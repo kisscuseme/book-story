@@ -1,6 +1,6 @@
 "use client";
 
-import { Accordion, Form, Row, Spinner } from "react-bootstrap";
+import { Accordion, Form, Row } from "react-bootstrap";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomButton } from "../atoms/CustomButton";
 import { getErrorMsg, l } from "@/services/util/util";
@@ -28,7 +28,7 @@ import {
 } from "@/services/firebase/db";
 import { checkLogin } from "@/services/firebase/auth";
 import { useForm } from "react-hook-form";
-import { CenterCol } from "../atoms/CustomAtoms";
+import { CenterCol, CustomSpinner } from "../atoms/CustomAtoms";
 import { DocumentData } from "firebase/firestore";
 
 interface BookListProps {
@@ -1004,7 +1004,7 @@ export default function BookList({
                             commentIsFetching &&
                             targetLoadingComment === book.id ? (
                               <CustomButton align="left" color="#b5b5b5">
-                                <Spinner animation="border" size="sm" />
+                                <CustomSpinner animation="border" size="sm" />
                               </CustomButton>
                             ) : (
                               <CustomButton
@@ -1034,7 +1034,7 @@ export default function BookList({
           <CenterCol>
             {bookList.length > 0 && bookIsFetching ? (
               <CustomButton align="center" color="#999999">
-                <Spinner animation="border" />
+                <CustomSpinner animation="border" />
               </CustomButton>
             ) : (
               <CustomButton
