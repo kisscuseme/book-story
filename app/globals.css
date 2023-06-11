@@ -1,0 +1,33 @@
+body {
+  --bs-body-bg: #efefef;
+}
+
+.offcanvas.offcanvas-end {
+  --bs-offcanvas-bg: #efefef;
+}
+
+@font-face {
+  font-family: 'GangwonEdu_OTFBoldA';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.container,
+.container-fluid {
+  font-family: 'GangwonEdu_OTFBoldA', 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  background-color: #f2f2f2;
+  min-height: 100vh;
+}
+
+input[type="date"] {
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  min-height: 1.2em;
+}
+
+.hidden-button {
+  display: none;
+}
