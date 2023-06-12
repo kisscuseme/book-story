@@ -5,18 +5,14 @@ import {
   showModalState,
   userInfoState,
 } from "@/states/states";
-import { BookType, CommentType } from "@/types/types";
+import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomDropdown } from "../atoms/CustomDropdown";
-import {
-  enterKeyUpEventHandler,
-  l,
-  onFocusHandler,
-} from "@/services/util/util";
+import { enterKeyUpEventHandler, getErrorMsg, l } from "@/services/util/util";
 import { CustomInput, InputWrapper } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
@@ -30,11 +26,7 @@ export default function AddCommentForm({
   book,
   componentsTextData,
 }: AddCommentFormProps) {
-  const {
-    register: addCommentRegister,
-    handleSubmit: addCommentHandleSubmit,
-    setValue: addCommentSetValue,
-  } = useForm();
+  const { register, handleSubmit, setValue, formState } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
   const userInfo = useRecoilValue(userInfoState);
@@ -42,16 +34,14 @@ export default function AddCommentForm({
   const firstLoading = useRecoilValue(firstLoadingState);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    
-  }, []);
+  useEffect(() => {}, []);
 
   // Comment 데이터 추가 시 react query 활용
   const insertCommentMutation = useMutation(insertData, {
     onSuccess(data) {
       if (data) {
         const bookId = data.path.split("/")[5];
-        addCommentSetValue(`text.${bookId}`, "");
+        setValue("text", "");
         setShowModal({
           show: true,
           title: l("Check"),
@@ -59,14 +49,14 @@ export default function AddCommentForm({
         });
         // 성공 시 참조 오브젝트에 데이터 추가 (db에서 데이터를 새로 조회하지 않음)
         const tempBookList = [];
-        for(const book of bookList) {
+        for (const book of bookList) {
           tempBookList.push({
             id: book.id,
             title: book.title,
             author: book.author,
             timestamp: book.timestamp,
             commentLastVisible: book.commentLastVisible,
-            comments: [...book.comments||[]]
+            comments: [...(book.comments || [])],
           });
         }
         const comment = {
@@ -94,7 +84,7 @@ export default function AddCommentForm({
     onError(error) {
       console.log(error);
       setIsSubmitting(false);
-    }
+    },
   });
 
   const insertCommentHandler = (bookId: string, type: string, text: string) => {
@@ -110,21 +100,17 @@ export default function AddCommentForm({
 
   return (
     <Form
-      onSubmit={addCommentHandleSubmit((data) => {
-        if(!isSubmitting) {
+      onSubmit={handleSubmit((data) => {
+        if (!isSubmitting) {
           setIsSubmitting(true);
-          insertCommentHandler(
-            book.id,
-            commentType,
-            data.text[book.id]
-          );
+          insertCommentHandler(book.id, commentType, data.text);
         }
       })}
       onKeyDown={(e) => {
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingBottom: "10px", paddingLeft: "10px" }}>
+      <Row style={{ paddingLeft: "10px" }}>
         <DefaultCol style={{ maxWidth: "22%" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
@@ -159,7 +145,12 @@ export default function AddCommentForm({
         <DefaultCol style={{ minWidth: "58%" }}>
           <InputWrapper>
             <CustomInput
-              {...addCommentRegister(`text.${book.id}`)}
+              {...register("text", {
+                required: {
+                  value: true,
+                  message: l("Enter your content."),
+                },
+              })}
               placeholder={
                 firstLoading
                   ? componentsTextData.enterContentPlaceholder
@@ -182,6 +173,13 @@ export default function AddCommentForm({
           >
             {firstLoading ? componentsTextData.addButton : l("Add")}
           </CustomButton>
+        </DefaultCol>
+      </Row>
+      <Row>
+        <DefaultCol>
+          <div style={{ color: "hotpink", paddingTop: "5px" }}>
+            {getErrorMsg(formState.errors, "text", "required")}
+          </div>
         </DefaultCol>
       </Row>
     </Form>

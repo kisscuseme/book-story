@@ -13,6 +13,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import {
   enterKeyUpEventHandler,
+  getErrorMsg,
   l,
   onFocusHandler,
 } from "@/services/util/util";
@@ -29,11 +30,7 @@ export default function EditBookForm({
   book,
   componentsTextData,
 }: EditBookFormProps) {
-  const {
-    register: editBookRegister,
-    handleSubmit: editBookHandleSubmit,
-    setValue: editBookSetValue,
-  } = useForm();
+  const { register, handleSubmit, setValue, formState } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
   const userInfo = useRecoilValue(userInfoState);
@@ -41,8 +38,8 @@ export default function EditBookForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    editBookSetValue(`title.${book.id}`, book.title);
-    editBookSetValue(`author.${book.id}`, book.author);
+    setValue("title", book.title);
+    setValue("author", book.author);
   }, []);
 
   // Book 데이터 수정 시 react query 활용
@@ -97,21 +94,26 @@ export default function EditBookForm({
 
   return (
     <Form
-      onSubmit={editBookHandleSubmit((data) => {
+      onSubmit={handleSubmit((data) => {
         if (!isSubmitting) {
           setIsSubmitting(true);
-          updateBookHandler(book.id, data.title[book.id], data.author[book.id]);
+          updateBookHandler(book.id, data.title, data.author);
         }
       })}
       onKeyDown={(e) => {
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingBottom: "7px", paddingLeft: "10px" }}>
+      <Row style={{ paddingLeft: "10px" }}>
         <DefaultCol style={{ maxWidth: "45%" }}>
           <InputWrapper>
             <CustomInput
-              {...editBookRegister(`title.${book.id}`)}
+              {...register("title", {
+                required: {
+                  value: true,
+                  message: l("Please enter the title of the book."),
+                },
+              })}
               placeholder={book.title}
               onFocus={onFocusHandler}
               onKeyUp={enterKeyUpEventHandler}
@@ -121,7 +123,7 @@ export default function EditBookForm({
         <DefaultCol style={{ minWidth: "35%" }}>
           <InputWrapper>
             <CustomInput
-              {...editBookRegister(`author.${book.id}`)}
+              {...register("author")}
               placeholder={book.author}
               onFocus={onFocusHandler}
               onKeyUp={enterKeyUpEventHandler}
@@ -141,6 +143,13 @@ export default function EditBookForm({
           >
             {firstLoading ? componentsTextData.editButton : l("Edit")}
           </CustomButton>
+        </DefaultCol>
+      </Row>
+      <Row>
+        <DefaultCol>
+          <div style={{ color: "hotpink", paddingTop: "5px" }}>
+            {getErrorMsg(formState.errors, "title", "required")}
+          </div>
         </DefaultCol>
       </Row>
     </Form>

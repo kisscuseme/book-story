@@ -1,5 +1,10 @@
 import { getUserPath, updateData } from "@/services/firebase/db";
-import { bookListState, firstLoadingState, showModalState, userInfoState } from "@/states/states";
+import {
+  bookListState,
+  firstLoadingState,
+  showModalState,
+  userInfoState,
+} from "@/states/states";
 import { BookType, CommentType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Row } from "react-bootstrap";
@@ -7,7 +12,12 @@ import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomDropdown } from "../atoms/CustomDropdown";
-import { enterKeyUpEventHandler, l, onFocusHandler } from "@/services/util/util";
+import {
+  enterKeyUpEventHandler,
+  getErrorMsg,
+  l,
+  onFocusHandler,
+} from "@/services/util/util";
 import { CustomInput, InputWrapper } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
@@ -23,11 +33,7 @@ export default function EditCommentForm({
   comment,
   componentsTextData,
 }: EditCommentFormProps) {
-  const {
-    register: editCommentRegister,
-    handleSubmit: editCommentHandleSubmit,
-    setValue: editCommentSetValue,
-  } = useForm();
+  const { register, handleSubmit, setValue, formState } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
   const userInfo = useRecoilValue(userInfoState);
@@ -36,7 +42,7 @@ export default function EditCommentForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    editCommentSetValue(`text.${book.id}.${comment.id}`, comment.text);
+    setValue("text", comment.text);
   }, []);
 
   // Comment 데이터 수정 시 react query 활용
@@ -51,14 +57,14 @@ export default function EditCommentForm({
         // 성공 시 참조 오브젝트에 데이터 추가 (db에서 데이터를 새로 조회하지 않음)
         const bookId = data.path.split("/")[5];
         const tempBookList = [];
-        for(const book of bookList) {
+        for (const book of bookList) {
           tempBookList.push({
             id: book.id,
             title: book.title,
             author: book.author,
             timestamp: book.timestamp,
             commentLastVisible: book.commentLastVisible,
-            comments: [...book.comments||[]]
+            comments: [...(book.comments || [])],
           });
         }
         const comment = {
@@ -87,7 +93,7 @@ export default function EditCommentForm({
     onError(error) {
       console.log(error);
       setIsSubmitting(false);
-    }
+    },
   });
 
   const updateCommentHandler = (
@@ -109,15 +115,10 @@ export default function EditCommentForm({
 
   return (
     <Form
-      onSubmit={editCommentHandleSubmit((data) => {
-        if(!isSubmitting) {
+      onSubmit={handleSubmit((data) => {
+        if (!isSubmitting) {
           setIsSubmitting(true);
-          updateCommentHandler(
-            book.id,
-            comment.id,
-            commentType,
-            data.text[book.id][comment.id]
-          );
+          updateCommentHandler(book.id, comment.id, commentType, data.text);
         }
       })}
       onKeyDown={(e) => {
@@ -126,7 +127,6 @@ export default function EditCommentForm({
     >
       <Row
         style={{
-          paddingBottom: "10px",
           paddingLeft: "15px",
         }}
       >
@@ -165,7 +165,12 @@ export default function EditCommentForm({
         <DefaultCol style={{ minWidth: "60%" }}>
           <InputWrapper>
             <CustomInput
-              {...editCommentRegister(`text.${book.id}.${comment.id}`)}
+              {...register("text", {
+                required: {
+                  value: true,
+                  message: l("Enter your content."),
+                },
+              })}
               style={{ fontSize: "14px" }}
               placeholder={comment.text}
               onFocus={onFocusHandler}
@@ -186,6 +191,13 @@ export default function EditCommentForm({
           >
             {firstLoading ? componentsTextData.editButton : l("Edit")}
           </CustomButton>
+        </DefaultCol>
+      </Row>
+      <Row>
+        <DefaultCol>
+          <div style={{ color: "hotpink", paddingTop: "5px", fontSize: "14px" }}>
+            {getErrorMsg(formState.errors, "text", "required")}
+          </div>
         </DefaultCol>
       </Row>
     </Form>

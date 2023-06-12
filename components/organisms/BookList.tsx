@@ -80,7 +80,7 @@ export default function BookList({
       // 현재의 스크롤 값을 저장
       lastScrollY = scrollY;
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

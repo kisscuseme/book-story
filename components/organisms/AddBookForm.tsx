@@ -20,15 +20,8 @@ interface AddBookFormProps {
   componentsTextData: Record<string, string>;
 }
 
-export default function AddBookForm({
-  componentsTextData,
-}: AddBookFormProps) {
-  const {
-    register: addBookRegister,
-    handleSubmit: addBookHandleSubmit,
-    formState: addBookFormState,
-    setValue: addBookSetValue,
-  } = useForm();
+export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
+  const { register, handleSubmit, formState, setValue } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
   const userInfo = useRecoilValue(userInfoState);
@@ -41,8 +34,8 @@ export default function AddBookForm({
   const insertBookMutation = useMutation(insertData, {
     onSuccess(data) {
       if (data) {
-        addBookSetValue("title", "");
-        addBookSetValue("author", "");
+        setValue("title", "");
+        setValue("author", "");
         setShowModal({
           show: true,
           title: l("Check"),
@@ -63,7 +56,7 @@ export default function AddBookForm({
     onError(error) {
       console.log(error);
       setIsSubmitting(false);
-    }
+    },
   });
 
   const insertBookHandler = (title: string, author: string) => {
@@ -79,11 +72,11 @@ export default function AddBookForm({
 
   return (
     <Form
-      onSubmit={addBookHandleSubmit((data) => {
-          if(!isSubmitting) {
-            setIsSubmitting(true);
-            insertBookHandler(data.title, data.author);
-          }
+      onSubmit={handleSubmit((data) => {
+        if (!isSubmitting) {
+          setIsSubmitting(true);
+          insertBookHandler(data.title, data.author);
+        }
       })}
       onKeyDown={(e) => {
         if (e.key === "Enter") e.preventDefault();
@@ -93,7 +86,7 @@ export default function AddBookForm({
         <DefaultCol style={{ minWidth: "45%" }}>
           <InputWrapper>
             <CustomInput
-              {...addBookRegister("title", {
+              {...register("title", {
                 required: {
                   value: true,
                   message: l("Please enter the title of the book."),
@@ -111,7 +104,7 @@ export default function AddBookForm({
         <DefaultCol style={{ minWidth: "35%" }}>
           <InputWrapper>
             <CustomInput
-              {...addBookRegister("author")}
+              {...register("author")}
               placeholder={
                 firstLoading
                   ? componentsTextData.bookAuthorPlaceholder
@@ -138,8 +131,8 @@ export default function AddBookForm({
       </Row>
       <Row>
         <DefaultCol>
-          <div style={{ color: "hotpink", paddingTop: "10px" }}>
-            {getErrorMsg(addBookFormState.errors, "title", "required")}
+          <div style={{ color: "hotpink", paddingTop: "5px" }}>
+            {getErrorMsg(formState.errors, "title", "required")}
           </div>
         </DefaultCol>
       </Row>
