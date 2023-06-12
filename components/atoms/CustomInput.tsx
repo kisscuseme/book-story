@@ -5,6 +5,7 @@ import React, {
   RefObject,
   forwardRef,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { FormControl, FormControlProps } from "react-bootstrap";
@@ -73,7 +74,10 @@ const CustomFormControl = styled(FormControl)`
  * 참고: https://ko.legacy.reactjs.org/docs/forwarding-refs.html
  */
 export const CustomInput = forwardRef(
-  ({ ...props }: FormControlProps, ref: React.ForwardedRef<HTMLInputElement>) => {
+  (
+    { ...props }: FormControlProps,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => {
     return <CustomFormControl ref={ref} {...props} />;
   }
 );
@@ -93,3 +97,42 @@ export const InputWrapper = ({
 
   return <div style={wrapperStyle}>{children}</div>;
 };
+
+interface ClearInputOwnProps {
+  clearButton?: boolean;
+  ref?: React.ForwardedRef<HTMLInputElement>
+}
+
+type ClearInputProps = ClearInputOwnProps & FormControlProps;
+
+export const ClearInput = ({
+  clearButton = true,
+  ...props
+}: ClearInputProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [text, setText] = useState("");
+  return (
+    <InputWrapper clearButton={clearButton}>
+      <CustomInput
+        ref={inputRef}
+        onChange={(e) => {
+          setText(e.currentTarget.value);
+        }}
+        {...props}
+      />
+      {clearButton && text && (
+        <ClearButton
+          onClick={() => {
+            if (inputRef.current) {
+              setText("");
+              inputRef.current.value = "";
+            }
+          }}
+        >
+          X
+        </ClearButton>
+      )}
+    </InputWrapper>
+  );
+};
+ClearInput.displayName = "ClearInput";
