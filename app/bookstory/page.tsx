@@ -1,9 +1,8 @@
 import { admin } from "@/services/firebase/firebase.admin";
-import { cookies } from "next/dist/client/components/headers";
 import Home from "../page";
 import BookStory from "@/components/templates/BookStory";
 import { BookType, CommentType } from "@/types/types";
-import { l } from "@/services/util/util";
+import { getCookie, l } from "@/services/util/util";
 import { getUserPath } from "@/services/firebase/db";
 import { queryDataFromServer } from "@/services/firebase/db.admin";
 
@@ -12,7 +11,7 @@ const BookStoryPage = async () => {
     // firebase 서버 토큰 검증
     const token = await admin
       .auth()
-      .verifyIdToken(cookies().get("token")?.value || "");
+      .verifyIdToken(getCookie("token") || "");
     if (token.uid !== "") {
       const componentsTextData: Record<string, string> = {
         title: l("My bookshelf"),

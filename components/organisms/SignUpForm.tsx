@@ -2,22 +2,22 @@
 
 import { signUp } from "@/services/firebase/auth";
 import { emailRegEx, getErrorMsg, l, setCookie } from "@/services/util/util";
-import { showModalState } from "@/states/states";
+import { rerenderDataState, showModalState } from "@/states/states";
 import { useMutation } from "@tanstack/react-query";
 import {
   sendEmailVerification,
   updateProfile,
   UserCredential,
 } from "firebase/auth";
-import { KeyboardEvent, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol, DefaultRow } from "../atoms/DefaultAtoms";
-import { CustomInput, InputWrapper } from "../atoms/CustomInput";
 import { CenterCol } from "../atoms/CustomAtoms";
 import TranslationFromClient from "./TranslationFromClient";
 import { CustomButton } from "../atoms/CustomButton";
+import { ClearInput } from "../atoms/CustomInput";
 
 // sign up form props
 export interface SignUpFormProps {
@@ -41,9 +41,13 @@ export default function SignUpForm({
     handleSubmit,
     reset,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm(); // react hook form 기능 활용
   const submitRef = useRef<HTMLButtonElement>(null);
+  const rerenderData = useRecoilValue(rerenderDataState);
+
+  useEffect(() => {}, [rerenderData]);
 
   // 계정 생성 시 react query 활용
   const signUpMutation = useMutation(signUp, {
@@ -120,96 +124,92 @@ export default function SignUpForm({
       <TranslationFromClient />
       <DefaultRow>
         <DefaultCol>
-          <InputWrapper>
-            <CustomInput
-              {...register("email", {
-                required: {
-                  value: true,
-                  message: l("Please enter your e-mail."),
-                },
-                pattern: {
-                  value: emailRegEx,
-                  message: l("Please check your email format."),
-                },
-              })}
-              placeholder={emailPlaceholder}
-              type="email"
-              onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
-                enterKeyUpEventHandler(e);
-              }}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("email", {
+              required: {
+                value: true,
+                message: l("Please enter your e-mail."),
+              },
+              pattern: {
+                value: emailRegEx,
+                message: l("Please check your email format."),
+              },
+            })}
+            placeholder={emailPlaceholder}
+            type="email"
+            onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
+              enterKeyUpEventHandler(e);
+            }}
+            clearValue={setValue}
+          />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>
         <DefaultCol>
-          <InputWrapper>
-            <CustomInput
-              {...register("name", {
-                required: {
-                  value: true,
-                  message: l("Enter your name, please."),
-                },
-              })}
-              placeholder={namePlaceholder}
-              type="text"
-              onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
-                enterKeyUpEventHandler(e);
-              }}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("name", {
+              required: {
+                value: true,
+                message: l("Enter your name, please."),
+              },
+            })}
+            placeholder={namePlaceholder}
+            type="text"
+            onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
+              enterKeyUpEventHandler(e);
+            }}
+            clearValue={setValue}
+          />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>
         <DefaultCol>
-          <InputWrapper>
-            <CustomInput
-              {...register("password", {
-                required: {
-                  value: true,
-                  message: l("Please enter your password."),
-                },
-                minLength: {
-                  value: 6,
-                  message: l("Please enter a password of at least 6 digits."),
-                },
-              })}
-              placeholder={passwordPlaceholder}
-              type="password"
-              onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
-                enterKeyUpEventHandler(e);
-              }}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("password", {
+              required: {
+                value: true,
+                message: l("Please enter your password."),
+              },
+              minLength: {
+                value: 6,
+                message: l("Please enter a password of at least 6 digits."),
+              },
+            })}
+            placeholder={passwordPlaceholder}
+            type="password"
+            onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
+              enterKeyUpEventHandler(e);
+            }}
+            clearValue={setValue}
+          />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>
         <DefaultCol>
-          <InputWrapper>
-            <CustomInput
-              {...register("reconfirmPassword", {
-                required: {
-                  value: true,
-                  message: l(
+          <ClearInput
+            {...register("reconfirmPassword", {
+              required: {
+                value: true,
+                message: l(
+                  "The entered password and reconfirm password are not the same."
+                ),
+              },
+              validate: (value) => {
+                const password = getValues()["password"];
+                if (value === password) return true;
+                else
+                  return l(
                     "The entered password and reconfirm password are not the same."
-                  ),
-                },
-                validate: (value) => {
-                  const password = getValues()["password"];
-                  if (value === password) return true;
-                  else
-                    return l(
-                      "The entered password and reconfirm password are not the same."
-                    );
-                },
-              })}
-              placeholder={reconfirmPasswordPlaceholder}
-              type="password"
-              onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
-                enterKeyUpEventHandler(e);
-              }}
-            />
-          </InputWrapper>
+                  );
+              },
+            })}
+            placeholder={reconfirmPasswordPlaceholder}
+            type="password"
+            onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
+              enterKeyUpEventHandler(e);
+            }}
+            clearValue={setValue}
+          />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>

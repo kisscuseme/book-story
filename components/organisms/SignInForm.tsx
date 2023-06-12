@@ -13,17 +13,17 @@ import {
 } from "@/services/util/util";
 import { firebaseAuth } from "@/services/firebase/firebase";
 import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
-import { useSetRecoilState } from "recoil";
-import { showModalState } from "@/states/states";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { rerenderDataState, showModalState } from "@/states/states";
 import { signIn } from "@/services/firebase/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { DefaultCol, DefaultRow, GroupButton } from "../atoms/DefaultAtoms";
 import { CenterCol } from "../atoms/CustomAtoms";
-import { CustomInput, InputWrapper } from "../atoms/CustomInput";
 import TranslationFromClient from "./TranslationFromClient";
 import { CustomButton } from "../atoms/CustomButton";
 import { styled } from "styled-components";
+import { ClearInput } from "../atoms/CustomInput";
 
 // sign in form props
 export interface SignInFormProps {
@@ -54,7 +54,7 @@ export const SignInForm = ({
 }: SignInFormProps) => {
   const [errorMsg, setErrorMsg] = useState("");
   const setShowModal = useSetRecoilState(showModalState);
-  const [savedEmail, setSavedEmail] = useState("");
+  const savedEmail = getCookie("email") || "";
   const {
     register,
     handleSubmit,
@@ -64,17 +64,14 @@ export const SignInForm = ({
     formState: { errors },
   } = useForm(); // react hook form 기능 활용
   const submitRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    // 기존 로그인 이메일이 있을 경우 가져 옴
-    setSavedEmail(getCookie("email") || "");
-  }, []);
+  const rerenderData = useRecoilValue(rerenderDataState);
 
   useEffect(() => {
     // 최초 로딩 시 input 컴포넌트 값에 기존 로그인 이메일 바인딩
     setValue("email", savedEmail);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [savedEmail]);
+  }, []);
+
+  useEffect(() => {}, [rerenderData]);
 
   // 로그인 시 react query 활용
   const signInMutation = useMutation(signIn, {
@@ -229,48 +226,47 @@ export const SignInForm = ({
       <TranslationFromClient />
       <DefaultRow>
         <DefaultCol>
-          <InputWrapper>
-            <CustomInput
-              {...register("email", {
-                required: {
-                  value: true,
-                  message: l("Please enter your e-mail."),
-                },
-                pattern: {
-                  value: emailRegEx,
-                  message: l("Please check your email format."),
-                },
-              })}
-              placeholder={emailPlaceholder}
-              type="email"
-              onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
-                enterKeyUpEventHandler(e);
-              }}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("email", {
+              required: {
+                value: true,
+                message: l("Please enter your e-mail."),
+              },
+              pattern: {
+                value: emailRegEx,
+                message: l("Please check your email format."),
+              },
+            })}
+            placeholder={emailPlaceholder}
+            type="email"
+            onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
+              enterKeyUpEventHandler(e);
+            }}
+            clearValue={setValue}
+            initValue={savedEmail}
+          />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>
         <DefaultCol>
-          <InputWrapper>
-            <CustomInput
-              {...register("password", {
-                required: {
-                  value: true,
-                  message: l("Please enter your password."),
-                },
-                minLength: {
-                  value: 6,
-                  message: l("Please enter a password of at least 6 digits."),
-                },
-              })}
-              placeholder={passwordPlaceholder}
-              type="password"
-              onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
-                enterKeyUpEventHandler(e);
-              }}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("password", {
+              required: {
+                value: true,
+                message: l("Please enter your password."),
+              },
+              minLength: {
+                value: 6,
+                message: l("Please enter a password of at least 6 digits."),
+              },
+            })}
+            placeholder={passwordPlaceholder}
+            type="password"
+            onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
+              enterKeyUpEventHandler(e);
+            }}
+            clearValue={setValue}
+          />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>

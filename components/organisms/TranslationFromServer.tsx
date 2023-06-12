@@ -3,6 +3,7 @@ import translationKR from "@/locales/kr/translation.json";
 import translationEN from "@/locales/en/translation.json";
 import localesJSON from "@/locales/locales.json";
 import { cookies } from "next/dist/client/components/headers";
+import { getCookie } from "@/services/util/util";
 
 // 서버에서 번역 기능을 사용하기 위한 컴포넌트
 export default function TranslationFromServer() {
@@ -21,7 +22,7 @@ export default function TranslationFromServer() {
 
   i18next.init({
     resources,
-    lng: cookies().get("lang")?.value || "kr", //default language
+    lng: getCookie("lang") || "kr", //default language
     keySeparator: false,
     interpolation: {
       escapeValue: false,

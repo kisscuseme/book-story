@@ -17,9 +17,9 @@ import {
   l,
   onFocusHandler,
 } from "@/services/util/util";
-import { CustomInput, InputWrapper } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
+import { ClearInput } from "../atoms/CustomInput";
 
 interface EditBookFormProps {
   book: BookType;
@@ -106,29 +106,29 @@ export default function EditBookForm({
     >
       <Row style={{ paddingLeft: "10px" }}>
         <DefaultCol style={{ maxWidth: "45%" }}>
-          <InputWrapper>
-            <CustomInput
-              {...register("title", {
-                required: {
-                  value: true,
-                  message: l("Please enter the title of the book."),
-                },
-              })}
-              placeholder={book.title}
-              onFocus={onFocusHandler}
-              onKeyUp={enterKeyUpEventHandler}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("title", {
+              required: {
+                value: true,
+                message: l("Please enter the title of the book."),
+              },
+            })}
+            placeholder={book.title}
+            onFocus={onFocusHandler}
+            onKeyUp={enterKeyUpEventHandler}
+            clearValue={setValue}
+            initValue={book.title}
+          />
         </DefaultCol>
         <DefaultCol style={{ minWidth: "35%" }}>
-          <InputWrapper>
-            <CustomInput
-              {...register("author")}
-              placeholder={book.author}
-              onFocus={onFocusHandler}
-              onKeyUp={enterKeyUpEventHandler}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("author")}
+            placeholder={book.author}
+            onFocus={onFocusHandler}
+            onKeyUp={enterKeyUpEventHandler}
+            clearValue={setValue}
+            initValue={book.author}
+          />
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "20%" }}>
           <CustomButton

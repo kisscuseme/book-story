@@ -18,9 +18,9 @@ import {
   l,
   onFocusHandler,
 } from "@/services/util/util";
-import { CustomInput, InputWrapper } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
+import { ClearInput } from "../atoms/CustomInput";
 
 interface EditCommentFormProps {
   book: BookType;
@@ -163,20 +163,19 @@ export default function EditCommentForm({
           />
         </DefaultCol>
         <DefaultCol style={{ minWidth: "60%" }}>
-          <InputWrapper>
-            <CustomInput
-              {...register("text", {
-                required: {
-                  value: true,
-                  message: l("Enter your content."),
-                },
-              })}
-              style={{ fontSize: "14px" }}
-              placeholder={comment.text}
-              onFocus={onFocusHandler}
-              onKeyUp={enterKeyUpEventHandler}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("text", {
+              required: {
+                value: true,
+                message: l("Enter your content."),
+              },
+            })}
+            style={{ fontSize: "14px" }}
+            placeholder={comment.text}
+            onFocus={onFocusHandler}
+            onKeyUp={enterKeyUpEventHandler}
+            clearValue={setValue}
+          />
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "20%" }}>
           <CustomButton
@@ -195,7 +194,9 @@ export default function EditCommentForm({
       </Row>
       <Row>
         <DefaultCol>
-          <div style={{ color: "hotpink", paddingTop: "5px", fontSize: "14px" }}>
+          <div
+            style={{ color: "hotpink", paddingTop: "5px", fontSize: "14px" }}
+          >
             {getErrorMsg(formState.errors, "text", "required")}
           </div>
         </DefaultCol>

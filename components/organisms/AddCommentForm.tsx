@@ -13,9 +13,9 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomDropdown } from "../atoms/CustomDropdown";
 import { enterKeyUpEventHandler, getErrorMsg, l } from "@/services/util/util";
-import { CustomInput, InputWrapper } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
+import { ClearInput } from "../atoms/CustomInput";
 
 interface AddCommentFormProps {
   book: BookType;
@@ -143,22 +143,21 @@ export default function AddCommentForm({
           />
         </DefaultCol>
         <DefaultCol style={{ minWidth: "58%" }}>
-          <InputWrapper>
-            <CustomInput
-              {...register("text", {
-                required: {
-                  value: true,
-                  message: l("Enter your content."),
-                },
-              })}
-              placeholder={
-                firstLoading
-                  ? componentsTextData.enterContentPlaceholder
-                  : l("Enter your content.")
-              }
-              onKeyUp={enterKeyUpEventHandler}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("text", {
+              required: {
+                value: true,
+                message: l("Enter your content."),
+              },
+            })}
+            placeholder={
+              firstLoading
+                ? componentsTextData.enterContentPlaceholder
+                : l("Enter your content.")
+            }
+            onKeyUp={enterKeyUpEventHandler}
+            clearValue={setValue}
+          />
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "20%" }}>
           <CustomButton

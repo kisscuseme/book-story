@@ -1,40 +1,11 @@
 import React, {
   ChangeEvent,
-  HTMLProps,
-  ReactNode,
-  RefObject,
   forwardRef,
-  useEffect,
-  useRef,
   useState,
 } from "react";
 import { FormControl, FormControlProps } from "react-bootstrap";
+import { ChangeHandler, FieldValues, UseFormSetValue } from "react-hook-form";
 import { styled } from "styled-components";
-
-interface InputOwnProps {
-  /**
-   * 타입
-   */
-  type?: string;
-  /**
-   * clear button ref
-   */
-  clearBtnRef?: RefObject<HTMLButtonElement>;
-  /**
-   * onClearButtonClick
-   */
-  onClearButtonClick?: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => void;
-  /**
-   * initValue
-   */
-  initValue?: string;
-}
-
-type InputProps = InputOwnProps &
-  FormControlProps &
-  HTMLProps<HTMLInputElement>;
 
 // 삭제 버튼 스타일 정의
 const ClearButton = styled.button`
@@ -73,66 +44,59 @@ const CustomFormControl = styled(FormControl)`
  * forwardRef 옵트인기능 활용
  * 참고: https://ko.legacy.reactjs.org/docs/forwarding-refs.html
  */
-export const CustomInput = forwardRef(
-  (
-    { ...props }: FormControlProps,
-    ref: React.ForwardedRef<HTMLInputElement>
-  ) => {
-    return <CustomFormControl ref={ref} {...props} />;
-  }
-);
-CustomInput.displayName = "CustomInput";
-
-export const InputWrapper = ({
-  children,
-  clearButton = false,
-}: {
-  children: ReactNode;
-  clearButton?: boolean;
-}) => {
-  const wrapperStyle = {
-    borderBottom: "1px solid #000000",
-    paddingRight: `${clearButton ? "25px" : "0"}`,
-  };
-
-  return <div style={wrapperStyle}>{children}</div>;
-};
-
 interface ClearInputOwnProps {
-  clearButton?: boolean;
-  ref?: React.ForwardedRef<HTMLInputElement>
+  onChange: ChangeHandler;
+  clearValue?: UseFormSetValue<FieldValues>;
+  initValue?: string;
 }
 
 type ClearInputProps = ClearInputOwnProps & FormControlProps;
 
-export const ClearInput = ({
-  clearButton = true,
-  ...props
-}: ClearInputProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [text, setText] = useState("");
-  return (
-    <InputWrapper clearButton={clearButton}>
-      <CustomInput
-        ref={inputRef}
-        onChange={(e) => {
-          setText(e.currentTarget.value);
-        }}
-        {...props}
-      />
-      {clearButton && text && (
-        <ClearButton
-          onClick={() => {
-            if (inputRef.current) {
+export const ClearInput = forwardRef(
+  (
+    { initValue, onChange, clearValue, ...props }: ClearInputProps,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => {
+    const [text, setText] = useState(initValue || "");
+    const wrapperStyle = {
+      borderBottom: "1px solid #000000",
+      paddingRight: `${clearValue ? "25px" : "0"}`,
+    };
+    let inputRef: HTMLInputElement | null = null;
+
+    const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+      setText(e.currentTarget.value);
+      onChange(e);
+    };
+
+    const refHandler = (target: HTMLInputElement) => {
+      if (!inputRef) inputRef = target;
+      if (typeof ref === "function") ref(target);
+    };
+
+    return (
+      <div style={wrapperStyle}>
+        <CustomFormControl
+          ref={refHandler}
+          onChange={onChangeHandler}
+          {...props}
+        />
+        {clearValue && text && (
+          <ClearButton
+            type="button"
+            onClick={() => {
               setText("");
-              inputRef.current.value = "";
-            }
-          }}
-        >
-          X
-        </ClearButton>
-      )}
-    </InputWrapper>
-  );
-};
+              if (inputRef) {
+                inputRef.value = "";
+                clearValue(inputRef.name, "");
+              }
+            }}
+          >
+            X
+          </ClearButton>
+        )}
+      </div>
+    );
+  }
+);
 ClearInput.displayName = "ClearInput";

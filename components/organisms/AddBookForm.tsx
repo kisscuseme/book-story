@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { enterKeyUpEventHandler, getErrorMsg, l } from "@/services/util/util";
-import { CustomInput, InputWrapper } from "../atoms/CustomInput";
+import { ClearInput } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
 
@@ -84,35 +84,33 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
     >
       <Row>
         <DefaultCol style={{ minWidth: "45%" }}>
-          <InputWrapper>
-            <CustomInput
-              {...register("title", {
-                required: {
-                  value: true,
-                  message: l("Please enter the title of the book."),
-                },
-              })}
-              placeholder={
-                firstLoading
-                  ? componentsTextData.bookTitlePlaceholder
-                  : l("Book Title")
-              }
-              onKeyUp={enterKeyUpEventHandler}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("title", {
+              required: {
+                value: true,
+                message: l("Please enter the title of the book."),
+              },
+            })}
+            placeholder={
+              firstLoading
+                ? componentsTextData.bookTitlePlaceholder
+                : l("Book Title")
+            }
+            onKeyUp={enterKeyUpEventHandler}
+            clearValue={setValue}
+          />
         </DefaultCol>
         <DefaultCol style={{ minWidth: "35%" }}>
-          <InputWrapper>
-            <CustomInput
-              {...register("author")}
-              placeholder={
-                firstLoading
-                  ? componentsTextData.bookAuthorPlaceholder
-                  : l("Book author")
-              }
-              onKeyUp={enterKeyUpEventHandler}
-            />
-          </InputWrapper>
+          <ClearInput
+            {...register("author")}
+            placeholder={
+              firstLoading
+                ? componentsTextData.bookAuthorPlaceholder
+                : l("Book author")
+            }
+            onKeyUp={enterKeyUpEventHandler}
+            clearValue={setValue}
+          />
         </DefaultCol>
         <DefaultCol>
           <CustomButton

@@ -1,4 +1,4 @@
-import { l } from "@/services/util/util";
+import { getCookie, l } from "@/services/util/util";
 import { cookies } from "next/dist/client/components/headers";
 import { DefaultContainer, DefaultTitle } from "../atoms/DefaultAtoms";
 import { TopBar } from "../molecules/TopBar";
@@ -11,7 +11,7 @@ export default function SignIn() {
       <TopBar>
         {/* 서버에서 번역을 적용하기 위한 컴포넌트 */}
         <LanguageSelectorForServer
-          langForServer={cookies().get("lang")?.value || "kr"}
+          langForServer={getCookie("lang") || "kr"}
         />
       </TopBar>
       <DefaultTitle>{l("Book Story")}</DefaultTitle>

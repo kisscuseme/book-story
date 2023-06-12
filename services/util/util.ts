@@ -5,6 +5,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { FieldErrors, FieldValues, useForm } from "react-hook-form";
 import { FocusEvent, KeyboardEvent } from "react";
+import { cookies } from "next/dist/client/components/headers";
 
 // 입력 받은 날짜로 요일 계산
 const getDay = (date: string) => {
@@ -113,27 +114,40 @@ const setCookie = (
   value: string,
   unixTime: number = new Date(9999, 12, 31).getTime()
 ) => {
-  var date = new Date();
+  const date = new Date();
   date.setTime(date.getTime() + unixTime);
-  document.cookie =
-    encodeURIComponent(name) +
-    "=" +
-    encodeURIComponent(value) +
-    ";expires=" +
-    date.toUTCString() +
-    ";path=/";
+  if(typeof document !== "undefined") {
+    document.cookie =
+      encodeURIComponent(name) +
+      "=" +
+      encodeURIComponent(value) +
+      ";expires=" +
+      date.toUTCString() +
+      ";path=/";
+  } else {
+    cookies().set(name, value, {maxAge: Math.floor((unixTime - date.getTime())/1000)});
+  }
 };
 
 // 쿠키 get
 const getCookie = (name: string) => {
-  var value = document.cookie.match("(^|;) ?" + name + "=([^;]*)(;|$)");
-  return value ? decodeURIComponent(value[2]) : null;
+  if (typeof document !== "undefined") {
+    const value = document.cookie.match("(^|;) ?" + name + "=([^;]*)(;|$)");
+    return value ? decodeURIComponent(value[2]) : null;
+  } else {
+    const value = cookies().get(name)?.value;
+    return value ? decodeURIComponent(value) : null;
+  }
 };
 
 // 쿠키 delete
 const deleteCookie = (name: string) => {
-  document.cookie =
-    encodeURIComponent(name) + "=; expires=Thu, 01 JAN 1999 00:00:10 GMT";
+  if(typeof document !== "undefined") {
+    document.cookie =
+      encodeURIComponent(name) + "=; expires=Thu, 01 JAN 1999 00:00:10 GMT";
+  } else {
+    cookies().delete(name);
+  }
 };
 
 // 암복호화 사용 여부
