@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { FieldErrors, FieldValues, useForm } from "react-hook-form";
+import { FocusEvent, KeyboardEvent } from "react";
 
 // 입력 받은 날짜로 요일 계산
 const getDay = (date: string) => {
@@ -186,6 +187,23 @@ const getErrorMsg = (
   else return null;
 };
 
+// 엔터 입력 시 submit 버튼 클릭 효과
+const enterKeyUpEventHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === "Enter") {
+    e.currentTarget.form?.requestSubmit();
+  }
+};
+
+// focus 시 커서 맨 뒤로
+const onFocusHandler = (e: FocusEvent<HTMLInputElement>) => {
+  const value = e.currentTarget?.value;
+  const target = e.currentTarget;
+  e.currentTarget.value = "";
+  setTimeout(() => {
+    target.value = value;
+  }, 100);
+};
+
 export {
   emailRegEx,
   checkEmail,
@@ -203,4 +221,6 @@ export {
   encrypt,
   decrypt,
   getErrorMsg,
+  enterKeyUpEventHandler,
+  onFocusHandler,
 };

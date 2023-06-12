@@ -1,4 +1,4 @@
-import { AlertType, UserType } from "@/types/types";
+import { AlertType, BookType, UserType } from "@/types/types";
 import { AccordionEventKey } from "react-bootstrap/esm/AccordionContext";
 import { atom } from "recoil";
 
@@ -52,4 +52,15 @@ export const mainListAccordionActiveState = atom<AccordionEventKey | null>({
 export const selectedLanguageState = atom<string | null>({
   key: "selectedLanguageState",
   default: null,
+});
+
+// 이 프로젝트에서만 사용되는 states
+export const bookListState = atom<BookType[]>({
+  key: "bookListState",
+  default: [],
+});
+
+export const firstLoadingState = atom<boolean>({
+  key: "firstLoadingState",
+  default: false
 });

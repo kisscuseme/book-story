@@ -1,35 +1,30 @@
 "use client";
 
-import { Accordion, Form, Row } from "react-bootstrap";
+import { Accordion, Row } from "react-bootstrap";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomButton } from "../atoms/CustomButton";
-import { getErrorMsg, l } from "@/services/util/util";
+import { l } from "@/services/util/util";
 import { accordionCustomStyle } from "../molecules/CustomMolecules";
-import { CustomInput, InputWrapper } from "../atoms/CustomInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { DivisionLine } from "../molecules/DefaultMolecules";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
+  bookListState,
+  firstLoadingState,
   mainListAccordionActiveState,
-  showModalState,
   userInfoState,
 } from "@/states/states";
-import { CustomDropdown } from "../atoms/CustomDropdown";
-import { FocusEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BookType, CommentType, LastVisibleType } from "@/types/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  getLastVisible,
-  getUserPath,
-  insertData,
-  queryData,
-  updateData,
-} from "@/services/firebase/db";
-import { checkLogin } from "@/services/firebase/auth";
-import { useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
+import { getLastVisible, getUserPath, queryData } from "@/services/firebase/db";
 import { CenterCol, CustomSpinner } from "../atoms/CustomAtoms";
 import { DocumentData } from "firebase/firestore";
+import EditCommentForm from "./EditCommentForm";
+import AddBookForm from "./AddBookForm";
+import AddCommentForm from "./AddCommentForm";
+import EditBookForm from "./EditBookForm";
 
 interface BookListProps {
   serverBookData: BookType[];
@@ -46,10 +41,9 @@ export default function BookList({
     mainListAccordionActiveState
   );
   const [fold, setFold] = useState(false);
-  const [firstLoading, setFirstLoading] = useState(true);
-  const setShowModal = useSetRecoilState(showModalState);
+  const [firstLoading, setFirstLoading] = useRecoilState(firstLoadingState);
   const userInfo = useRecoilValue(userInfoState);
-  const [bookList, setBookList] = useState<BookType[]>([]);
+  const [bookList, setBookList] = useRecoilState(bookListState);
   const bookLoadMoreButtonRef = useRef<HTMLButtonElement>(null);
 
   const [lastVisible, setLastVisible] = useState<LastVisibleType>(null);
@@ -64,34 +58,6 @@ export default function BookList({
     string | null
   >(null);
 
-  const {
-    register: addBookRegister,
-    handleSubmit: addBookHandleSubmit,
-    formState: addBookFormState,
-    setValue: addBookSetValue,
-  } = useForm();
-  const {
-    register: editBookRegister,
-    handleSubmit: editBookHandleSubmit,
-    setValue: editBookSetValue,
-  } = useForm();
-  const {
-    register: addCommentRegister,
-    handleSubmit: addCommentHandleSubmit,
-    setValue: addCommentSetValue,
-  } = useForm();
-  const {
-    register: editCommentRegister,
-    handleSubmit: editCommentHandleSubmit,
-    setValue: editCommentSetValue,
-  } = useForm();
-  const [addCommentTypes, setAddCommentTypes] = useState<
-    Record<string, string>
-  >({});
-  const [editCommentTypes, setEditCommentTypes] = useState<
-    Record<string, string>
-  >({});
-
   const [noMoreBookData, setNoMoreBookData] = useState<boolean>(false);
   const [noMoreCommentsData, setNoMoreCommentsData] = useState<
     Record<string, boolean>
@@ -100,7 +66,6 @@ export default function BookList({
   useEffect(() => {
     setFirstLoading(false);
     setBookList(serverBookData);
-    rerenderEditBookForm(serverBookData);
 
     // 무한 로딩을 위한 스크롤 이벤트 리스너
     let lastScrollY = 0;
@@ -144,26 +109,6 @@ export default function BookList({
       });
     }
   }, [userInfo]);
-
-  const rerenderEditBookForm = (bookList: BookType[]) => {
-    const tempAddCommentTypes = { ...addCommentTypes };
-    bookList.map((book) => {
-      editBookSetValue(`title.${book.id}`, book.title);
-      editBookSetValue(`author.${book.id}`, book.author);
-      tempAddCommentTypes[`text.${book.id}`] = "Verse";
-      if (book.comments && book.comments.length > 0) {
-        const tempEditCommentTypes: Record<string, string> = {
-          ...editCommentTypes,
-        };
-        book.comments.map((comment) => {
-          editCommentSetValue(`text.${book.id}.${comment.id}`, comment.text);
-          tempEditCommentTypes[`text.${book.id}.${comment.id}`] = comment.type;
-        });
-        setEditCommentTypes(tempEditCommentTypes);
-      }
-    });
-    setAddCommentTypes(tempAddCommentTypes);
-  };
 
   const queryBookData = async () => {
     try {
@@ -251,10 +196,10 @@ export default function BookList({
             });
           });
 
-          const tempList = [...bookList, ...dataBookList];
-          const uniqueList = tempList.filter((value1, index) => {
+          const tempBookList = [...bookList, ...dataBookList];
+          const uniqueList = tempBookList.filter((value1, index) => {
             return (
-              tempList.findIndex((value2) => {
+              tempBookList.findIndex((value2) => {
                 return value1?.id === value2?.id;
               }) === index
             );
@@ -317,7 +262,17 @@ export default function BookList({
               timestamp: data.timestamp.toMillis(),
             });
           });
-          const tempBookList = [...bookList];
+          const tempBookList = [];
+          for (const book of bookList) {
+            tempBookList.push({
+              id: book.id,
+              title: book.title,
+              author: book.author,
+              timestamp: book.timestamp,
+              commentLastVisible: book.commentLastVisible,
+              comments: [...(book.comments || [])],
+            });
+          }
           for (let i = 0; i < tempBookList.length; i++) {
             if (targetLoadingComment === tempBookList[i].id) {
               const tempCommentList = [
@@ -373,12 +328,8 @@ export default function BookList({
   }, [lastVisible]);
 
   useEffect(() => {
-    rerenderEditBookForm(bookList);
-  }, [bookList]);
-
-  useEffect(() => {
     if (targetLoadingComment) {
-      setCommentLastVisible({...nextCommentLastVisible});
+      setCommentLastVisible({ ...nextCommentLastVisible });
     }
   }, [targetLoadingComment]);
 
@@ -387,488 +338,6 @@ export default function BookList({
       commentRefetch();
     }
   }, [commentLastVisible]);
-
-  // Book 데이터 추가 시 react query 활용
-  const insertBookMutation = useMutation(insertData, {
-    onSuccess(data) {
-      if (data) {
-        addBookSetValue("title", "");
-        addBookSetValue("author", "");
-        setShowModal({
-          show: true,
-          title: l("Check"),
-          content: l("A book has been added."),
-        });
-        // 성공 시 참조 오브젝트에 데이터 추가 (db에서 데이터를 새로 조회하지 않음)
-        const tempList = [
-          {
-            id: data.docId,
-            ...data.data,
-          } as BookType,
-          ...bookList,
-        ];
-        setBookList(tempList);
-      }
-    },
-  });
-
-  const insertBookHandler = (title: string, author: string) => {
-    checkLogin().then((user) => {
-      if (user) {
-        const path = `${getUserPath()}/${user?.uid}/books`;
-        insertBookMutation.mutate({
-          path: path,
-          data: {
-            title: title,
-            author: author,
-          },
-        });
-      }
-    });
-  };
-
-  // Comment 데이터 추가 시 react query 활용
-  const insertCommentMutation = useMutation(insertData, {
-    onSuccess(data) {
-      if (data) {
-        const bookId = data.path.split("/")[5];
-        addCommentSetValue(`text.${bookId}`, "");
-        setShowModal({
-          show: true,
-          title: l("Check"),
-          content: l("A comment has been added."),
-        });
-        // 성공 시 참조 오브젝트에 데이터 추가 (db에서 데이터를 새로 조회하지 않음)
-        const tempBookList = [...bookList];
-        const comment = {
-          id: data.docId,
-          type: data.data.type,
-          text: data.data.text,
-        };
-        for (let i = 0; i < tempBookList.length; i++) {
-          if (tempBookList[i].id === bookId) {
-            if (tempBookList[i].comments) {
-              tempBookList[i].comments = [
-                comment,
-                ...(tempBookList[i].comments || []),
-              ];
-            } else {
-              tempBookList[i].comments = [comment];
-            }
-            break;
-          }
-        }
-        setBookList(tempBookList);
-      }
-    },
-  });
-
-  const insertCommentHandler = (bookId: string, type: string, text: string) => {
-    const path = `${getUserPath()}/${userInfo?.uid}/books/${bookId}/comments`;
-    insertCommentMutation.mutate({
-      path: path,
-      data: {
-        type: type,
-        text: text,
-      },
-    });
-  };
-
-  // Book 데이터 수정 시 react query 활용
-  const updateBookMutation = useMutation(updateData, {
-    onSuccess(data) {
-      if (data) {
-        setShowModal({
-          show: true,
-          title: l("Check"),
-          content: l("The book has been updated."),
-        });
-        // 성공 시 참조 오브젝트 데이터 변경 (db에서 데이터를 새로 조회하지 않음)
-        const tempList = [...bookList];
-        for (let i = 0; i < tempList.length; i++) {
-          if (tempList[i].id === data?.docId) {
-            tempList[i].title = data.data.title;
-            tempList[i].author = data.data.author;
-            break;
-          }
-        }
-        setBookList(tempList);
-      }
-    },
-  });
-
-  const updateBookHandler = (bookId: string, title: string, author: string) => {
-    const path = `${getUserPath()}/${userInfo?.uid}/books`;
-    updateBookMutation.mutate({
-      path: path,
-      docId: bookId,
-      data: {
-        title: title,
-        author: author || "",
-      },
-    });
-  };
-
-  // Comment 데이터 수정 시 react query 활용
-  const updateCommentMutation = useMutation(updateData, {
-    onSuccess(data) {
-      if (data) {
-        setShowModal({
-          show: true,
-          title: l("Check"),
-          content: l("The comment has been updated."),
-        });
-        // 성공 시 참조 오브젝트에 데이터 추가 (db에서 데이터를 새로 조회하지 않음)
-        console.log(data);
-        const bookId = data.path.split("/")[5];
-        const tempBookList = [...bookList];
-        const comment = {
-          id: data.docId,
-          type: data.data.type,
-          text: data.data.text,
-        };
-        for (let i = 0; i < tempBookList.length; i++) {
-          if (tempBookList[i].id === bookId) {
-            if (tempBookList[i].comments) {
-              const tempCommentList = [...(tempBookList[i].comments || [])];
-              for (let j = 0; j < tempCommentList.length; j++) {
-                if (tempCommentList[j].id === data.docId) {
-                  tempCommentList[j] = comment;
-                  tempBookList[i].comments = tempCommentList;
-                  break;
-                }
-              }
-            }
-          }
-        }
-        setBookList(tempBookList);
-      }
-    },
-  });
-
-  const updateCommentHandler = (
-    bookId: string,
-    commentId: string,
-    type: string,
-    text: string
-  ) => {
-    const path = `${getUserPath()}/${userInfo?.uid}/books/${bookId}/comments`;
-    updateCommentMutation.mutate({
-      path: path,
-      docId: commentId,
-      data: {
-        type: type,
-        text: text,
-      },
-    });
-  };
-
-  // 엔터 입력 시 submit 버튼 클릭 효과
-  const enterKeyUpEventHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.currentTarget.form?.requestSubmit();
-    }
-  };
-
-  const onFocusHandler = (e: FocusEvent<HTMLInputElement>) => {
-    const value = e.currentTarget?.value;
-    const target = e.currentTarget;
-    e.currentTarget.value = "";
-    setTimeout(() => {
-      target.value = value;
-    }, 100);
-  };
-
-  const editCommentForm = (book: BookType, comment: CommentType) => {
-    return (
-      <Form
-        onSubmit={editCommentHandleSubmit((data) => {
-          updateCommentHandler(
-            book.id,
-            comment.id,
-            editCommentTypes[`text.${book.id}.${comment.id}`] || "Verse",
-            data.text[book.id][comment.id]
-          );
-        })}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") e.preventDefault();
-        }}
-      >
-        <Row
-          style={{
-            paddingBottom: "10px",
-            paddingLeft: "15px",
-          }}
-        >
-          <DefaultCol style={{ maxWidth: "20%" }}>
-            <CustomDropdown
-              onClickItemHandler={(label) => {
-                // console.log(label);
-                const tempEditCommentTypes = { ...editCommentTypes };
-                tempEditCommentTypes[`text.${book.id}.${comment.id}`] = label;
-                setEditCommentTypes(tempEditCommentTypes);
-              }}
-              itemAlign="start"
-              align="left"
-              size="small"
-              backgroundColor={comment.type === "Verse" ? "#ff7878" : "#5561ff"}
-              color="#ffffff"
-              initText={
-                firstLoading ? comment.transType || "" : l(comment.type)
-              }
-              items={[
-                {
-                  key: "Verse",
-                  label: firstLoading
-                    ? componentsTextData.verseLabel
-                    : l("Verse"),
-                  href: "#",
-                  backgroundColor: "#ff7878",
-                  color: "#ffffff",
-                },
-                {
-                  key: "Feel",
-                  label: firstLoading
-                    ? componentsTextData.feelLabel
-                    : l("Feel"),
-                  href: "#",
-                  backgroundColor: "#5561ff",
-                  color: "#ffffff",
-                },
-              ]}
-            />
-          </DefaultCol>
-          <DefaultCol style={{ minWidth: "60%" }}>
-            <InputWrapper>
-              <CustomInput
-                {...editCommentRegister(`text.${book.id}.${comment.id}`)}
-                style={{ fontSize: "14px" }}
-                placeholder={comment.text}
-                onFocus={onFocusHandler}
-                onKeyUp={enterKeyUpEventHandler}
-              />
-            </InputWrapper>
-          </DefaultCol>
-          <DefaultCol style={{ maxWidth: "20%" }}>
-            <CustomButton
-              backgroundColor="#ffd1d1"
-              color="#ff6f6f"
-              size="sm"
-              align="left"
-              type="button"
-              onClick={(e) => {
-                e.currentTarget.form?.requestSubmit();
-              }}
-            >
-              {firstLoading ? componentsTextData.editButton : l("Edit")}
-            </CustomButton>
-          </DefaultCol>
-        </Row>
-      </Form>
-    );
-  };
-
-  const addCommentForm = (book: BookType) => {
-    return (
-      <Form
-        onSubmit={addCommentHandleSubmit((data) => {
-          insertCommentHandler(
-            book.id,
-            addCommentTypes[`text.${book.id}`] || "Verse",
-            data.text[book.id]
-          );
-        })}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") e.preventDefault();
-        }}
-      >
-        <Row style={{ paddingBottom: "10px", paddingLeft: "10px" }}>
-          <DefaultCol style={{ maxWidth: "22%" }}>
-            <CustomDropdown
-              onClickItemHandler={(label) => {
-                // console.log(label);
-                const tempAddCommentTypes = { ...addCommentTypes };
-                tempAddCommentTypes[`text.${book.id}`] = label;
-                setAddCommentTypes(tempAddCommentTypes);
-              }}
-              itemAlign="start"
-              align="left"
-              backgroundColor={"#ff7878"}
-              color="#ffffff"
-              initText={
-                firstLoading ? componentsTextData.verseLabel : l("Verse")
-              }
-              items={[
-                {
-                  key: "Verse",
-                  label: firstLoading
-                    ? componentsTextData.verseLabel
-                    : l("Verse"),
-                  href: "#",
-                  backgroundColor: "#ff7878",
-                  color: "#ffffff",
-                },
-                {
-                  key: "Feel",
-                  label: firstLoading
-                    ? componentsTextData.feelLabel
-                    : l("Feel"),
-                  href: "#",
-                  backgroundColor: "#5561ff",
-                  color: "#ffffff",
-                },
-              ]}
-            />
-          </DefaultCol>
-          <DefaultCol style={{ minWidth: "58%" }}>
-            <InputWrapper>
-              <CustomInput
-                {...addCommentRegister(`text.${book.id}`)}
-                placeholder={
-                  firstLoading
-                    ? componentsTextData.enterContentPlaceholder
-                    : l("Enter your content.")
-                }
-                onKeyUp={enterKeyUpEventHandler}
-              />
-            </InputWrapper>
-          </DefaultCol>
-          <DefaultCol style={{ maxWidth: "20%" }}>
-            <CustomButton
-              backgroundColor="#5b5b5b"
-              color="#ffffff"
-              size="sm"
-              align="left"
-              type="button"
-              onClick={(e) => {
-                e.currentTarget.form?.requestSubmit();
-              }}
-            >
-              {firstLoading ? componentsTextData.addButton : l("Add")}
-            </CustomButton>
-          </DefaultCol>
-        </Row>
-      </Form>
-    );
-  };
-
-  const editBookForm = (book: BookType) => {
-    return (
-      <Form
-        onSubmit={editBookHandleSubmit((data) => {
-          updateBookHandler(book.id, data.title[book.id], data.author[book.id]);
-        })}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") e.preventDefault();
-        }}
-      >
-        <Row style={{ paddingBottom: "7px", paddingLeft: "10px" }}>
-          <DefaultCol style={{ maxWidth: "45%" }}>
-            <InputWrapper>
-              <CustomInput
-                {...editBookRegister(`title.${book.id}`)}
-                placeholder={book.title}
-                onFocus={onFocusHandler}
-                onKeyUp={enterKeyUpEventHandler}
-              />
-            </InputWrapper>
-          </DefaultCol>
-          <DefaultCol style={{ minWidth: "35%" }}>
-            <InputWrapper>
-              <CustomInput
-                {...editBookRegister(`author.${book.id}`)}
-                placeholder={book.author}
-                onFocus={onFocusHandler}
-                onKeyUp={enterKeyUpEventHandler}
-              />
-            </InputWrapper>
-          </DefaultCol>
-          <DefaultCol style={{ maxWidth: "20%" }}>
-            <CustomButton
-              backgroundColor="#ffd1d1"
-              color="#ff6f6f"
-              size="sm"
-              align="left"
-              type="button"
-              onClick={(e) => {
-                e.currentTarget.form?.requestSubmit();
-              }}
-            >
-              {firstLoading ? componentsTextData.editButton : l("Edit")}
-            </CustomButton>
-          </DefaultCol>
-        </Row>
-      </Form>
-    );
-  };
-
-  const addBookForm = () => {
-    return (
-      <Form
-        onSubmit={addBookHandleSubmit((data) => {
-          insertBookHandler(data.title, data.author);
-        })}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") e.preventDefault();
-        }}
-      >
-        <Row>
-          <DefaultCol style={{ minWidth: "45%" }}>
-            <InputWrapper>
-              <CustomInput
-                {...addBookRegister("title", {
-                  required: {
-                    value: true,
-                    message: l("Please enter the title of the book."),
-                  },
-                })}
-                placeholder={
-                  firstLoading
-                    ? componentsTextData.bookTitlePlaceholder
-                    : l("Book Title")
-                }
-                onKeyUp={enterKeyUpEventHandler}
-              />
-            </InputWrapper>
-          </DefaultCol>
-          <DefaultCol style={{ minWidth: "35%" }}>
-            <InputWrapper>
-              <CustomInput
-                {...addBookRegister("author")}
-                placeholder={
-                  firstLoading
-                    ? componentsTextData.bookAuthorPlaceholder
-                    : l("Book author")
-                }
-                onKeyUp={enterKeyUpEventHandler}
-              />
-            </InputWrapper>
-          </DefaultCol>
-          <DefaultCol>
-            <CustomButton
-              backgroundColor="#5b5b5b"
-              color="#ffffff"
-              size="sm"
-              align="left"
-              type="button"
-              onClick={(e) => {
-                e.currentTarget.form?.requestSubmit();
-              }}
-            >
-              {firstLoading ? componentsTextData.addButton : l("Add")}
-            </CustomButton>
-          </DefaultCol>
-        </Row>
-        <Row>
-          <DefaultCol>
-            <div style={{ color: "hotpink", paddingTop: "10px" }}>
-              {getErrorMsg(addBookFormState.errors, "title", "required")}
-            </div>
-          </DefaultCol>
-        </Row>
-      </Form>
-    );
-  };
 
   return (
     <>
@@ -896,7 +365,9 @@ export default function BookList({
                   <span style={{ fontSize: "14px" }}>{fold ? "▲" : "▼"}</span>
                 </div>
               </Accordion.Header>
-              <Accordion.Body>{addBookForm()}</Accordion.Body>
+              <Accordion.Body>
+                <AddBookForm componentsTextData={componentsTextData} />
+              </Accordion.Body>
             </Accordion.Item>
           </Accordion>
         </DefaultCol>
@@ -915,115 +386,123 @@ export default function BookList({
               : bookList
             ).map((book) => {
               return (
-                <>
-                  <Accordion.Item
-                    key={book.id}
-                    eventKey={book.id}
-                    style={{ paddingBottom: "10px" }}
-                  >
-                    <Accordion.Header>
-                      <span style={{ width: "16px", height: "16px" }}>
-                        <FontAwesomeIcon
-                          icon={faBook}
-                          color="#d1d1d1"
-                          size="1x"
-                        />
-                      </span>
-                      <div style={{ paddingLeft: "5px", paddingRight: "5px" }}>
-                        {book.title}
-                        {book.author && (
-                          <>
-                            {" - "}
-                            <span style={{ color: "#6f6f6f" }}>
-                              {book.author}
-                            </span>
-                          </>
-                        )}
-                      </div>
-                      <span style={{ width: "16px", height: "16px" }}>
-                        <FontAwesomeIcon
-                          icon={faPenToSquare}
-                          color={
-                            book.id === mainListAccordionActive
-                              ? "#ff8a8a"
-                              : "#b6b6b6"
-                          }
-                          size="xs"
-                        />
-                      </span>
-                    </Accordion.Header>
-                    <Accordion.Body>
-                      {editBookForm(book)}
-                      {addCommentForm(book)}
-                    </Accordion.Body>
-                    <Accordion defaultActiveKey="">
-                      {book.comments?.map((comment) => {
-                        return (
-                          <Accordion.Item
-                            key={`${book.id}.${comment.id}`}
-                            eventKey={`${book.id}.${comment.id}`}
-                          >
-                            <Accordion.Header>
-                              <div
-                                style={{
-                                  paddingLeft: "10px",
-                                  fontSize: "14px",
-                                }}
-                              >
-                                <span
-                                  style={{
-                                    color:
-                                      comment.type === "Verse"
-                                        ? "#ff7768"
-                                        : "#5561ff",
-                                    minWidth: "40px",
-                                    display: "inline-flex",
-                                  }}
-                                >
-                                  {firstLoading
-                                    ? comment.transType
-                                    : l(comment.type)}
-                                </span>{" "}
-                                <span style={{ color: "#6b6b6b" }}>
-                                  {comment.text}
-                                </span>
-                              </div>
-                            </Accordion.Header>
-                            <Accordion.Body>
-                              {editCommentForm(book, comment)}
-                            </Accordion.Body>
-                          </Accordion.Item>
-                        );
-                      })}
-                    </Accordion>
-                    {nextCommentLastVisible[book.id] &&
-                      !noMoreCommentsData[book.id] && (
-                        <Row style={{ paddingLeft: "30px" }}>
-                          <CenterCol>
-                            {(book.comments || []).length > 0 &&
-                            commentIsFetching &&
-                            targetLoadingComment === book.id ? (
-                              <CustomButton align="left" color="#b5b5b5">
-                                <CustomSpinner animation="border" size="sm" />
-                              </CustomButton>
-                            ) : (
-                              <CustomButton
-                                align="left"
-                                type="button"
-                                size="sm"
-                                color="#b5b5b5"
-                                onClick={() => {
-                                  setTargetLoadingComment(book.id);
-                                }}
-                              >
-                                {l("Load More")}
-                              </CustomButton>
-                            )}
-                          </CenterCol>
-                        </Row>
+                <Accordion.Item
+                  key={book.id}
+                  eventKey={book.id}
+                  style={{ paddingBottom: "10px" }}
+                >
+                  <Accordion.Header>
+                    <span style={{ width: "16px", height: "16px" }}>
+                      <FontAwesomeIcon
+                        icon={faBook}
+                        color="#d1d1d1"
+                        size="1x"
+                      />
+                    </span>
+                    <div style={{ paddingLeft: "5px", paddingRight: "5px" }}>
+                      {book.title}
+                      {book.author && (
+                        <>
+                          {" - "}
+                          <span style={{ color: "#6f6f6f" }}>
+                            {book.author}
+                          </span>
+                        </>
                       )}
-                  </Accordion.Item>
-                </>
+                    </div>
+                    <span style={{ width: "16px", height: "16px" }}>
+                      <FontAwesomeIcon
+                        icon={faPenToSquare}
+                        color={
+                          book.id === mainListAccordionActive
+                            ? "#ff8a8a"
+                            : "#b6b6b6"
+                        }
+                        size="xs"
+                      />
+                    </span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <EditBookForm
+                      book={book}
+                      componentsTextData={componentsTextData}
+                    />
+                    <AddCommentForm
+                      book={book}
+                      componentsTextData={componentsTextData}
+                    />
+                  </Accordion.Body>
+                  <Accordion defaultActiveKey="">
+                    {book.comments?.map((comment) => {
+                      return (
+                        <Accordion.Item
+                          key={`${book.id}.${comment.id}`}
+                          eventKey={`${book.id}.${comment.id}`}
+                        >
+                          <Accordion.Header>
+                            <div
+                              style={{
+                                paddingLeft: "10px",
+                                fontSize: "14px",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  color:
+                                    comment.type === "Verse"
+                                      ? "#ff7768"
+                                      : "#5561ff",
+                                  minWidth: "40px",
+                                  display: "inline-flex",
+                                }}
+                              >
+                                {firstLoading
+                                  ? comment.transType
+                                  : l(comment.type)}
+                              </span>{" "}
+                              <span style={{ color: "#6b6b6b" }}>
+                                {comment.text}
+                              </span>
+                            </div>
+                          </Accordion.Header>
+                          <Accordion.Body>
+                            <EditCommentForm
+                              book={book}
+                              comment={comment}
+                              componentsTextData={componentsTextData}
+                            />
+                          </Accordion.Body>
+                        </Accordion.Item>
+                      );
+                    })}
+                  </Accordion>
+                  {nextCommentLastVisible[book.id] &&
+                    !noMoreCommentsData[book.id] && (
+                      <Row style={{ paddingLeft: "30px" }}>
+                        <CenterCol>
+                          {(book.comments || []).length > 0 &&
+                          commentIsFetching &&
+                          targetLoadingComment === book.id ? (
+                            <CustomButton align="left" color="#b5b5b5">
+                              <CustomSpinner animation="border" size="sm" />
+                            </CustomButton>
+                          ) : (
+                            <CustomButton
+                              align="left"
+                              type="button"
+                              size="sm"
+                              color="#b5b5b5"
+                              onClick={() => {
+                                setTargetLoadingComment(book.id);
+                              }}
+                            >
+                              {l("Load More")}
+                            </CustomButton>
+                          )}
+                        </CenterCol>
+                      </Row>
+                    )}
+                </Accordion.Item>
               );
             })}
           </Accordion>
@@ -1041,6 +520,7 @@ export default function BookList({
                 align="center"
                 type="button"
                 color="#999999"
+                ref={bookLoadMoreButtonRef}
                 onClick={() => {
                   setLastVisible(nextLastVisible);
                 }}
