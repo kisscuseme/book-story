@@ -1,14 +1,13 @@
 "use client";
 
 import { Form, Row } from "react-bootstrap";
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import {
   checkEmail,
   emailRegEx,
   getCookie,
   getErrorMsg,
   l,
-  passwordRegEx,
   setCookie,
 } from "@/services/util/util";
 import { firebaseAuth } from "@/services/firebase/firebase";
@@ -243,7 +242,6 @@ export const SignInForm = ({
               enterKeyUpEventHandler(e);
             }}
             clearValue={setValue}
-            initValue={savedEmail}
           />
         </DefaultCol>
       </DefaultRow>

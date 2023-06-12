@@ -59,8 +59,3 @@ export const bookListState = atom<BookType[]>({
   key: "bookListState",
   default: [],
 });
-
-export const firstLoadingState = atom<boolean>({
-  key: "firstLoadingState",
-  default: false
-});

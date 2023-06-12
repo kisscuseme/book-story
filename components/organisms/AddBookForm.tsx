@@ -1,7 +1,6 @@
 import { getUserPath, insertData } from "@/services/firebase/db";
 import {
   bookListState,
-  firstLoadingState,
   showModalState,
   userInfoState,
 } from "@/states/states";
@@ -25,10 +24,12 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
   const userInfo = useRecoilValue(userInfoState);
-  const firstLoading = useRecoilValue(firstLoadingState);
+  const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setFirstLoading(false);
+  }, []);
 
   // Book 데이터 추가 시 react query 활용
   const insertBookMutation = useMutation(insertData, {

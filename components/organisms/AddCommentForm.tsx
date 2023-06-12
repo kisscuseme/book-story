@@ -1,7 +1,6 @@
-import { getUserPath, insertData, updateData } from "@/services/firebase/db";
+import { getUserPath, insertData } from "@/services/firebase/db";
 import {
   bookListState,
-  firstLoadingState,
   showModalState,
   userInfoState,
 } from "@/states/states";
@@ -31,10 +30,12 @@ export default function AddCommentForm({
   const setShowModal = useSetRecoilState(showModalState);
   const userInfo = useRecoilValue(userInfoState);
   const [commentType, setCommentType] = useState("Verse");
-  const firstLoading = useRecoilValue(firstLoadingState);
+  const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setFirstLoading(false);
+  }, []);
 
   // Comment 데이터 추가 시 react query 활용
   const insertCommentMutation = useMutation(insertData, {

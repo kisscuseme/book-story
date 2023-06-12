@@ -1,7 +1,6 @@
 import { getUserPath, updateData } from "@/services/firebase/db";
 import {
   bookListState,
-  firstLoadingState,
   showModalState,
   userInfoState,
 } from "@/states/states";
@@ -38,11 +37,12 @@ export default function EditCommentForm({
   const setShowModal = useSetRecoilState(showModalState);
   const userInfo = useRecoilValue(userInfoState);
   const [commentType, setCommentType] = useState(comment.type);
-  const firstLoading = useRecoilValue(firstLoadingState);
+  const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setValue("text", comment.text);
+    setFirstLoading(false);
   }, []);
 
   // Comment 데이터 수정 시 react query 활용
@@ -141,7 +141,7 @@ export default function EditCommentForm({
             size="small"
             backgroundColor={comment.type === "Verse" ? "#ff7878" : "#5561ff"}
             color="#ffffff"
-            initText={firstLoading ? comment.transType || "" : l(comment.type)}
+            initText={firstLoading && comment.transType ? comment.transType : l(comment.type)}
             items={[
               {
                 key: "Verse",

@@ -11,7 +11,6 @@ import { DivisionLine } from "../molecules/DefaultMolecules";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   bookListState,
-  firstLoadingState,
   mainListAccordionActiveState,
   userInfoState,
 } from "@/states/states";
@@ -41,7 +40,7 @@ export default function BookList({
     mainListAccordionActiveState
   );
   const [fold, setFold] = useState(false);
-  const [firstLoading, setFirstLoading] = useRecoilState(firstLoadingState);
+  const [firstLoading, setFirstLoading] = useState(true);
   const userInfo = useRecoilValue(userInfoState);
   const [bookList, setBookList] = useRecoilState(bookListState);
   const bookLoadMoreButtonRef = useRef<HTMLButtonElement>(null);
@@ -80,7 +79,7 @@ export default function BookList({
       // 현재의 스크롤 값을 저장
       lastScrollY = scrollY;
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -167,58 +166,58 @@ export default function BookList({
   };
 
   // book 데이터 조회에 react query를 활용
-  const { isFetching: bookIsFetching, refetch: bookRefetch } = useQuery(
-    ["loadBookData"],
-    queryBookData,
-    {
-      refetchOnWindowFocus: false,
-      retry: 0,
-      onSuccess: (data) => {
-        if (data) {
-          // 조회 성공 시 중복 데이터 제거 (추가된 데이터가 있을 경우 db 재조회를 하지 않고 걸러내기 위함)
-          const dataBookList: BookType[] = [];
-          data.dataList.map((bookData) => {
-            const dataCommentList: CommentType[] = [];
-            bookData.comments.map((commentData: any) => {
-              dataCommentList.push({
-                id: commentData.id,
-                type: commentData.type,
-                text: commentData.text,
-                timestamp: commentData.timestamp.toMillis(),
-              });
-            });
-            dataBookList.push({
-              id: bookData.id,
-              title: bookData.title,
-              author: bookData.author,
-              timestamp: bookData.timestamp.toMillis(),
-              comments: dataCommentList,
+  const {
+    isFetching: bookIsFetching,
+    isLoading: bookIsLoading,
+    refetch: bookRefetch,
+  } = useQuery(["loadBookData"], queryBookData, {
+    refetchOnWindowFocus: false,
+    retry: 0,
+    onSuccess: (data) => {
+      if (data) {
+        // 조회 성공 시 중복 데이터 제거 (추가된 데이터가 있을 경우 db 재조회를 하지 않고 걸러내기 위함)
+        const dataBookList: BookType[] = [];
+        data.dataList.map((bookData) => {
+          const dataCommentList: CommentType[] = [];
+          bookData.comments.map((commentData: any) => {
+            dataCommentList.push({
+              id: commentData.id,
+              type: commentData.type,
+              text: commentData.text,
+              timestamp: commentData.timestamp.toMillis(),
             });
           });
-
-          const tempBookList = [...bookList, ...dataBookList];
-          const uniqueList = tempBookList.filter((value1, index) => {
-            return (
-              tempBookList.findIndex((value2) => {
-                return value1?.id === value2?.id;
-              }) === index
-            );
+          dataBookList.push({
+            id: bookData.id,
+            title: bookData.title,
+            author: bookData.author,
+            timestamp: bookData.timestamp.toMillis(),
+            comments: dataCommentList,
           });
+        });
 
-          //lastVisible이 null일 경우 더 이상 조회할 데이터가 없다고 판단함
-          lastVisible && !noMoreBookData
-            ? setBookList(uniqueList)
-            : setBookList(data.dataList as BookType[]);
-          data.lastVisible
-            ? setNextLastVisible(data.lastVisible)
-            : setNoMoreBookData(true);
-        }
-      },
-      onError: (e: any) => {
-        console.log(e.message);
-      },
-    }
-  );
+        const tempBookList = [...bookList, ...dataBookList];
+        const uniqueList = tempBookList.filter((value1, index) => {
+          return (
+            tempBookList.findIndex((value2) => {
+              return value1?.id === value2?.id;
+            }) === index
+          );
+        });
+
+        //lastVisible이 null일 경우 더 이상 조회할 데이터가 없다고 판단함
+        lastVisible && !noMoreBookData
+          ? setBookList(uniqueList)
+          : setBookList(data.dataList as BookType[]);
+        data.lastVisible
+          ? setNextLastVisible(data.lastVisible)
+          : setNoMoreBookData(true);
+      }
+    },
+    onError: (e: any) => {
+      console.log(e.message);
+    },
+  });
 
   const queryCommentData = async () => {
     try {
@@ -244,82 +243,82 @@ export default function BookList({
   };
 
   // comment 데이터 조회에 react query를 활용
-  const { isFetching: commentIsFetching, refetch: commentRefetch } = useQuery(
-    ["loadCommentData"],
-    queryCommentData,
-    {
-      refetchOnWindowFocus: false,
-      retry: 0,
-      onSuccess: (data) => {
-        if (data) {
-          // 조회 성공 시 중복 데이터 제거 (추가된 데이터가 있을 경우 db 재조회를 하지 않고 걸러내기 위함)
-          const dataList: CommentType[] = [];
-          data.dataList.map((data) => {
-            dataList.push({
-              id: data.id,
-              type: data.type,
-              text: data.text,
-              timestamp: data.timestamp.toMillis(),
-            });
+  const {
+    isFetching: commentIsFetching,
+    isLoading: commentIsLoading,
+    refetch: commentRefetch,
+  } = useQuery(["loadCommentData"], queryCommentData, {
+    refetchOnWindowFocus: false,
+    retry: 0,
+    onSuccess: (data) => {
+      if (data) {
+        // 조회 성공 시 중복 데이터 제거 (추가된 데이터가 있을 경우 db 재조회를 하지 않고 걸러내기 위함)
+        const dataList: CommentType[] = [];
+        data.dataList.map((data) => {
+          dataList.push({
+            id: data.id,
+            type: data.type,
+            text: data.text,
+            timestamp: data.timestamp.toMillis(),
           });
-          const tempBookList = [];
-          for (const book of bookList) {
-            tempBookList.push({
-              id: book.id,
-              title: book.title,
-              author: book.author,
-              timestamp: book.timestamp,
-              commentLastVisible: book.commentLastVisible,
-              comments: [...(book.comments || [])],
-            });
-          }
-          for (let i = 0; i < tempBookList.length; i++) {
-            if (targetLoadingComment === tempBookList[i].id) {
-              const tempCommentList = [
-                ...(tempBookList[i].comments || []),
-                ...dataList,
-              ];
-              const uniqueCommentList = tempCommentList.filter(
-                (value1, index) => {
-                  return (
-                    tempCommentList.findIndex((value2) => {
-                      return value1?.id === value2?.id;
-                    }) === index
-                  );
-                }
-              );
-              tempBookList[i].comments = uniqueCommentList;
-              break;
-            }
-          }
-
-          //lastVisible이 null일 경우 더 이상 조회할 데이터가 없다고 판단함
-          if (
-            commentLastVisible[targetLoadingComment || ""] &&
-            !noMoreCommentsData[targetLoadingComment || ""]
-          ) {
-            setBookList(tempBookList);
-          }
-          if (data.lastVisible) {
-            const tempNextCommentLastvisible = { ...nextCommentLastVisible };
-            tempNextCommentLastvisible[targetLoadingComment || ""] =
-              data.lastVisible;
-            setNextCommentLastVisible(tempNextCommentLastvisible);
-          } else {
-            const tempNoMoreCommentsData = { ...noMoreCommentsData };
-            tempNoMoreCommentsData[targetLoadingComment || ""] = true;
-            setNoMoreCommentsData(tempNoMoreCommentsData);
-          }
-
-          // target 초기화
-          setTargetLoadingComment(null);
+        });
+        const tempBookList = [];
+        for (const book of bookList) {
+          tempBookList.push({
+            id: book.id,
+            title: book.title,
+            author: book.author,
+            timestamp: book.timestamp,
+            commentLastVisible: book.commentLastVisible,
+            comments: [...(book.comments || [])],
+          });
         }
-      },
-      onError: (e: any) => {
-        console.log(e.message);
-      },
-    }
-  );
+        for (let i = 0; i < tempBookList.length; i++) {
+          if (targetLoadingComment === tempBookList[i].id) {
+            const tempCommentList = [
+              ...(tempBookList[i].comments || []),
+              ...dataList,
+            ];
+            const uniqueCommentList = tempCommentList.filter(
+              (value1, index) => {
+                return (
+                  tempCommentList.findIndex((value2) => {
+                    return value1?.id === value2?.id;
+                  }) === index
+                );
+              }
+            );
+            tempBookList[i].comments = uniqueCommentList;
+            break;
+          }
+        }
+
+        //lastVisible이 null일 경우 더 이상 조회할 데이터가 없다고 판단함
+        if (
+          commentLastVisible[targetLoadingComment || ""] &&
+          !noMoreCommentsData[targetLoadingComment || ""]
+        ) {
+          setBookList(tempBookList);
+        }
+        if (data.lastVisible) {
+          const tempNextCommentLastvisible = { ...nextCommentLastVisible };
+          tempNextCommentLastvisible[targetLoadingComment || ""] =
+            data.lastVisible;
+          setNextCommentLastVisible(tempNextCommentLastvisible);
+        } else {
+          const tempNoMoreCommentsData = { ...noMoreCommentsData };
+          tempNoMoreCommentsData[targetLoadingComment || ""] = true;
+          setNoMoreCommentsData(tempNoMoreCommentsData);
+        }
+
+        // target 초기화
+        setTargetLoadingComment(null);
+      }
+    },
+    onError: (e: any) => {
+      console.log(e.message);
+    },
+  });
 
   useEffect(() => {
     if (lastVisible) {
@@ -477,11 +476,11 @@ export default function BookList({
                     })}
                   </Accordion>
                   {nextCommentLastVisible[book.id] &&
-                    !noMoreCommentsData[book.id] && (
+                    !noMoreCommentsData[book.id] ? (
                       <Row style={{ paddingLeft: "30px" }}>
                         <CenterCol>
                           {(book.comments || []).length > 0 &&
-                          commentIsFetching &&
+                          (commentIsLoading || commentIsFetching) &&
                           targetLoadingComment === book.id ? (
                             <CustomButton align="left" color="#b5b5b5">
                               <CustomSpinner animation="border" size="sm" />
@@ -501,6 +500,16 @@ export default function BookList({
                           )}
                         </CenterCol>
                       </Row>
+                    ) : (
+                      (book.commentLastVisible && !commentLastVisible[book.id]) && (
+                        <Row style={{ paddingLeft: "30px" }}>
+                          <CenterCol>
+                            <CustomButton align="left" color="#b5b5b5">
+                              <CustomSpinner animation="border" size="sm" />
+                            </CustomButton>
+                          </CenterCol>
+                        </Row>
+                      )
                     )}
                 </Accordion.Item>
               );
@@ -508,10 +517,10 @@ export default function BookList({
           </Accordion>
         </DefaultCol>
       </Row>
-      {nextLastVisible && !noMoreBookData && (
+      {nextLastVisible && !noMoreBookData ? (
         <Row>
           <CenterCol>
-            {bookList.length > 0 && bookIsFetching ? (
+            {bookList.length > 0 && (bookIsLoading || bookIsFetching) ? (
               <CustomButton align="center" color="#999999">
                 <CustomSpinner animation="border" />
               </CustomButton>
@@ -530,6 +539,16 @@ export default function BookList({
             )}
           </CenterCol>
         </Row>
+      ) : (
+        !lastVisible && (
+          <Row>
+            <CenterCol>
+              <CustomButton align="center" color="#999999">
+                <CustomSpinner animation="border" />
+              </CustomButton>
+            </CenterCol>
+          </Row>
+        )
       )}
     </>
   );

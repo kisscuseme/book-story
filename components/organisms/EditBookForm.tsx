@@ -1,7 +1,6 @@
 import { getUserPath, updateData } from "@/services/firebase/db";
 import {
   bookListState,
-  firstLoadingState,
   showModalState,
   userInfoState,
 } from "@/states/states";
@@ -34,12 +33,13 @@ export default function EditBookForm({
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
   const userInfo = useRecoilValue(userInfoState);
-  const firstLoading = useRecoilValue(firstLoadingState);
+  const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setValue("title", book.title);
     setValue("author", book.author);
+    setFirstLoading(false);
   }, []);
 
   // Book 데이터 수정 시 react query 활용
@@ -117,7 +117,6 @@ export default function EditBookForm({
             onFocus={onFocusHandler}
             onKeyUp={enterKeyUpEventHandler}
             clearValue={setValue}
-            initValue={book.title}
           />
         </DefaultCol>
         <DefaultCol style={{ minWidth: "35%" }}>
@@ -127,7 +126,6 @@ export default function EditBookForm({
             onFocus={onFocusHandler}
             onKeyUp={enterKeyUpEventHandler}
             clearValue={setValue}
-            initValue={book.author}
           />
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "20%" }}>

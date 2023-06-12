@@ -128,7 +128,7 @@ export const CustomDropdown = ({
   const rerenderData = useRecoilValue(rerenderDataState);
 
   useEffect(() => {
-    setSelectedText(initText);
+    if(initText) setSelectedText(initText);
   }, [rerenderData]);
 
   const theme = {

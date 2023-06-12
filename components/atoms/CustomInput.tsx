@@ -1,8 +1,4 @@
-import React, {
-  ChangeEvent,
-  forwardRef,
-  useState,
-} from "react";
+import React, { ChangeEvent, forwardRef, useState } from "react";
 import { FormControl, FormControlProps } from "react-bootstrap";
 import { ChangeHandler, FieldValues, UseFormSetValue } from "react-hook-form";
 import { styled } from "styled-components";
@@ -47,17 +43,16 @@ const CustomFormControl = styled(FormControl)`
 interface ClearInputOwnProps {
   onChange: ChangeHandler;
   clearValue?: UseFormSetValue<FieldValues>;
-  initValue?: string;
 }
 
 type ClearInputProps = ClearInputOwnProps & FormControlProps;
 
 export const ClearInput = forwardRef(
   (
-    { initValue, onChange, clearValue, ...props }: ClearInputProps,
+    { onChange, clearValue, ...props }: ClearInputProps,
     ref: React.ForwardedRef<HTMLInputElement>
   ) => {
-    const [text, setText] = useState(initValue || "");
+    const [text, setText] = useState("");
     const wrapperStyle = {
       borderBottom: "1px solid #000000",
       paddingRight: `${clearValue ? "25px" : "0"}`,
@@ -72,6 +67,8 @@ export const ClearInput = forwardRef(
     const refHandler = (target: HTMLInputElement) => {
       if (!inputRef) inputRef = target;
       if (typeof ref === "function") ref(target);
+      if (target && target.value === "" && text !== "") setText("");
+      if (target && target.value !== "" && text === "") setText(target.value);
     };
 
     return (
