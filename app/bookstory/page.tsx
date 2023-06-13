@@ -30,9 +30,9 @@ const BookStoryPage = async () => {
       const books = await queryDataFromServer(
         [],
         fullPath,
+        3,
         "timestamp",
-        "desc",
-        3
+        "desc"
       );
       const serverBookData: BookType[] = [];
       if(books.dataList.length > 0) {
@@ -45,9 +45,9 @@ const BookStoryPage = async () => {
               const comments = await queryDataFromServer(
                 [],
                 fullPath,
+                3,
                 "timestamp",
-                "desc",
-                3
+                "desc"
               );
               const commentList: CommentType[] = [];
               comments.dataList.map((comment) => {

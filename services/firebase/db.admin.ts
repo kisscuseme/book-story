@@ -29,17 +29,15 @@ const makeRangeQueriesFromServer = (
 const queryDataFromServer = async (
   whereConfig: WhereConfigType[],
   path: string,
-  orderByField: string,
-  orderByDirection: OrderByDirection,
-  limitNumber: number = defaultLimitNumber
+  limitNumber: number = defaultLimitNumber,
+  orderByField?: string,
+  orderByDirection?: OrderByDirection
 ) => {
   const collectionRef = admin.firestore().collection(path);
-  const whereRef = makeRangeQueriesFromServer(collectionRef, whereConfig);
+  let whereRef = makeRangeQueriesFromServer(collectionRef, whereConfig);
   const dataList: admin.firestore.DocumentData[] = [];
-  const querySnapshots = await whereRef
-    .orderBy(orderByField, orderByDirection)
-    .limit(limitNumber)
-    .get();
+  if(orderByField) whereRef = whereRef.orderBy(orderByField, orderByDirection);
+  const querySnapshots = await whereRef.limit(limitNumber).get();
   querySnapshots.docs.forEach((doc: admin.firestore.QueryDocumentSnapshot<admin.firestore.DocumentData>) => {
     dataList.push({
       id: doc.id,

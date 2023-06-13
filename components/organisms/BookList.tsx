@@ -116,7 +116,7 @@ export default function BookList({
         const bookData = await queryData(
           [],
           bookPath,
-          1,
+          3,
           lastVisible,
           "timestamp",
           "desc"
@@ -398,7 +398,7 @@ export default function BookList({
                         size="1x"
                       />
                     </span>
-                    <div style={{ paddingLeft: "5px", paddingRight: "5px" }}>
+                    <span style={{ paddingLeft: "5px", paddingRight: "5px" }}>
                       {book.title}
                       {book.author && (
                         <>
@@ -408,7 +408,7 @@ export default function BookList({
                           </span>
                         </>
                       )}
-                    </div>
+                    </span>
                     <span style={{ width: "16px", height: "16px" }}>
                       <FontAwesomeIcon
                         icon={faPenToSquare}
@@ -418,6 +418,9 @@ export default function BookList({
                             : "#b6b6b6"
                         }
                         size="xs"
+                        fade={
+                          book.id === mainListAccordionActive ? true : false
+                        }
                       />
                     </span>
                   </Accordion.Header>
@@ -431,7 +434,12 @@ export default function BookList({
                       componentsTextData={componentsTextData}
                     />
                   </Accordion.Body>
-                  <Accordion defaultActiveKey="">
+                  <Accordion
+                    onSelect={(e) => {
+                      setMainListAccordionActive(e);
+                    }}
+                    defaultActiveKey={mainListAccordionActive}
+                  >
                     {book.comments?.map((comment) => {
                       return (
                         <Accordion.Item
@@ -459,8 +467,24 @@ export default function BookList({
                                   ? comment.transType
                                   : l(comment.type)}
                               </span>{" "}
-                              <span style={{ color: "#6b6b6b" }}>
+                              <span style={{ color: "#6b6b6b", paddingRight: "5px" }}>
                                 {comment.text}
+                              </span>
+                              <span style={{ width: "16px", height: "16px" }}>
+                                <FontAwesomeIcon
+                                  icon={faPenToSquare}
+                                  color={
+                                    `${book.id}.${comment.id}` === mainListAccordionActive
+                                      ? "#c783ff"
+                                      : "#b6b6b6"
+                                  }
+                                  size="2xs"
+                                  fade={
+                                    `${book.id}.${comment.id}` === mainListAccordionActive
+                                      ? true
+                                      : false
+                                  }
+                                />
                               </span>
                             </div>
                           </Accordion.Header>
