@@ -35,50 +35,51 @@ const BookStoryPage = async () => {
         3
       );
       const serverBookData: BookType[] = [];
-
-      await (() => {
-        return new Promise((resolve) => {
-          books.dataList.map(async (book) => {
-            const fullPath = `${getUserPath()}/${token.uid}/books/${
-              book.id
-            }/comments`;
-            const comments = await queryDataFromServer(
-              [],
-              fullPath,
-              "timestamp",
-              "desc",
-              3
-            );
-            const commentList: CommentType[] = [];
-            comments.dataList.map((comment) => {
-              commentList.push({
-                id: comment.id,
-                text: comment.text,
-                type: comment.type,
-                transType: l(comment.type),
-                timestamp: comment.timestamp.toMillis(),
+      if(books.dataList.length > 0) {
+        await (() => {
+          return new Promise((resolve) => {
+            books.dataList.map(async (book) => {
+              const fullPath = `${getUserPath()}/${token.uid}/books/${
+                book.id
+              }/comments`;
+              const comments = await queryDataFromServer(
+                [],
+                fullPath,
+                "timestamp",
+                "desc",
+                3
+              );
+              const commentList: CommentType[] = [];
+              comments.dataList.map((comment) => {
+                commentList.push({
+                  id: comment.id,
+                  text: comment.text,
+                  type: comment.type,
+                  transType: l(comment.type),
+                  timestamp: comment.timestamp.toMillis(),
+                });
               });
-            });
-            commentList.sort((a, b) => {
-              return (b.timestamp || 0) - (a.timestamp || 0);
-            });
-            serverBookData.push({
-              id: book.id,
-              title: book.title,
-              author: book.author,
-              timestamp: book.timestamp.toMillis(),
-              comments: commentList,
-              commentLastVisible: comments.lastVisible,
-            });
-            if (books.dataList.length === serverBookData.length) {
-              serverBookData.sort((a, b) => {
+              commentList.sort((a, b) => {
                 return (b.timestamp || 0) - (a.timestamp || 0);
               });
-              resolve(true);
-            }
+              serverBookData.push({
+                id: book.id,
+                title: book.title,
+                author: book.author,
+                timestamp: book.timestamp.toMillis(),
+                comments: commentList,
+                commentLastVisible: comments.lastVisible,
+              });
+              if (books.dataList.length === serverBookData.length) {
+                serverBookData.sort((a, b) => {
+                  return (b.timestamp || 0) - (a.timestamp || 0);
+                });
+                resolve(true);
+              }
+            });
           });
-        });
-      })();
+        })();
+      }
 
       return (
         <BookStory

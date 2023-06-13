@@ -517,7 +517,7 @@ export default function BookList({
           </Accordion>
         </DefaultCol>
       </Row>
-      {nextLastVisible && !noMoreBookData ? (
+      {serverBookData.length > 0 ? (nextLastVisible && !noMoreBookData ? (
         <Row>
           <CenterCol>
             {bookList.length > 0 && (bookIsLoading || bookIsFetching) ? (
@@ -549,7 +549,13 @@ export default function BookList({
             </CenterCol>
           </Row>
         )
-      )}
+      )) :           <Row>
+      <CenterCol>
+        <CustomButton align="center" color="#999999">
+          <div>{l("No content viewed")}</div>
+        </CustomButton>
+      </CenterCol>
+    </Row>}
     </>
   );
 }
