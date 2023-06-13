@@ -81,6 +81,7 @@ export const CustomInput = forwardRef(
         {clearButton && text && (
           <ClearButton
             type="button"
+            tabIndex={-1}
             onClick={() => {
               setText("");
               if (inputRef) {
