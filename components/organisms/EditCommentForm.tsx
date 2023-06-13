@@ -2,7 +2,7 @@ import { deleteData, getUserPath, updateData } from "@/services/firebase/db";
 import { bookListState, showModalState, userInfoState } from "@/states/states";
 import { BookType, CommentType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
-import { Form, Row } from "react-bootstrap";
+import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
@@ -14,7 +14,7 @@ import {
   onFocusHandler,
 } from "@/services/util/util";
 import { CustomButton } from "../atoms/CustomButton";
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { CustomInput } from "../atoms/CustomInput";
 
 interface EditCommentFormProps {
@@ -35,6 +35,8 @@ export default function EditCommentForm({
   const [commentType, setCommentType] = useState(comment.type);
   const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const closeAccordion = useAccordionButton(`${book.id}.${comment.id}` || "");
+  const closeAccordionButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setValue("text", comment.text);
@@ -84,6 +86,7 @@ export default function EditCommentForm({
         }
         setBookList(tempBookList);
         setIsSubmitting(false);
+        closeAccordionButtonRef.current?.click();
       }
     },
     onError(error) {
@@ -290,6 +293,16 @@ export default function EditCommentForm({
           </div>
         </DefaultCol>
       </Row>
+      <div className="hidden-button">
+        <Button
+          ref={closeAccordionButtonRef}
+          onClick={(e: SyntheticEvent<HTMLButtonElement, Event>) => {
+            closeAccordion(e);
+          }}
+        >
+          close accordion hidden button
+        </Button>
+      </div>
     </Form>
   );
 }

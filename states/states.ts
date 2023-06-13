@@ -48,6 +48,12 @@ export const mainListAccordionActiveState = atom<AccordionEventKey | null>({
   default: "",
 });
 
+// 선택된 sub list accordion 키 값
+export const subListAccordionActiveState = atom<Record<string, AccordionEventKey>>({
+  key: "subListAccordionActiveState",
+  default: {},
+});
+
 // 선택한 언어
 export const selectedLanguageState = atom<string | null>({
   key: "selectedLanguageState",

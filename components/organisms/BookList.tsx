@@ -12,6 +12,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   bookListState,
   mainListAccordionActiveState,
+  subListAccordionActiveState,
   userInfoState,
 } from "@/states/states";
 import { useEffect, useRef, useState } from "react";
@@ -38,6 +39,9 @@ export default function BookList({
 }: BookListProps) {
   const [mainListAccordionActive, setMainListAccordionActive] = useRecoilState(
     mainListAccordionActiveState
+  );
+  const [subListAccordionActive, setSubListAccordionActive] = useRecoilState(
+    subListAccordionActiveState
   );
   const [fold, setFold] = useState(false);
   const [firstLoading, setFirstLoading] = useState(true);
@@ -448,7 +452,9 @@ export default function BookList({
                   </Accordion.Body>
                   <Accordion
                     onSelect={(e) => {
-                      setMainListAccordionActive(e);
+                      const tempAccordionActive = {...subListAccordionActive};
+                      tempAccordionActive[book.id] = e;
+                      setSubListAccordionActive(tempAccordionActive);
                     }}
                     defaultActiveKey={mainListAccordionActive}
                   >
@@ -498,14 +504,14 @@ export default function BookList({
                                   icon={faPenToSquare}
                                   color={
                                     `${book.id}.${comment.id}` ===
-                                    mainListAccordionActive
+                                    subListAccordionActive[book.id]
                                       ? "#c783ff"
                                       : "#b6b6b6"
                                   }
                                   size="2xs"
                                   fade={
                                     `${book.id}.${comment.id}` ===
-                                    mainListAccordionActive
+                                    subListAccordionActive[book.id]
                                       ? true
                                       : false
                                   }
