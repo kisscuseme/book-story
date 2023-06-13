@@ -112,7 +112,7 @@ export default function EditCommentForm({
   // 데이터 삭제 시 react query 활용
   const deleteCommentMutation = useMutation(deleteData, {
     onSuccess(data) {
-      if(data) {
+      if (data) {
         // 데이터 삭제 후 참조 오브젝트에서 제거하기 위한 로직 (db를 재 조회하지 않음)
         const bookId = data.path.split("/")[5];
         const tempBookList = [];
@@ -151,7 +151,7 @@ export default function EditCommentForm({
     const path = `${getUserPath()}/${userInfo?.uid}/books/${bookId}/comments`;
     deleteCommentMutation.mutate({
       path: path,
-      docId: commentId
+      docId: commentId,
     });
   };
 
@@ -208,12 +208,18 @@ export default function EditCommentForm({
             ]}
           />
         </DefaultCol>
-        <DefaultCol style={{ minWidth: "45%", paddingLeft: "0px", paddingRight: "5px" }}>
+        <DefaultCol
+          style={{ minWidth: "45%", paddingLeft: "0px", paddingRight: "5px" }}
+        >
           <ClearInput
             {...register("text", {
               required: {
                 value: true,
                 message: l("Enter your content."),
+              },
+              validate: (value) => {
+                if (value !== comment.text) return true;
+                else return l("The content is the same.");
               },
             })}
             style={{ fontSize: "14px" }}
@@ -267,10 +273,10 @@ export default function EditCommentForm({
                     },
                   });
                 },
-              })
+              });
             }}
           >
-            {firstLoading ? componentsTextData.editButton : l("delete")}
+            {firstLoading ? componentsTextData.editButton : l("Delete")}
           </CustomButton>
         </DefaultCol>
       </Row>
@@ -279,7 +285,8 @@ export default function EditCommentForm({
           <div
             style={{ color: "hotpink", paddingTop: "5px", fontSize: "14px" }}
           >
-            {getErrorMsg(formState.errors, "text", "required")}
+            {getErrorMsg(formState.errors, "text", "required") ||
+              getErrorMsg(formState.errors, "text", "validate")}
           </div>
         </DefaultCol>
       </Row>

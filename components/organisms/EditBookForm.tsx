@@ -25,7 +25,7 @@ export default function EditBookForm({
   book,
   componentsTextData,
 }: EditBookFormProps) {
-  const { register, handleSubmit, setValue, formState } = useForm();
+  const { register, handleSubmit, setValue, formState, getValues } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
   const userInfo = useRecoilValue(userInfoState);
@@ -91,7 +91,7 @@ export default function EditBookForm({
   // 데이터 삭제 시 react query 활용
   const deleteBookMutation = useMutation(deleteData, {
     onSuccess(data) {
-      if(data) {
+      if (data) {
         // 데이터 삭제 후 참조 오브젝트에서 제거하기 위한 로직 (db를 재 조회하지 않음)
         const tempBookList = [];
         for (const book of bookList) {
@@ -122,11 +122,13 @@ export default function EditBookForm({
 
   const deleteBookHandler = (bookId: string) => {
     const path = `${getUserPath()}/${userInfo?.uid}/books`;
-    const confirmPath = `${getUserPath()}/${userInfo?.uid}/books/${bookId}/comments`;
+    const confirmPath = `${getUserPath()}/${
+      userInfo?.uid
+    }/books/${bookId}/comments`;
     deleteBookMutation.mutate({
       path: path,
       docId: bookId,
-      confirmPath: confirmPath
+      confirmPath: confirmPath,
     });
   };
 
@@ -149,6 +151,11 @@ export default function EditBookForm({
               required: {
                 value: true,
                 message: l("Please enter the title of the book."),
+              },
+              validate: (value) => {
+                const author = getValues()["author"];
+                if (value !== book.title || author !== book.author) return true;
+                else return l("Everything is the same.");
               },
             })}
             placeholder={book.title}
@@ -208,14 +215,15 @@ export default function EditBookForm({
               });
             }}
           >
-            {firstLoading ? componentsTextData.editButton : l("delete")}
+            {firstLoading ? componentsTextData.editButton : l("Delete")}
           </CustomButton>
         </DefaultCol>
       </Row>
       <Row>
         <DefaultCol>
           <div style={{ color: "hotpink", paddingTop: "5px" }}>
-            {getErrorMsg(formState.errors, "title", "required")}
+            {getErrorMsg(formState.errors, "title", "required") ||
+              getErrorMsg(formState.errors, "title", "validate")}
           </div>
         </DefaultCol>
       </Row>
