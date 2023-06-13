@@ -14,7 +14,7 @@ import {
 } from "@/services/util/util";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
-import { ClearInput } from "../atoms/CustomInput";
+import { CustomInput } from "../atoms/CustomInput";
 
 interface EditBookFormProps {
   book: BookType;
@@ -146,7 +146,7 @@ export default function EditBookForm({
     >
       <Row style={{ paddingLeft: "20px", marginLeft: "0px" }}>
         <DefaultCol style={{ minWidth: "30%", paddingLeft: "0px" }}>
-          <ClearInput
+          <CustomInput
             {...register("title", {
               required: {
                 value: true,
@@ -161,18 +161,18 @@ export default function EditBookForm({
             placeholder={book.title}
             onFocus={onFocusHandler}
             onKeyUp={enterKeyUpEventHandler}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
         <DefaultCol
           style={{ maxWidth: "25%", paddingLeft: "0px", paddingRight: "5px" }}
         >
-          <ClearInput
+          <CustomInput
             {...register("author")}
             placeholder={book.author}
             onFocus={onFocusHandler}
             onKeyUp={enterKeyUpEventHandler}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
         <DefaultCol

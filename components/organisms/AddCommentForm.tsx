@@ -10,7 +10,7 @@ import { CustomDropdown } from "../atoms/CustomDropdown";
 import { enterKeyUpEventHandler, getErrorMsg, l } from "@/services/util/util";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
-import { ClearInput } from "../atoms/CustomInput";
+import { CustomInput } from "../atoms/CustomInput";
 
 interface AddCommentFormProps {
   book: BookType;
@@ -140,7 +140,7 @@ export default function AddCommentForm({
           />
         </DefaultCol>
         <DefaultCol style={{ minWidth: "58%", paddingLeft: "5px" }}>
-          <ClearInput
+          <CustomInput
             {...register("text", {
               required: {
                 value: true,
@@ -153,7 +153,7 @@ export default function AddCommentForm({
                 : l("Enter your content.")
             }
             onKeyUp={enterKeyUpEventHandler}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "20%", paddingLeft: "0px" }}>

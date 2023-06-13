@@ -40,22 +40,22 @@ const CustomFormControl = styled(FormControl)`
  * forwardRef 옵트인기능 활용
  * 참고: https://ko.legacy.reactjs.org/docs/forwarding-refs.html
  */
-interface ClearInputOwnProps {
+interface CustomInputOwnProps {
   onChange: ChangeHandler;
-  clearValue?: UseFormSetValue<FieldValues>;
+  clearButton?: UseFormSetValue<FieldValues> | boolean;
 }
 
-type ClearInputProps = ClearInputOwnProps & FormControlProps;
+type CustomInputProps = CustomInputOwnProps & FormControlProps;
 
-export const ClearInput = forwardRef(
+export const CustomInput = forwardRef(
   (
-    { onChange, clearValue, ...props }: ClearInputProps,
+    { onChange, clearButton, ...props }: CustomInputProps,
     ref: React.ForwardedRef<HTMLInputElement>
   ) => {
     const [text, setText] = useState("");
     const wrapperStyle = {
       borderBottom: "1px solid #000000",
-      paddingRight: `${clearValue ? "25px" : "0"}`,
+      paddingRight: `${clearButton ? "25px" : "0"}`,
     };
     let inputRef: HTMLInputElement | null = null;
 
@@ -78,14 +78,15 @@ export const ClearInput = forwardRef(
           onChange={onChangeHandler}
           {...props}
         />
-        {clearValue && text && (
+        {clearButton && text && (
           <ClearButton
             type="button"
             onClick={() => {
               setText("");
               if (inputRef) {
                 inputRef.value = "";
-                clearValue(inputRef.name, "");
+                // react hook form을 사용할 경우 setValue 함수를 참조하여 값 초기화에 사용
+                if(typeof clearButton === "function") clearButton(inputRef.name, "");
               }
             }}
           >
@@ -96,4 +97,4 @@ export const ClearInput = forwardRef(
     );
   }
 );
-ClearInput.displayName = "ClearInput";
+CustomInput.displayName = "CustomInput";

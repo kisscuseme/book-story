@@ -15,7 +15,7 @@ import {
 } from "@/services/util/util";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
-import { ClearInput } from "../atoms/CustomInput";
+import { CustomInput } from "../atoms/CustomInput";
 
 interface EditCommentFormProps {
   book: BookType;
@@ -211,7 +211,7 @@ export default function EditCommentForm({
         <DefaultCol
           style={{ minWidth: "45%", paddingLeft: "0px", paddingRight: "5px" }}
         >
-          <ClearInput
+          <CustomInput
             {...register("text", {
               required: {
                 value: true,
@@ -226,7 +226,7 @@ export default function EditCommentForm({
             placeholder={comment.text}
             onFocus={onFocusHandler}
             onKeyUp={enterKeyUpEventHandler}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
         <DefaultCol

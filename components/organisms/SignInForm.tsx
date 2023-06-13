@@ -22,7 +22,7 @@ import { CenterCol } from "../atoms/CustomAtoms";
 import TranslationFromClient from "./TranslationFromClient";
 import { CustomButton } from "../atoms/CustomButton";
 import { styled } from "styled-components";
-import { ClearInput } from "../atoms/CustomInput";
+import { CustomInput } from "../atoms/CustomInput";
 
 // sign in form props
 export interface SignInFormProps {
@@ -225,7 +225,7 @@ export const SignInForm = ({
       <TranslationFromClient />
       <DefaultRow>
         <DefaultCol>
-          <ClearInput
+          <CustomInput
             {...register("email", {
               required: {
                 value: true,
@@ -241,13 +241,13 @@ export const SignInForm = ({
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>
         <DefaultCol>
-          <ClearInput
+          <CustomInput
             {...register("password", {
               required: {
                 value: true,
@@ -263,7 +263,7 @@ export const SignInForm = ({
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
       </DefaultRow>

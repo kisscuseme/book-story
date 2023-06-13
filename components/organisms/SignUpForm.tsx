@@ -17,7 +17,7 @@ import { DefaultCol, DefaultRow } from "../atoms/DefaultAtoms";
 import { CenterCol } from "../atoms/CustomAtoms";
 import TranslationFromClient from "./TranslationFromClient";
 import { CustomButton } from "../atoms/CustomButton";
-import { ClearInput } from "../atoms/CustomInput";
+import { CustomInput } from "../atoms/CustomInput";
 
 // sign up form props
 export interface SignUpFormProps {
@@ -124,7 +124,7 @@ export default function SignUpForm({
       <TranslationFromClient />
       <DefaultRow>
         <DefaultCol>
-          <ClearInput
+          <CustomInput
             {...register("email", {
               required: {
                 value: true,
@@ -140,13 +140,13 @@ export default function SignUpForm({
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>
         <DefaultCol>
-          <ClearInput
+          <CustomInput
             {...register("name", {
               required: {
                 value: true,
@@ -158,13 +158,13 @@ export default function SignUpForm({
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>
         <DefaultCol>
-          <ClearInput
+          <CustomInput
             {...register("password", {
               required: {
                 value: true,
@@ -180,13 +180,13 @@ export default function SignUpForm({
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
       </DefaultRow>
       <DefaultRow>
         <DefaultCol>
-          <ClearInput
+          <CustomInput
             {...register("reconfirmPassword", {
               required: {
                 value: true,
@@ -208,7 +208,7 @@ export default function SignUpForm({
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
       </DefaultRow>

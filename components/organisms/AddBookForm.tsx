@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { enterKeyUpEventHandler, getErrorMsg, l } from "@/services/util/util";
-import { ClearInput } from "../atoms/CustomInput";
+import { CustomInput } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
 
@@ -81,7 +81,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
     >
       <Row>
         <DefaultCol style={{ minWidth: "45%" }}>
-          <ClearInput
+          <CustomInput
             {...register("title", {
               required: {
                 value: true,
@@ -94,11 +94,11 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
                 : l("Book Title")
             }
             onKeyUp={enterKeyUpEventHandler}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
         <DefaultCol style={{ minWidth: "35%" }}>
-          <ClearInput
+          <CustomInput
             {...register("author")}
             placeholder={
               firstLoading
@@ -106,7 +106,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
                 : l("Book author")
             }
             onKeyUp={enterKeyUpEventHandler}
-            clearValue={setValue}
+            clearButton={setValue}
           />
         </DefaultCol>
         <DefaultCol style={{ paddingLeft: "0px" }}>
