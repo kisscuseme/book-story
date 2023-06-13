@@ -53,30 +53,28 @@ const getLastVisible = async (path: string, docId: string) => {
 const queryData = async (
   whereConfig: WhereConfigType[],
   path: string,
-  lastVisible:
+  limitNumber: number = defaultLimitNumber,
+  lastVisible?:
     | QueryDocumentSnapshot<DocumentData>
     | DocumentSnapshot<DocumentData>
     | string
     | null,
-  orderByField: string,
-  orderByDirection: OrderByDirection,
-  limitNumber: number = defaultLimitNumber
+  orderByField?: string,
+  orderByDirection?: OrderByDirection
 ) => {
-  const currentQuery =
-    lastVisible !== null
-      ? query(
-          collection(firebaseDb, path),
-          makeRangeQuery(whereConfig),
-          orderBy(orderByField, orderByDirection),
-          startAfter(lastVisible),
-          limit(limitNumber)
-        )
-      : query(
-          collection(firebaseDb, path),
-          makeRangeQuery(whereConfig),
-          orderBy(orderByField, orderByDirection),
-          limit(limitNumber)
-        );
+  const queryConstraint = [];
+  if (orderByField) {
+    queryConstraint.push(orderBy(orderByField, orderByDirection));
+  }
+  if (lastVisible) {
+    queryConstraint.push(startAfter(lastVisible));
+  }
+  queryConstraint.push(limit(limitNumber));
+  const currentQuery = query(
+    collection(firebaseDb, path),
+    makeRangeQuery(whereConfig),
+    ...queryConstraint
+  );
   const documentSnapshots = await getDocs(currentQuery);
   const dataList: DocumentData[] = [];
   documentSnapshots.forEach((doc) => {
@@ -131,10 +129,10 @@ const insertData = async (insertInfo: {
   path: string;
   data: WithFieldValue<DocumentData>;
 }) => {
-  try{
+  try {
     // Get a new write batch
     const batch = writeBatch(firebaseDb);
-  
+
     const docRef = doc(collection(firebaseDb, insertInfo.path));
     const dataRef = doc(firebaseDb, insertInfo.path, docRef.id);
     const data = {
@@ -142,10 +140,10 @@ const insertData = async (insertInfo: {
       ...insertInfo.data,
     };
     batch.set(dataRef, data);
-  
+
     // Commit the batch
     await batch.commit();
-  
+
     return { docId: docRef.id, ...insertInfo };
   } catch (e) {
     console.log("Transaction failed: ", e);
@@ -154,14 +152,25 @@ const insertData = async (insertInfo: {
 };
 
 // firebase 데이터 삭제
-const deleteData = async (deleteInfo: { path: string; docId: string }) => {
+const deleteData = async (deleteInfo: {
+  path: string;
+  docId: string;
+  confirmPath?: string;
+}) => {
   try {
     // Get a new write batch
     const batch = writeBatch(firebaseDb);
-  
-    const scheduleRef = doc(firebaseDb, deleteInfo.path, deleteInfo.docId);
-    batch.delete(scheduleRef);
-  
+
+    const dataRef = doc(firebaseDb, deleteInfo.path, deleteInfo.docId);
+    batch.delete(dataRef);
+
+    if (deleteInfo.confirmPath) {
+      const confirmData = await queryData([], deleteInfo.confirmPath, 1);
+      if(confirmData.dataList.length > 0) {
+        batch.set(dataRef, { status: "deleted" });
+      }
+    }
+
     // Commit the batch
     await batch.commit();
 

@@ -60,13 +60,13 @@ export const ClearInput = forwardRef(
     let inputRef: HTMLInputElement | null = null;
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-      setText(e.currentTarget.value);
       onChange(e);
+      setText(e.currentTarget.value);
     };
 
     const refHandler = (target: HTMLInputElement) => {
-      if (!inputRef) inputRef = target;
       if (typeof ref === "function") ref(target);
+      if (!inputRef) inputRef = target;
       if (target && target.value === "" && text !== "") setText("");
       if (target && target.value !== "" && text === "") setText(target.value);
     };
@@ -89,7 +89,7 @@ export const ClearInput = forwardRef(
               }
             }}
           >
-            X
+            x
           </ClearButton>
         )}
       </div>

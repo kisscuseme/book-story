@@ -1,9 +1,5 @@
 import { getUserPath, insertData } from "@/services/firebase/db";
-import {
-  bookListState,
-  showModalState,
-  userInfoState,
-} from "@/states/states";
+import { bookListState, showModalState, userInfoState } from "@/states/states";
 import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Row } from "react-bootstrap";
@@ -113,7 +109,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             clearValue={setValue}
           />
         </DefaultCol>
-        <DefaultCol>
+        <DefaultCol style={{ paddingLeft: "0px" }}>
           <CustomButton
             backgroundColor="#5b5b5b"
             color="#ffffff"

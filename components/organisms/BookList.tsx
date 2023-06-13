@@ -116,10 +116,10 @@ export default function BookList({
         const bookData = await queryData(
           [],
           bookPath,
+          1,
           lastVisible,
           "timestamp",
-          "desc",
-          3
+          "desc"
         );
         const tempBookList: DocumentData[] = [];
         const tempNextCommentLastVisible = { ...nextCommentLastVisible };
@@ -139,10 +139,10 @@ export default function BookList({
           const commentData = await queryData(
             [],
             commentPath,
+            3,
             commentLastVisible[book.id] || null,
             "timestamp",
-            "desc",
-            3
+            "desc"
           );
           if (commentData) {
             tempBook.comments = commentData.dataList as CommentType[];
@@ -228,10 +228,10 @@ export default function BookList({
         return queryData(
           [],
           path,
+          3,
           commentLastVisible[targetLoadingComment || ""],
           "timestamp",
-          "desc",
-          3
+          "desc"
         );
       } else {
         return false;
@@ -476,86 +476,89 @@ export default function BookList({
                     })}
                   </Accordion>
                   {nextCommentLastVisible[book.id] &&
-                    !noMoreCommentsData[book.id] ? (
+                  !noMoreCommentsData[book.id] ? (
+                    <Row style={{ paddingLeft: "30px" }}>
+                      <CenterCol>
+                        {(book.comments || []).length > 0 &&
+                        (commentIsLoading || commentIsFetching) &&
+                        targetLoadingComment === book.id ? (
+                          <CustomButton align="left" color="#b5b5b5">
+                            <CustomSpinner animation="border" size="sm" />
+                          </CustomButton>
+                        ) : (
+                          <CustomButton
+                            align="left"
+                            type="button"
+                            size="sm"
+                            color="#b5b5b5"
+                            onClick={() => {
+                              setTargetLoadingComment(book.id);
+                            }}
+                          >
+                            {l("Load More")}
+                          </CustomButton>
+                        )}
+                      </CenterCol>
+                    </Row>
+                  ) : (
+                    book.commentLastVisible &&
+                    !commentLastVisible[book.id] && (
                       <Row style={{ paddingLeft: "30px" }}>
                         <CenterCol>
-                          {(book.comments || []).length > 0 &&
-                          (commentIsLoading || commentIsFetching) &&
-                          targetLoadingComment === book.id ? (
-                            <CustomButton align="left" color="#b5b5b5">
-                              <CustomSpinner animation="border" size="sm" />
-                            </CustomButton>
-                          ) : (
-                            <CustomButton
-                              align="left"
-                              type="button"
-                              size="sm"
-                              color="#b5b5b5"
-                              onClick={() => {
-                                setTargetLoadingComment(book.id);
-                              }}
-                            >
-                              {l("Load More")}
-                            </CustomButton>
-                          )}
+                          <CustomButton align="left" color="#b5b5b5">
+                            <CustomSpinner animation="border" size="sm" />
+                          </CustomButton>
                         </CenterCol>
                       </Row>
-                    ) : (
-                      (book.commentLastVisible && !commentLastVisible[book.id]) && (
-                        <Row style={{ paddingLeft: "30px" }}>
-                          <CenterCol>
-                            <CustomButton align="left" color="#b5b5b5">
-                              <CustomSpinner animation="border" size="sm" />
-                            </CustomButton>
-                          </CenterCol>
-                        </Row>
-                      )
-                    )}
+                    )
+                  )}
                 </Accordion.Item>
               );
             })}
           </Accordion>
         </DefaultCol>
       </Row>
-      {serverBookData.length > 0 ? (nextLastVisible && !noMoreBookData ? (
-        <Row>
-          <CenterCol>
-            {bookList.length > 0 && (bookIsLoading || bookIsFetching) ? (
-              <CustomButton align="center" color="#999999">
-                <CustomSpinner animation="border" />
-              </CustomButton>
-            ) : (
-              <CustomButton
-                align="center"
-                type="button"
-                color="#999999"
-                ref={bookLoadMoreButtonRef}
-                onClick={() => {
-                  setLastVisible(nextLastVisible);
-                }}
-              >
-                {l("Load More")}
-              </CustomButton>
-            )}
-          </CenterCol>
-        </Row>
-      ) : (
-        !lastVisible && (
+      {serverBookData.length > 0 ? (
+        nextLastVisible && !noMoreBookData ? (
           <Row>
             <CenterCol>
-              <CustomButton align="center" color="#999999">
-                <CustomSpinner animation="border" />
-              </CustomButton>
+              {bookList.length > 0 && (bookIsLoading || bookIsFetching) ? (
+                <CustomButton align="center" color="#999999">
+                  <CustomSpinner animation="border" />
+                </CustomButton>
+              ) : (
+                <CustomButton
+                  align="center"
+                  type="button"
+                  color="#999999"
+                  ref={bookLoadMoreButtonRef}
+                  onClick={() => {
+                    setLastVisible(nextLastVisible);
+                  }}
+                >
+                  {l("Load More")}
+                </CustomButton>
+              )}
             </CenterCol>
           </Row>
+        ) : (
+          !lastVisible && (
+            <Row>
+              <CenterCol>
+                <CustomButton align="center" color="#999999">
+                  <CustomSpinner animation="border" />
+                </CustomButton>
+              </CenterCol>
+            </Row>
+          )
         )
-      )) :           <Row>
-      <CenterCol>
-        <CustomButton align="center" color="#999999">
-          <div>{l("No content viewed")}</div>
-        </CustomButton>
-      </CenterCol>
-    </Row>}
+      ) : (
+        <Row>
+          <CenterCol>
+            <div style={{ color: "#777777" }}>{l("No content viewed.")}</div>
+          </CenterCol>
+        </Row>
+      )}
     </>
   );
 }

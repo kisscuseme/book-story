@@ -1,9 +1,5 @@
-import { getUserPath, updateData } from "@/services/firebase/db";
-import {
-  bookListState,
-  showModalState,
-  userInfoState,
-} from "@/states/states";
+import { deleteData, getUserPath, updateData } from "@/services/firebase/db";
+import { bookListState, showModalState, userInfoState } from "@/states/states";
 import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Row } from "react-bootstrap";
@@ -92,6 +88,48 @@ export default function EditBookForm({
     });
   };
 
+  // 데이터 삭제 시 react query 활용
+  const deleteBookMutation = useMutation(deleteData, {
+    onSuccess(data) {
+      if(data) {
+        // 데이터 삭제 후 참조 오브젝트에서 제거하기 위한 로직 (db를 재 조회하지 않음)
+        const tempBookList = [];
+        for (const book of bookList) {
+          tempBookList.push({
+            id: book.id,
+            title: book.title,
+            author: book.author,
+            timestamp: book.timestamp,
+            commentLastVisible: book.commentLastVisible,
+            comments: [...(book.comments || [])],
+          });
+        }
+        tempBookList.sort((a, b) => {
+          if (a === null || b === null) return 0;
+          else {
+            let numA = Number(a.timestamp);
+            let numB = Number(b.timestamp);
+            if (b.id === data.docId) return -1;
+            else return numB - numA;
+          }
+        });
+        tempBookList.pop();
+        setBookList(tempBookList);
+        setIsSubmitting(false);
+      }
+    },
+  });
+
+  const deleteBookHandler = (bookId: string) => {
+    const path = `${getUserPath()}/${userInfo?.uid}/books`;
+    const confirmPath = `${getUserPath()}/${userInfo?.uid}/books/${bookId}/comments`;
+    deleteBookMutation.mutate({
+      path: path,
+      docId: bookId,
+      confirmPath: confirmPath
+    });
+  };
+
   return (
     <Form
       onSubmit={handleSubmit((data) => {
@@ -104,8 +142,8 @@ export default function EditBookForm({
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingLeft: "10px" }}>
-        <DefaultCol style={{ maxWidth: "45%" }}>
+      <Row style={{ paddingLeft: "20px", marginLeft: "0px" }}>
+        <DefaultCol style={{ minWidth: "30%", paddingLeft: "0px" }}>
           <ClearInput
             {...register("title", {
               required: {
@@ -119,7 +157,9 @@ export default function EditBookForm({
             clearValue={setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ minWidth: "35%" }}>
+        <DefaultCol
+          style={{ maxWidth: "25%", paddingLeft: "0px", paddingRight: "5px" }}
+        >
           <ClearInput
             {...register("author")}
             placeholder={book.author}
@@ -128,10 +168,17 @@ export default function EditBookForm({
             clearValue={setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: "20%" }}>
+        <DefaultCol
+          style={{
+            maxWidth: "40%",
+            display: "flex",
+            justifyContent: "space-evenly",
+            paddingLeft: "0px",
+          }}
+        >
           <CustomButton
-            backgroundColor="#ffd1d1"
-            color="#ff6f6f"
+            backgroundColor="#d1d1d1"
+            color="#767676"
             size="sm"
             align="left"
             type="button"
@@ -140,6 +187,28 @@ export default function EditBookForm({
             }}
           >
             {firstLoading ? componentsTextData.editButton : l("Edit")}
+          </CustomButton>
+          <CustomButton
+            backgroundColor="#ffd1d1"
+            color="#ff6f6f"
+            size="sm"
+            align="left"
+            type="button"
+            onClick={(e) => {
+              setShowModal({
+                show: true,
+                title: l("check"),
+                content: l("Are you sure you want to delete?"),
+                confirm: () => {
+                  if (!isSubmitting) {
+                    setIsSubmitting(true);
+                    deleteBookHandler(book.id);
+                  }
+                },
+              });
+            }}
+          >
+            {firstLoading ? componentsTextData.editButton : l("delete")}
           </CustomButton>
         </DefaultCol>
       </Row>

@@ -1,9 +1,5 @@
 import { getUserPath, insertData } from "@/services/firebase/db";
-import {
-  bookListState,
-  showModalState,
-  userInfoState,
-} from "@/states/states";
+import { bookListState, showModalState, userInfoState } from "@/states/states";
 import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Row } from "react-bootstrap";
@@ -111,7 +107,7 @@ export default function AddCommentForm({
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingLeft: "10px" }}>
+      <Row style={{ paddingLeft: "10px", marginLeft: "0px" }}>
         <DefaultCol style={{ maxWidth: "22%" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
@@ -143,7 +139,7 @@ export default function AddCommentForm({
             ]}
           />
         </DefaultCol>
-        <DefaultCol style={{ minWidth: "58%" }}>
+        <DefaultCol style={{ minWidth: "58%", paddingLeft: "5px" }}>
           <ClearInput
             {...register("text", {
               required: {
@@ -160,7 +156,7 @@ export default function AddCommentForm({
             clearValue={setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: "20%" }}>
+        <DefaultCol style={{ maxWidth: "20%", paddingLeft: "0px" }}>
           <CustomButton
             backgroundColor="#5b5b5b"
             color="#ffffff"
