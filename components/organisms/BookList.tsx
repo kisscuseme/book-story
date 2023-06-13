@@ -391,7 +391,13 @@ export default function BookList({
                   style={{ paddingBottom: "10px" }}
                 >
                   <Accordion.Header>
-                    <span style={{ width: "16px", height: "16px" }}>
+                    <span
+                      style={{
+                        width: "16px",
+                        height: "16px",
+                        display: "inline-flex",
+                      }}
+                    >
                       <FontAwesomeIcon
                         icon={faBook}
                         color="#d1d1d1"
@@ -409,7 +415,13 @@ export default function BookList({
                         </>
                       )}
                     </span>
-                    <span style={{ width: "16px", height: "16px" }}>
+                    <span
+                      style={{
+                        width: "12px",
+                        height: "12px",
+                        display: "inline-flex",
+                      }}
+                    >
                       <FontAwesomeIcon
                         icon={faPenToSquare}
                         color={
@@ -467,20 +479,33 @@ export default function BookList({
                                   ? comment.transType
                                   : l(comment.type)}
                               </span>{" "}
-                              <span style={{ color: "#6b6b6b", paddingRight: "5px" }}>
+                              <span
+                                style={{
+                                  color: "#6b6b6b",
+                                  paddingRight: "5px",
+                                }}
+                              >
                                 {comment.text}
                               </span>
-                              <span style={{ width: "16px", height: "16px" }}>
+                              <span
+                                style={{
+                                  width: "9px",
+                                  height: "9px",
+                                  display: "inline-flex",
+                                }}
+                              >
                                 <FontAwesomeIcon
                                   icon={faPenToSquare}
                                   color={
-                                    `${book.id}.${comment.id}` === mainListAccordionActive
+                                    `${book.id}.${comment.id}` ===
+                                    mainListAccordionActive
                                       ? "#c783ff"
                                       : "#b6b6b6"
                                   }
                                   size="2xs"
                                   fade={
-                                    `${book.id}.${comment.id}` === mainListAccordionActive
+                                    `${book.id}.${comment.id}` ===
+                                    mainListAccordionActive
                                       ? true
                                       : false
                                   }
