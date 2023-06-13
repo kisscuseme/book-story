@@ -218,7 +218,7 @@ export default function EditCommentForm({
                 message: l("Enter your content."),
               },
               validate: (value) => {
-                if (value !== comment.text) return true;
+                if (value !== comment.text || commentType !== comment.type) return true;
                 else return l("The content is the same.");
               },
             })}
