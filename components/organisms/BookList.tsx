@@ -97,20 +97,28 @@ export default function BookList({
           setNextLastVisible(data);
         });
       }
-      bookList.map((book) => {
-        if (book.commentLastVisible?.constructor === String) {
-          const path = `${getUserPath()}/${userInfo?.uid}/books/${
-            book.id
-          }/comments`;
-          getLastVisible(path, book.commentLastVisible).then((data) => {
-            const tempCommentLastVisible = {
-              ...nextCommentLastVisible,
-            };
-            tempCommentLastVisible[book.id] = data;
+      if (bookList.length > 0) {
+        const tempCommentLastVisible = {
+          ...nextCommentLastVisible,
+        };
+        let count = 0;
+        bookList.map(async (book) => {
+          if (book.commentLastVisible?.constructor === String) {
+            const path = `${getUserPath()}/${userInfo?.uid}/books/${
+              book.id
+            }/comments`;
+            const lastVisible = await getLastVisible(
+              path,
+              book.commentLastVisible
+            );
+            count++;
+            tempCommentLastVisible[book.id] = lastVisible;
+          }
+          if (bookList.length === count + 1) {
             setNextCommentLastVisible(tempCommentLastVisible);
-          });
-        }
-      });
+          }
+        });
+      }
     }
   }, [userInfo]);
 
@@ -342,6 +350,11 @@ export default function BookList({
       commentRefetch();
     }
   }, [commentLastVisible]);
+
+  const test = (a: any, b: any) => {
+    console.log(a, b);
+    return "test";
+  };
 
   return (
     <>

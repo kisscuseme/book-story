@@ -60,12 +60,15 @@ export default function AddCommentForm({
         }
         for (let i = 0; i < tempBookList.length; i++) {
           if (tempBookList[i].id === bookId) {
-            const commentsLength = tempBookList[i].comments.length;
+            let tempTimestamp = 0;
+            if(tempBookList[i].comments.length > 0) {
+              tempTimestamp = tempBookList[i].comments[0].timestamp||0;
+            }
             const comment = {
               id: data.docId,
               type: data.data.type,
               text: data.data.text,
-              timestamp: commentsLength > 0 ? tempBookList[i].comments[commentsLength-1].timestamp||0 + 1 : 1
+              timestamp: tempTimestamp + 1
             };
             if (tempBookList[i].comments) {
               tempBookList[i].comments = [
@@ -75,6 +78,7 @@ export default function AddCommentForm({
             } else {
               tempBookList[i].comments = [comment];
             }
+            console.log(tempBookList[i].comments);
             break;
           }
         }

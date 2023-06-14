@@ -133,6 +133,7 @@ export default function EditCommentForm({
               if (tempBookList[i].comments.length > 0) {
                 for (let j = 0; j < tempBookList[i].comments.length; j++) {
                   if (tempBookList[i].comments[j].id === data.docId) {
+                    console.log(tempBookList[i].comments);
                     tempBookList[i].comments.sort((a, b) => {
                       if (a === null || b === null) return 0;
                       else {
@@ -270,17 +271,10 @@ export default function EditCommentForm({
                 title: l("check"),
                 content: l("Are you sure you want to delete?"),
                 confirm: () => {
-                  setShowModal({
-                    show: true,
-                    title: l("check"),
-                    content: l("Are you sure you want to delete?"),
-                    confirm: () => {
-                      if (!isSubmitting) {
-                        setIsSubmitting(true);
-                        deleteCommentHandler(book.id, comment.id);
-                      }
-                    },
-                  });
+                  if (!isSubmitting) {
+                    setIsSubmitting(true);
+                    deleteCommentHandler(book.id, comment.id);
+                  }
                 },
               });
             }}
