@@ -25,7 +25,7 @@ export default function ShowToast() {
         setTimeout(() => {
           setShowToast({ show: false });
         }, 500);
-      }, showToast.delay || 1113000);
+      }, showToast.delay || 3000);
     }
   }, [startAnimation]);
 
