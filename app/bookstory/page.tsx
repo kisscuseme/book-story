@@ -23,6 +23,7 @@ const BookStoryPage = async () => {
         verseLabel: l("Verse"),
         feelLabel: l("Feel"),
         enterContentPlaceholder: l("Enter your content."),
+        noContentViewed: l("No content viewed.")
       };
 
       // 서버로부터 데이터 가져오기

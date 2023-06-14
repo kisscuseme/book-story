@@ -83,6 +83,7 @@ export default function BookList({
       // 현재의 스크롤 값을 저장
       lastScrollY = scrollY;
     });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -384,10 +385,7 @@ export default function BookList({
             }}
             defaultActiveKey={mainListAccordionActive}
           >
-            {(firstLoading || bookList.length === 0
-              ? serverBookData
-              : bookList
-            ).map((book) => {
+            {(firstLoading ? serverBookData : bookList).map((book) => {
               return (
                 <Accordion.Item
                   key={book.id}
@@ -452,7 +450,7 @@ export default function BookList({
                   </Accordion.Body>
                   <Accordion
                     onSelect={(e) => {
-                      const tempAccordionActive = {...subListAccordionActive};
+                      const tempAccordionActive = { ...subListAccordionActive };
                       tempAccordionActive[book.id] = e;
                       setSubListAccordionActive(tempAccordionActive);
                     }}
@@ -573,29 +571,32 @@ export default function BookList({
           </Accordion>
         </DefaultCol>
       </Row>
-      {serverBookData.length > 0 ? (
-        nextLastVisible && !noMoreBookData ? (
-          <Row>
-            <CenterCol>
-              {bookList.length > 0 && (bookIsLoading || bookIsFetching) ? (
-                <CustomButton align="center" color="#999999">
-                  <CustomSpinner animation="border" />
-                </CustomButton>
-              ) : (
-                <CustomButton
-                  align="center"
-                  type="button"
-                  color="#999999"
-                  ref={bookLoadMoreButtonRef}
-                  onClick={() => {
-                    setLastVisible(nextLastVisible);
-                  }}
-                >
-                  {l("Load More")}
-                </CustomButton>
-              )}
-            </CenterCol>
-          </Row>
+      {(firstLoading && serverBookData.length > 0) || bookList.length > 0 ? (
+        bookList.length > 0 ? (
+          !noMoreBookData &&
+          nextLastVisible && (
+            <Row>
+              <CenterCol>
+                {bookIsLoading || bookIsFetching ? (
+                  <CustomButton align="center" color="#999999">
+                    <CustomSpinner animation="border" />
+                  </CustomButton>
+                ) : (
+                  <CustomButton
+                    align="center"
+                    type="button"
+                    color="#999999"
+                    ref={bookLoadMoreButtonRef}
+                    onClick={() => {
+                      setLastVisible(nextLastVisible);
+                    }}
+                  >
+                    {l("Load More")}
+                  </CustomButton>
+                )}
+              </CenterCol>
+            </Row>
+          )
         ) : (
           !lastVisible && (
             <Row>
@@ -610,7 +611,11 @@ export default function BookList({
       ) : (
         <Row>
           <CenterCol>
-            <div style={{ color: "#777777" }}>{l("No content viewed.")}</div>
+            <div style={{ color: "#777777" }}>
+              {firstLoading
+                ? componentsTextData.noContentViewed
+                : l("No content viewed.")}
+            </div>
           </CenterCol>
         </Row>
       )}

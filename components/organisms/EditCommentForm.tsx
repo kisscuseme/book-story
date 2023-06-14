@@ -130,17 +130,22 @@ export default function EditCommentForm({
           });
           for (let i = 0; i < tempBookList.length; i++) {
             if (tempBookList[i].id === bookId) {
-              tempBookList[i].comments.sort((a, b) => {
-                if (a === null || b === null) return 0;
-                else {
-                  let numA = Number(a.timestamp);
-                  let numB = Number(b.timestamp);
-                  if (b.id === data.docId) return -1;
-                  else return numB - numA;
+              if (tempBookList[i].comments.length > 0) {
+                for (let j = 0; j < tempBookList[i].comments.length; j++) {
+                  if (tempBookList[i].comments[j].id === data.docId) {
+                    tempBookList[i].comments.sort((a, b) => {
+                      if (a === null || b === null) return 0;
+                      else {
+                        let numA = Number(a.timestamp);
+                        let numB = Number(b.timestamp);
+                        if (b.id === data.docId) return -1;
+                        else return numB - numA;
+                      }
+                    });
+                    tempBookList[i].comments.pop();
+                  }
                 }
-              });
-              tempBookList[i].comments.pop();
-              break;
+              }
             }
           }
         }
@@ -221,7 +226,8 @@ export default function EditCommentForm({
                 message: l("Enter your content."),
               },
               validate: (value) => {
-                if (value !== comment.text || commentType !== comment.type) return true;
+                if (value !== comment.text || commentType !== comment.type)
+                  return true;
                 else return l("The content is the same.");
               },
             })}
