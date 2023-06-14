@@ -116,6 +116,10 @@ export default function EditCommentForm({
   const deleteCommentMutation = useMutation(deleteData, {
     onSuccess(data) {
       if (data) {
+        setShowToast({
+          show: true,
+          content: l("The comment has been deleted."),
+        });
         // 데이터 삭제 후 참조 오브젝트에서 제거하기 위한 로직 (db를 재 조회하지 않음)
         const bookId = data.path.split("/")[5];
         const tempBookList = [];

@@ -95,6 +95,10 @@ export default function EditBookForm({
   const deleteBookMutation = useMutation(deleteData, {
     onSuccess(data) {
       if (data) {
+        setShowToast({
+          show: true,
+          content: l("The book has been deleted."),
+        });
         // 데이터 삭제 후 참조 오브젝트에서 제거하기 위한 로직 (db를 재 조회하지 않음)
         const tempBookList = [];
         for (const book of bookList) {

@@ -79,5 +79,7 @@
   "A book has been added.": "책이 추가되었습니다.",
   "The book has been updated.": "책 정보가 변경되었습니다.",
   "A comment has been added.": "내용이 추가되었습니다.",
-  "The comment has been updated.": "내용이 수정되었습니다."
+  "The comment has been updated.": "내용이 수정되었습니다.",
+  "The book has been deleted.": "책이 삭제되었습니다.",
+  "The comment has been deleted.": "내용이 삭제되었습니다."
 }

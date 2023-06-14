@@ -79,5 +79,7 @@
   "A book has been added.": "A book has been added.",
   "The book has been updated.": "The book has been updated.",
   "A comment has been added.": "A comment has been added.",
-  "The comment has been updated.": "The comment has been updated."
+  "The comment has been updated.": "The comment has been updated.",
+  "The book has been deleted.": "The book has been deleted.",
+  "The comment has been deleted.": "The comment has been deleted."
 }
