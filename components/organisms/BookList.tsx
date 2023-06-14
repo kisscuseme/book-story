@@ -111,12 +111,12 @@ export default function BookList({
               path,
               book.commentLastVisible
             );
-            count++;
             tempCommentLastVisible[book.id] = lastVisible;
           }
           if (bookList.length === count + 1) {
             setNextCommentLastVisible(tempCommentLastVisible);
           }
+          count++;
         });
       }
     }

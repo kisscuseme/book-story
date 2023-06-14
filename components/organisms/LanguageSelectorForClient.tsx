@@ -1,7 +1,7 @@
 "use client";
 
 import { l } from "@/services/util/util";
-import { selectedLanguageState, showModalState } from "@/states/states";
+import { selectedLanguageState, showToastState } from "@/states/states";
 import i18next from "i18next";
 import { useSetRecoilState } from "recoil";
 import localesJSON from "../../locales/locales.json";
@@ -9,7 +9,7 @@ import { CustomDropdown, DropdownDataProps } from "../atoms/CustomDropdown";
 
 export const LanguageSelectorForClient = () => {
   const setSelectedLanguage = useSetRecoilState(selectedLanguageState);
-  const setShowModal = useSetRecoilState(showModalState);
+  const setShowToast = useSetRecoilState(showToastState);
   const data: DropdownDataProps[] = [];
 
   // Dropdown에 사용할 데이터 구성
@@ -36,9 +36,8 @@ export const LanguageSelectorForClient = () => {
     try {
       setSelectedLanguage(langCode);
     } catch (error: any) {
-      setShowModal({
+      setShowToast({
         show: true,
-        title: l("Error"),
         content: error.message,
       });
     }

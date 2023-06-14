@@ -1,8 +1,20 @@
 import { getUserPath, insertData } from "@/services/firebase/db";
-import { bookListState, showModalState, userInfoState } from "@/states/states";
+import {
+  bookListState,
+  showModalState,
+  showToastState,
+  userInfoState,
+} from "@/states/states";
 import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
-import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
+import {
+  Button,
+  Form,
+  Row,
+  Toast,
+  ToastContainer,
+  useAccordionButton,
+} from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
@@ -23,7 +35,7 @@ export default function AddCommentForm({
 }: AddCommentFormProps) {
   const { register, handleSubmit, setValue, formState } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
-  const setShowModal = useSetRecoilState(showModalState);
+  const setShowToast = useSetRecoilState(showToastState);
   const userInfo = useRecoilValue(userInfoState);
   const [commentType, setCommentType] = useState("Verse");
   const [firstLoading, setFirstLoading] = useState(true);
@@ -40,12 +52,11 @@ export default function AddCommentForm({
     onSuccess(data) {
       if (data) {
         const bookId = data.path.split("/")[5];
-        setValue("text", "");
-        setShowModal({
+        setShowToast({
           show: true,
-          title: l("Check"),
           content: l("A comment has been added."),
         });
+
         // 성공 시 참조 오브젝트에 데이터 추가 (db에서 데이터를 새로 조회하지 않음)
         const tempBookList = [];
         for (const book of bookList) {
@@ -61,14 +72,14 @@ export default function AddCommentForm({
         for (let i = 0; i < tempBookList.length; i++) {
           if (tempBookList[i].id === bookId) {
             let tempTimestamp = 0;
-            if(tempBookList[i].comments.length > 0) {
-              tempTimestamp = tempBookList[i].comments[0].timestamp||0;
+            if (tempBookList[i].comments.length > 0) {
+              tempTimestamp = tempBookList[i].comments[0].timestamp || 0;
             }
             const comment = {
               id: data.docId,
               type: data.data.type,
               text: data.data.text,
-              timestamp: tempTimestamp + 1
+              timestamp: tempTimestamp + 1,
             };
             if (tempBookList[i].comments) {
               tempBookList[i].comments = [
@@ -78,12 +89,12 @@ export default function AddCommentForm({
             } else {
               tempBookList[i].comments = [comment];
             }
-            console.log(tempBookList[i].comments);
             break;
           }
         }
         setBookList(tempBookList);
         setIsSubmitting(false);
+        setValue("text", "");
         closeAccordionButtonRef.current?.click();
       }
     },

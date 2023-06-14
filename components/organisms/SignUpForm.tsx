@@ -2,7 +2,7 @@
 
 import { signUp } from "@/services/firebase/auth";
 import { emailRegEx, getErrorMsg, l, setCookie } from "@/services/util/util";
-import { rerenderDataState, showModalState } from "@/states/states";
+import { rerenderDataState, showModalState, showToastState } from "@/states/states";
 import { useMutation } from "@tanstack/react-query";
 import {
   sendEmailVerification,
@@ -36,6 +36,7 @@ export default function SignUpForm({
   signUpButtonText,
 }: SignUpFormProps) {
   const setShowModal = useSetRecoilState(showModalState);
+  const setShowToast = useSetRecoilState(showToastState);
   const {
     register,
     handleSubmit,
@@ -56,9 +57,8 @@ export default function SignUpForm({
         const registerInfo = getValues();
         if (typeof data === "string") {
           // 가져온 데이터가 string type일 경우 에러 메시지임
-          setShowModal({
+          setShowToast({
             show: true,
-            title: l("Check"),
             content: data,
           });
         } else {
@@ -81,17 +81,15 @@ export default function SignUpForm({
           });
         }
       } catch (error: any) {
-        setShowModal({
+        setShowToast({
           show: true,
-          title: l("Check"),
           content: l(error.message),
         });
       }
     },
     onError(error: any) {
-      setShowModal({
+      setShowToast({
         show: true,
-        title: l("Check"),
         content: l(error),
       });
     },

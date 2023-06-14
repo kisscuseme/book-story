@@ -1,5 +1,5 @@
 import { deleteData, getUserPath, updateData } from "@/services/firebase/db";
-import { bookListState, showModalState, userInfoState } from "@/states/states";
+import { bookListState, showModalState, showToastState, userInfoState } from "@/states/states";
 import { BookType, CommentType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
@@ -31,6 +31,7 @@ export default function EditCommentForm({
   const { register, handleSubmit, setValue, formState } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
+  const setShowToast = useSetRecoilState(showToastState);
   const userInfo = useRecoilValue(userInfoState);
   const [commentType, setCommentType] = useState(comment.type);
   const [firstLoading, setFirstLoading] = useState(true);
@@ -47,9 +48,8 @@ export default function EditCommentForm({
   const updateCommentMutation = useMutation(updateData, {
     onSuccess(data) {
       if (data) {
-        setShowModal({
+        setShowToast({
           show: true,
-          title: l("Check"),
           content: l("The comment has been updated."),
         });
         // 성공 시 참조 오브젝트에 데이터 추가 (db에서 데이터를 새로 조회하지 않음)

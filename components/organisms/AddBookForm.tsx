@@ -1,5 +1,5 @@
 import { getUserPath, insertData } from "@/services/firebase/db";
-import { bookListState, showModalState, userInfoState } from "@/states/states";
+import { bookListState, showToastState, userInfoState } from "@/states/states";
 import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Row } from "react-bootstrap";
@@ -18,7 +18,7 @@ interface AddBookFormProps {
 export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
   const { register, handleSubmit, formState, setValue } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
-  const setShowModal = useSetRecoilState(showModalState);
+  const setShowToast = useSetRecoilState(showToastState);
   const userInfo = useRecoilValue(userInfoState);
   const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,11 +31,8 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
   const insertBookMutation = useMutation(insertData, {
     onSuccess(data) {
       if (data) {
-        setValue("title", "");
-        setValue("author", "");
-        setShowModal({
+        setShowToast({
           show: true,
-          title: l("Check"),
           content: l("A book has been added."),
         });
         // 성공 시 참조 오브젝트에 데이터 추가 (db에서 데이터를 새로 조회하지 않음)
@@ -47,6 +44,8 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
           ...bookList,
         ];
         setBookList(tempBookList);
+        setValue("title", "");
+        setValue("author", "");
         setIsSubmitting(false);
       }
     },

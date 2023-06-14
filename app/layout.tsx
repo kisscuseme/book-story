@@ -4,6 +4,7 @@ import RecoilRootWrapper from "@/components/organisms/RecoilRootWrapper";
 import StyledComponentsRegistry from "../components/organisms/StyledComponentsRegistry";
 import TranslationFromServer from "@/components/organisms/TranslationFromServer";
 import ShowAlert from "@/components/organisms/ShowAlert";
+import ShowToast from "@/components/organisms/ShowToast";
 
 // 기본 메타 정보
 export const metadata = {
@@ -74,6 +75,7 @@ export default function RootLayout({
             <StyledComponentsRegistry>
               {children}
               <ShowAlert />
+              <ShowToast />
             </StyledComponentsRegistry>
           </RecoilRootWrapper>
         </ReactQueryWrapper>

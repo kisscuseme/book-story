@@ -13,7 +13,7 @@ import {
 import { firebaseAuth } from "@/services/firebase/firebase";
 import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { rerenderDataState, showModalState } from "@/states/states";
+import { rerenderDataState, showModalState, showToastState } from "@/states/states";
 import { signIn } from "@/services/firebase/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -53,6 +53,7 @@ export const SignInForm = ({
 }: SignInFormProps) => {
   const [errorMsg, setErrorMsg] = useState("");
   const setShowModal = useSetRecoilState(showModalState);
+  const setShowToast = useSetRecoilState(showToastState);
   const savedEmail = getCookie("email") || "";
   const {
     register,
@@ -97,12 +98,9 @@ export const SignInForm = ({
               });
               try {
                 await sendEmailVerification(data.user);
-                setShowModal({
+                setShowToast({
                   show: true,
-                  title: l("Check"),
-                  content: l(
-                    "Resending of verification e-mail has been completed."
-                  ),
+                  content: "Resending of verification e-mail has been completed."
                 });
               } catch (error: any) {
                 let message;
@@ -113,10 +111,8 @@ export const SignInForm = ({
                 } else {
                   message = error.message;
                 }
-
-                setShowModal({
+                setShowToast({
                   show: true,
-                  title: l("Check"),
                   content: message,
                 });
               }
@@ -132,9 +128,8 @@ export const SignInForm = ({
       }
     },
     onError(error: any) {
-      setShowModal({
+      setShowToast({
         show: true,
-        title: l("Check"),
         content: l(error),
       });
     },
@@ -144,11 +139,9 @@ export const SignInForm = ({
     try {
       return await sendPasswordResetEmail(firebaseAuth, email);
     } catch (error: any) {
-      setShowModal({
+      setShowToast({
         show: true,
-        title: l("Check"),
-        content:
-          `${l("An error occurred while sending e-mail.")}\n` + error.message,
+        content: `${l("An error occurred while sending e-mail.")}\n` + error.message,
       });
     }
   };
@@ -161,16 +154,14 @@ export const SignInForm = ({
       } else {
         message = error.message;
       }
-      setShowModal({
+      setShowToast({
         show: true,
-        title: l("Check"),
         content: message,
       });
     },
     onSuccess: () => {
-      setShowModal({
+      setShowToast({
         show: true,
-        title: l("Check"),
         content: l("E-mail sending has been completed."),
       });
     },
@@ -195,9 +186,8 @@ export const SignInForm = ({
           },
         });
       } catch (error: any) {
-        setShowModal({
+        setShowToast({
           show: true,
-          title: l("Check"),
           content: l(error.message),
         });
       }

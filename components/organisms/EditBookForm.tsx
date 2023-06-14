@@ -1,5 +1,5 @@
 import { deleteData, getUserPath, updateData } from "@/services/firebase/db";
-import { bookListState, showModalState, userInfoState } from "@/states/states";
+import { bookListState, showModalState, showToastState, userInfoState } from "@/states/states";
 import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
@@ -28,6 +28,7 @@ export default function EditBookForm({
   const { register, handleSubmit, setValue, formState, getValues } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
+  const setShowToast = useSetRecoilState(showToastState);
   const userInfo = useRecoilValue(userInfoState);
   const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,9 +45,8 @@ export default function EditBookForm({
   const updateBookMutation = useMutation(updateData, {
     onSuccess(data) {
       if (data) {
-        setShowModal({
+        setShowToast({
           show: true,
-          title: l("Check"),
           content: l("The book has been updated."),
         });
         // 성공 시 참조 오브젝트 데이터 변경 (db에서 데이터를 새로 조회하지 않음)
@@ -172,7 +172,7 @@ export default function EditBookForm({
         >
           <CustomInput
             {...register("author")}
-            placeholder={book.author}
+            placeholder={book.author||l("Book author")||componentsTextData.bookAuthorPlaceholder}
             onFocus={onFocusHandler}
             onKeyUp={enterKeyUpEventHandler}
             clearButton={setValue}

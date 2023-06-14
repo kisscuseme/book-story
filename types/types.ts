@@ -14,6 +14,14 @@ export interface AlertType {
   show: boolean;
 }
 
+// toast type
+export interface ToastType {
+  title?: string;
+  content?: React.ReactNode;
+  delay?: number;
+  show: boolean;
+}
+
 // lastvisible type
 export type LastVisibleType =
   | QueryDocumentSnapshot<DocumentData>

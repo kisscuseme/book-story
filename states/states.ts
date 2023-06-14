@@ -1,4 +1,4 @@
-import { AlertType, BookType, UserType } from "@/types/types";
+import { AlertType, BookType, ToastType, UserType } from "@/types/types";
 import { AccordionEventKey } from "react-bootstrap/esm/AccordionContext";
 import { atom } from "recoil";
 
@@ -35,6 +35,16 @@ export const resetClearButtonState = atom<boolean>({
 // alert 보임 여부
 export const showModalState = atom<AlertType>({
   key: "showModalState",
+  default: {
+    title: "",
+    content: "",
+    show: false,
+  },
+});
+
+// toast 보임 여부
+export const showToastState = atom<ToastType>({
+  key: "showToastState",
   default: {
     title: "",
     content: "",
