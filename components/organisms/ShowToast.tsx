@@ -25,7 +25,7 @@ export default function ShowToast() {
         setTimeout(() => {
           setShowToast({ show: false });
         }, 500);
-      }, showToast.delay || 3000);
+      }, showToast.delay || 1113000);
     }
   }, [startAnimation]);
 
@@ -59,7 +59,7 @@ export default function ShowToast() {
         <ToastContainer
           className="p-3"
           position={"top-center"}
-          style={{ zIndex: 1 }}
+          style={{ zIndex: 1, position: "fixed" }}
           ref={nodeRef}
         >
           <Toast
@@ -72,7 +72,7 @@ export default function ShowToast() {
               padding: "0px 10px",
               borderWidth: "0",
               backgroundColor: "#333333",
-              color: "#eeeeee"
+              color: "#eeeeee",
             }}
           >
             {showToast.title && <Toast.Header>{showToast.title}</Toast.Header>}
