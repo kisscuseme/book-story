@@ -9,10 +9,10 @@ import ShowToast from "@/components/organisms/ShowToast";
 // 기본 메타 정보
 export const metadata = {
   title: "Book Story",
-  description: "Write down your feeling",
+  description: "Write a review",
   openGraph: {
     title: "Book Story",
-    description: "Write down your feeling",
+    description: "Write a review",
     images: "/logo.png",
   },
 };
@@ -59,14 +59,14 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
 
-        {/* <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/images/icons/icon-192x192.png"></link>
-        <meta name="msapplication-TileColor" content="#99aaf6"></meta>
+        <meta name="msapplication-TileColor" content="#b988ff"></meta>
         <link
-          href="/images/favicon.ico"
+          href="/images/favicon.png"
           rel="icon"
-          sizes="16x16"
-        /> */}
+          sizes="32x32"
+        />
       </head>
       <body>
         <TranslationFromServer />
