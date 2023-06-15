@@ -5,7 +5,7 @@ export const metadata = {
   openGraph: {
     title: "Book Story - Create an account",
     description: "Please create an account.",
-    images: "/logo.png",
+    images: "/images/logo.png",
   },
 };
 

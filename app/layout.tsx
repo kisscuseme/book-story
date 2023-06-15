@@ -13,7 +13,7 @@ export const metadata = {
   openGraph: {
     title: "Book Story",
     description: "Write a review",
-    images: "/logo.png",
+    images: "/images/logo.png",
   },
 };
 
