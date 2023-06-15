@@ -108,7 +108,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             clearButton={setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ paddingLeft: "0px" }}>
+        <DefaultCol style={{ paddingLeft: "0" }}>
           <CustomButton
             backgroundColor="#5b5b5b"
             color="#ffffff"
@@ -125,7 +125,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
       </Row>
       <Row>
         <DefaultCol>
-          <div style={{ color: "hotpink", paddingTop: "5px" }}>
+          <div style={{ color: "hotpink", paddingTop: "0.3rem" }}>
             {getErrorMsg(formState.errors, "title", "required")}
           </div>
         </DefaultCol>

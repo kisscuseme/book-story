@@ -101,8 +101,7 @@ export default function BookList({
         const tempCommentLastVisible = {
           ...nextCommentLastVisible,
         };
-        let count = 0;
-        bookList.map(async (book) => {
+        bookList.map(async (book, index) => {
           if (book.commentLastVisible?.constructor === String) {
             const path = `${getUserPath()}/${userInfo?.uid}/books/${
               book.id
@@ -113,10 +112,9 @@ export default function BookList({
             );
             tempCommentLastVisible[book.id] = lastVisible;
           }
-          if (bookList.length === count + 1) {
+          if (bookList.length === index + 1) {
             setNextCommentLastVisible(tempCommentLastVisible);
           }
-          count++;
         });
       }
     }
@@ -379,7 +377,7 @@ export default function BookList({
                   {firstLoading
                     ? componentsTextData.addBookFormTitle
                     : l("Add a book")}{" "}
-                  <span style={{ fontSize: "14px" }}>{fold ? "▲" : "▼"}</span>
+                  <span style={{ fontSize: "0.9rem" }}>{fold ? "▲" : "▼"}</span>
                 </div>
               </Accordion.Header>
               <Accordion.Body>
@@ -398,18 +396,18 @@ export default function BookList({
             }}
             defaultActiveKey={mainListAccordionActive}
           >
-            {(firstLoading ? serverBookData : bookList).map((book) => {
+            {(firstLoading ? serverBookData : bookList).map((book, index) => {
               return (
                 <Accordion.Item
                   key={book.id}
                   eventKey={book.id}
-                  style={{ paddingBottom: "10px" }}
+                  style={{ paddingBottom: "0.6rem" }}
                 >
                   <Accordion.Header>
                     <span
                       style={{
-                        width: "16px",
-                        height: "16px",
+                        width: "1rem",
+                        height: "1rem",
                         display: "inline-flex",
                       }}
                     >
@@ -419,7 +417,9 @@ export default function BookList({
                         size="1x"
                       />
                     </span>
-                    <span style={{ paddingLeft: "5px", paddingRight: "5px" }}>
+                    <span
+                      style={{ paddingLeft: "0.3rem", paddingRight: "0.3rem", fontSize: "1.15rem" }}
+                    >
                       {book.title}
                       {book.author && (
                         <>
@@ -432,8 +432,8 @@ export default function BookList({
                     </span>
                     <span
                       style={{
-                        width: "12px",
-                        height: "12px",
+                        width: "0.75rem",
+                        height: "0.75rem",
                         display: "inline-flex",
                       }}
                     >
@@ -478,8 +478,7 @@ export default function BookList({
                           <Accordion.Header>
                             <div
                               style={{
-                                paddingLeft: "10px",
-                                fontSize: "14px",
+                                paddingLeft: "0.6rem",
                               }}
                             >
                               <span
@@ -499,15 +498,15 @@ export default function BookList({
                               <span
                                 style={{
                                   color: "#6b6b6b",
-                                  paddingRight: "5px",
+                                  paddingRight: "0.3rem",
                                 }}
                               >
                                 {comment.text}
                               </span>
                               <span
                                 style={{
-                                  width: "9px",
-                                  height: "9px",
+                                  width: "0.6rem",
+                                  height: "0.6rem",
                                   display: "inline-flex",
                                 }}
                               >
@@ -543,7 +542,7 @@ export default function BookList({
                   </Accordion>
                   {nextCommentLastVisible[book.id] &&
                   !noMoreCommentsData[book.id] ? (
-                    <Row style={{ paddingLeft: "30px" }}>
+                    <Row style={{ paddingLeft: "1.7rem" }}>
                       <CenterCol>
                         {(book.comments || []).length > 0 &&
                         (commentIsLoading || commentIsFetching) &&
@@ -569,14 +568,21 @@ export default function BookList({
                   ) : (
                     book.commentLastVisible &&
                     !commentLastVisible[book.id] && (
-                      <Row style={{ paddingLeft: "30px" }}>
+                      <Row style={{ paddingLeft: "1.7rem" }}>
                         <CenterCol>
                           <CustomButton align="left" color="#b5b5b5">
-                            <CustomSpinner animation="border" size="sm" />
+                            <CustomSpinner
+                              animation="border"
+                              size="sm"
+                              style={{ opacity: "0.5" }}
+                            />
                           </CustomButton>
                         </CenterCol>
                       </Row>
                     )
+                  )}
+                  {bookList.length !== index + 1 && (
+                    <DivisionLine color="#f5f5f5" />
                   )}
                 </Accordion.Item>
               );

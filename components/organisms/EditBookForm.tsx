@@ -151,8 +151,8 @@ export default function EditBookForm({
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingLeft: "20px", marginLeft: "0px" }}>
-        <DefaultCol style={{ minWidth: "30%", paddingLeft: "0px" }}>
+      <Row style={{ paddingLeft: "1.1rem", marginLeft: "0" }}>
+        <DefaultCol style={{ minWidth: "30%", paddingLeft: "0" }}>
           <CustomInput
             {...register("title", {
               required: {
@@ -172,7 +172,7 @@ export default function EditBookForm({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "25%", paddingLeft: "0px", paddingRight: "5px" }}
+          style={{ maxWidth: "25%", paddingLeft: "0", paddingRight: "0.3rem" }}
         >
           <CustomInput
             {...register("author")}
@@ -187,7 +187,7 @@ export default function EditBookForm({
             maxWidth: "40%",
             display: "flex",
             justifyContent: "space-evenly",
-            paddingLeft: "0px",
+            paddingLeft: "0",
           }}
         >
           <CustomButton
@@ -228,7 +228,7 @@ export default function EditBookForm({
       </Row>
       <Row>
         <DefaultCol>
-          <div style={{ color: "hotpink", paddingTop: "5px" }}>
+          <div style={{ color: "hotpink", paddingTop: "0.3rem" }}>
             {getErrorMsg(formState.errors, "title", "required") ||
               getErrorMsg(formState.errors, "title", "validate")}
           </div>

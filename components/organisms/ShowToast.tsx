@@ -69,7 +69,7 @@ export default function ShowToast() {
             style={{
               textAlign: "center",
               width: "fit-content",
-              padding: "0px 10px",
+              padding: "0 0.6rem",
               borderWidth: "0",
               backgroundColor: "#333333",
               color: "#eeeeee",

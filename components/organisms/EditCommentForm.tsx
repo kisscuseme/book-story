@@ -182,7 +182,7 @@ export default function EditCommentForm({
     >
       <Row
         style={{
-          paddingLeft: "15px",
+          paddingLeft: "0.95rem",
         }}
       >
         <DefaultCol style={{ maxWidth: "20%" }}>
@@ -222,7 +222,7 @@ export default function EditCommentForm({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ minWidth: "45%", paddingLeft: "0px", paddingRight: "5px" }}
+          style={{ minWidth: "45%", paddingLeft: "0", paddingRight: "0.3rem" }}
         >
           <CustomInput
             {...register("text", {
@@ -236,7 +236,6 @@ export default function EditCommentForm({
                 else return l("The content is the same.");
               },
             })}
-            style={{ fontSize: "14px" }}
             placeholder={comment.text}
             onFocus={onFocusHandler}
             onKeyUp={enterKeyUpEventHandler}
@@ -248,7 +247,7 @@ export default function EditCommentForm({
             maxWidth: "40%",
             display: "flex",
             justifyContent: "space-evenly",
-            paddingLeft: "0px",
+            paddingLeft: "0",
           }}
         >
           <CustomButton
@@ -290,7 +289,7 @@ export default function EditCommentForm({
       <Row>
         <DefaultCol>
           <div
-            style={{ color: "hotpink", paddingTop: "5px", fontSize: "14px" }}
+            style={{ color: "hotpink", paddingTop: "0.3rem" }}
           >
             {getErrorMsg(formState.errors, "text", "required") ||
               getErrorMsg(formState.errors, "text", "validate")}

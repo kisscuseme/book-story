@@ -81,7 +81,7 @@ const StyledDropdownToggle = styled(Dropdown.Toggle)`
   --bs-btn-active-color: ${(props) => props.theme.color};
   --bs-btn-active-bg: ${(props) => props.theme.backgroundColor};
   --bs-btn-active-border-color: ${(props) => props.theme.backgroundColor};
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-active-shadow: inset 0 0.25rem 0.3rem rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: ${(props) => props.theme.color};
   --bs-btn-disabled-bg: ${(props) => props.theme.backgroundColor};
   --bs-btn-disabled-border-color: ${(props) => props.theme.backgroundColor};
@@ -134,9 +134,9 @@ export const CustomDropdown = ({
   const theme = {
     backgroundColor: currentBackgroundColor,
     color: currentColor,
-    fontSize: size === "large" ? "16px" : size === "medium" ? "14px" : "12px",
+    fontSize: size === "large" ? "1rem" : size === "medium" ? "0.9rem" : "0.8rem",
     padding:
-      size === "large" ? "5px 9px" : size === "medium" ? "5px 8px" : "5px 7px",
+      size === "large" ? "0.3rem 0.5rem" : size === "medium" ? "0.3rem 0.45rem" : "0.3rem 0.4rem",
   };
 
   return (

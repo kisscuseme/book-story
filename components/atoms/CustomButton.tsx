@@ -16,7 +16,7 @@ const StyledButton = styled(Button)`
   --bs-btn-active-color: ${(props) => props.theme.color};
   --bs-btn-active-bg: ${(props) => props.theme.backgroundColor};
   --bs-btn-active-border-color: ${(props) => props.theme.backgroundColor};
-  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-active-shadow: inset 0.2rem 0.3rem rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: ${(props) => props.theme.color};
   --bs-btn-disabled-bg: ${(props) => props.theme.backgroundColor};
   --bs-btn-disabled-border-color: ${(props) => props.theme.backgroundColor};

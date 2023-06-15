@@ -5,7 +5,7 @@ const StyledDivisionLine = styled.div`
   border-width: 1px;
   border-style: solid;
   border-color: ${(props) => props.theme.borderColor};
-  margin: 10px;
+  margin: 0.7rem;
 `;
 
 export const DivisionLine = ({ color = "#ffffff" }: { color?: string }) => {

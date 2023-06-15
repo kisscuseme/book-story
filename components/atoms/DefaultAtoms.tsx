@@ -32,8 +32,8 @@ export const DefaultContainer = styled(Container)`
   min-width: 375px;
   min-height: 100vh;
   height: 100%;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 1.3rem;
+  padding-right: 1.3rem;
 `;
 
 // 기본 Row 스타일 정의
@@ -48,11 +48,11 @@ export const DefaultCol = styled(Col)`
 
 // 그룹 버튼 스타일 정의
 export const GroupButton = styled(CustomButton)`
-  margin: 10px;
+  margin: 0.7rem;
 `;
 
 // 기본 타이틀 스타일 정의
-export const DefaultTitle = styled.h3`
+export const DefaultTitle = styled.h2`
   text-align: center;
-  padding: 30px 0;
+  padding: 1.8rem 0;
 `;

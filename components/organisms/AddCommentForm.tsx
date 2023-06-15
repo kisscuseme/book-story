@@ -127,7 +127,7 @@ export default function AddCommentForm({
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingLeft: "10px", marginLeft: "0px" }}>
+      <Row style={{ paddingLeft: "0.6rem", marginLeft: "0" }}>
         <DefaultCol style={{ maxWidth: "22%" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
@@ -159,7 +159,7 @@ export default function AddCommentForm({
             ]}
           />
         </DefaultCol>
-        <DefaultCol style={{ minWidth: "58%", paddingLeft: "5px" }}>
+        <DefaultCol style={{ minWidth: "58%", paddingLeft: "0.3rem" }}>
           <CustomInput
             {...register("text", {
               required: {
@@ -176,7 +176,7 @@ export default function AddCommentForm({
             clearButton={setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: "20%", paddingLeft: "0px" }}>
+        <DefaultCol style={{ maxWidth: "20%", paddingLeft: "0" }}>
           <CustomButton
             backgroundColor="#5b5b5b"
             color="#ffffff"
@@ -193,7 +193,7 @@ export default function AddCommentForm({
       </Row>
       <Row>
         <DefaultCol>
-          <div style={{ color: "hotpink", paddingTop: "5px" }}>
+          <div style={{ color: "hotpink", paddingTop: "0.3rem" }}>
             {getErrorMsg(formState.errors, "text", "required")}
           </div>
         </DefaultCol>

@@ -16,7 +16,7 @@ export const accordionCustomStyle = `
   .accordion-button {
     background-color: transparent;
     border: 0 !important;
-    padding: 5px 0;
+    padding: 0.3rem 0;
     --bs-accordion-border-width: 0;
   }
 
@@ -45,7 +45,7 @@ export const accordionCustomStyle = `
   }
 
   .accordion-body {
-    padding: 5px 0;
+    padding: 0.3rem 0;
   }
   .accordion-collapse .collapsing {
     overflow: auto;

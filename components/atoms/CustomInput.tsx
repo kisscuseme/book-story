@@ -55,7 +55,7 @@ export const CustomInput = forwardRef(
     const [text, setText] = useState("");
     const wrapperStyle = {
       borderBottom: "1px solid #000000",
-      paddingRight: `${clearButton ? "25px" : "0"}`,
+      paddingRight: `${clearButton ? "1.5rem" : "0"}`,
     };
     let inputRef: HTMLInputElement | null = null;
 
