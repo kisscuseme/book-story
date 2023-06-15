@@ -2,14 +2,18 @@
 
 import { signUp } from "@/services/firebase/auth";
 import { emailRegEx, getErrorMsg, l, setCookie } from "@/services/util/util";
-import { rerenderDataState, showModalState, showToastState } from "@/states/states";
+import {
+  rerenderDataState,
+  showModalState,
+  showToastState,
+} from "@/states/states";
 import { useMutation } from "@tanstack/react-query";
 import {
   sendEmailVerification,
   updateProfile,
   UserCredential,
 } from "firebase/auth";
-import { KeyboardEvent, useEffect, useRef } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -18,10 +22,11 @@ import { CenterCol } from "../atoms/CustomAtoms";
 import TranslationFromClient from "./TranslationFromClient";
 import { CustomButton } from "../atoms/CustomButton";
 import { CustomInput } from "../atoms/CustomInput";
+import { CustomDropdown } from "../atoms/CustomDropdown";
 
 // sign up form props
 export interface SignUpFormProps {
-  emailPlaceholder: string;
+  emailEnterDirectly: string;
   namePlaceholder: string;
   passwordPlaceholder: string;
   reconfirmPasswordPlaceholder: string;
@@ -29,7 +34,7 @@ export interface SignUpFormProps {
 }
 
 export default function SignUpForm({
-  emailPlaceholder,
+  emailEnterDirectly,
   namePlaceholder,
   passwordPlaceholder,
   reconfirmPasswordPlaceholder,
@@ -47,6 +52,7 @@ export default function SignUpForm({
   } = useForm(); // react hook form 기능 활용
   const submitRef = useRef<HTMLButtonElement>(null);
   const rerenderData = useRecoilValue(rerenderDataState);
+  const [disabledEmailAddress, setDisabledEmailAddress] = useState(false);
 
   useEffect(() => {}, [rerenderData]);
 
@@ -67,7 +73,10 @@ export default function SignUpForm({
           // 인증 메일 전송
           await sendEmailVerification(data.user);
           // 이메일 정보 쿠키에 저장
-          setCookie("email", registerInfo.email);
+          setCookie(
+            "email",
+            `${registerInfo.email.user}@${registerInfo.email.address}`
+          );
           setShowModal({
             show: true,
             title: l("Check"),
@@ -116,29 +125,139 @@ export default function SignUpForm({
   return (
     <Form
       onSubmit={handleSubmit((data) => {
-        signUpHandleSubmit(data.email, data.password);
+        signUpHandleSubmit(
+          `${data.email.user}@${data.email.address}`,
+          data.password
+        );
       })}
     >
       <TranslationFromClient />
       <DefaultRow>
-        <DefaultCol>
+        <DefaultCol style={{ minWidth: "25%", paddingRight: "0" }}>
           <CustomInput
-            {...register("email", {
+            {...register("email.user", {
               required: {
                 value: true,
                 message: l("Please enter your e-mail."),
               },
-              pattern: {
-                value: emailRegEx,
-                message: l("Please check your email format."),
+              validate: (value) => {
+                const address = getValues().email.address;
+                if (emailRegEx.test(`${value}@${address}`)) {
+                  return true;
+                } else {
+                  return l("Please check your email format.");
+                }
               },
             })}
-            placeholder={emailPlaceholder}
-            type="email"
+            placeholder={"user"}
+            type="text"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
             clearButton={setValue}
+          />
+        </DefaultCol>
+        <DefaultCol
+          style={{ maxWidth: "3%", paddingLeft: "0.3rem", paddingRight: "0" }}
+        >
+          <div style={{ color: "#5f5f5f" }}>@</div>
+        </DefaultCol>
+        <DefaultCol
+          style={{ minWidth: "20%", maxWidth: "30%", paddingRight: "0.3rem" }}
+        >
+          <CustomInput
+            {...register("email.address", {
+              required: {
+                value: true,
+                message: l("Please enter your e-mail."),
+              },
+              validate: (value) => {
+                const user = getValues().email.user;
+                if (emailRegEx.test(`${user}@${value}`)) {
+                  return true;
+                } else {
+                  return l("Please check your email format.");
+                }
+              },
+            })}
+            placeholder={"example.com"}
+            type="text"
+            onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
+              enterKeyUpEventHandler(e);
+            }}
+            disabled={disabledEmailAddress}
+            clearButton={disabledEmailAddress ? false : setValue}
+          />
+        </DefaultCol>
+        <DefaultCol style={{ minWidth: "20%", maxWidth: "30%" }}>
+          <CustomDropdown
+            onClickItemHandler={(label) => {
+              // console.log(label);
+              if (label === "Enter directly") setDisabledEmailAddress(false);
+              else {
+                setValue("email.address", label);
+                setDisabledEmailAddress(true);
+              }
+            }}
+            itemAlign="end"
+            align="right"
+            initText={emailEnterDirectly}
+            items={[
+              {
+                key: "Enter directly",
+                label: emailEnterDirectly,
+                href: "#",
+                color: "#323232",
+              },
+              {
+                key: "gmail.com",
+                label: "gmail.com",
+                href: "#",
+                color: "#d64a2e",
+              },
+              {
+                key: "naver.com",
+                label: "naver.com",
+                href: "#",
+                color: "#32ad13",
+              },
+              {
+                key: "hotmail.com",
+                label: "hotmail.com",
+                href: "#",
+                color: "#fb7623",
+              },
+              {
+                key: "daum.com",
+                label: "daum.com",
+                href: "#",
+                color: "#337dfc",
+              },
+              {
+                key: "hanmail.net",
+                label: "hanmail.net",
+                href: "#",
+                color: "#337dfc",
+              },
+              {
+                key: "nate.com",
+                label: "nate.com",
+                href: "#",
+                color: "#ff1e1e",
+              },
+              {
+                key: "kakao.com",
+                label: "kakao.com",
+                href: "#",
+                color: "#ffad29",
+              },
+              {
+                key: "yahoo.co.kr",
+                label: "yahoo.co.kr",
+                href: "#",
+                color: "#8d3bff",
+              },
+            ]}
           />
         </DefaultCol>
       </DefaultRow>
@@ -220,8 +339,10 @@ export default function SignUpForm({
       <DefaultRow>
         <CenterCol>
           <div style={{ color: "hotpink" }}>
-            {getErrorMsg(errors, "email", "required") ||
-              getErrorMsg(errors, "email", "pattern") ||
+            {getErrorMsg(errors, "email.user", "required") ||
+              getErrorMsg(errors, "email.user", "validate") ||
+              getErrorMsg(errors, "email.address", "required") ||
+              getErrorMsg(errors, "email.address", "validate") ||
               getErrorMsg(errors, "name", "required") ||
               getErrorMsg(errors, "password", "required") ||
               getErrorMsg(errors, "password", "minWidth") ||

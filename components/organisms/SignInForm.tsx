@@ -13,7 +13,11 @@ import {
 import { firebaseAuth } from "@/services/firebase/firebase";
 import { sendEmailVerification, sendPasswordResetEmail } from "firebase/auth";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { rerenderDataState, showModalState, showToastState } from "@/states/states";
+import {
+  rerenderDataState,
+  showModalState,
+  showToastState,
+} from "@/states/states";
 import { signIn } from "@/services/firebase/auth";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -23,10 +27,11 @@ import TranslationFromClient from "./TranslationFromClient";
 import { CustomButton } from "../atoms/CustomButton";
 import { styled } from "styled-components";
 import { CustomInput } from "../atoms/CustomInput";
+import { CustomDropdown } from "../atoms/CustomDropdown";
 
 // sign in form props
 export interface SignInFormProps {
-  emailPlaceholder: string;
+  emailEnterDirectly: string;
   passwordPlaceholder: string;
   signInButtonText: string;
   resetPasswordButtonText: string;
@@ -45,7 +50,7 @@ const GroupButtonWrapper = styled.div`
 `;
 
 export const SignInForm = ({
-  emailPlaceholder,
+  emailEnterDirectly,
   passwordPlaceholder,
   signInButtonText,
   resetPasswordButtonText,
@@ -65,10 +70,15 @@ export const SignInForm = ({
   } = useForm(); // react hook form 기능 활용
   const submitRef = useRef<HTMLButtonElement>(null);
   const rerenderData = useRecoilValue(rerenderDataState);
+  const [disabledEmailAddress, setDisabledEmailAddress] = useState(false);
 
   useEffect(() => {
     // 최초 로딩 시 input 컴포넌트 값에 기존 로그인 이메일 바인딩
-    setValue("email", savedEmail);
+    if (savedEmail) {
+      const email = savedEmail.split("@");
+      setValue("email.user", email[0]);
+      setValue("email.address", email[1]);
+    }
   }, []);
 
   useEffect(() => {}, [rerenderData]);
@@ -100,7 +110,8 @@ export const SignInForm = ({
                 await sendEmailVerification(data.user);
                 setShowToast({
                   show: true,
-                  content: "Resending of verification e-mail has been completed."
+                  content:
+                    "Resending of verification e-mail has been completed.",
                 });
               } catch (error: any) {
                 let message;
@@ -141,7 +152,8 @@ export const SignInForm = ({
     } catch (error: any) {
       setShowToast({
         show: true,
-        content: `${l("An error occurred while sending e-mail.")}\n` + error.message,
+        content:
+          `${l("An error occurred while sending e-mail.")}\n` + error.message,
       });
     }
   };
@@ -209,29 +221,139 @@ export const SignInForm = ({
     <Form
       onSubmit={handleSubmit((data) => {
         setErrorMsg("");
-        signInMutation.mutate({ email: data.email, password: data.password });
+        signInMutation.mutate({
+          email: `${data.email.user}@${data.email.address}`,
+          password: data.password,
+        });
       })}
     >
       <TranslationFromClient />
       <DefaultRow>
-        <DefaultCol>
+        <DefaultCol style={{ minWidth: "25%", paddingRight: "0" }}>
           <CustomInput
-            {...register("email", {
+            {...register("email.user", {
               required: {
                 value: true,
                 message: l("Please enter your e-mail."),
               },
-              pattern: {
-                value: emailRegEx,
-                message: l("Please check your email format."),
+              validate: (value) => {
+                const address = getValues().email.address;
+                if (emailRegEx.test(`${value}@${address}`)) {
+                  return true;
+                } else {
+                  return l("Please check your email format.");
+                }
               },
             })}
-            placeholder={emailPlaceholder}
-            type="email"
+            placeholder={"user"}
+            type="text"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
             clearButton={setValue}
+          />
+        </DefaultCol>
+        <DefaultCol
+          style={{ maxWidth: "3%", paddingLeft: "0.3rem", paddingRight: "0" }}
+        >
+          <div style={{ color: "#5f5f5f" }}>@</div>
+        </DefaultCol>
+        <DefaultCol
+          style={{ minWidth: "20%", maxWidth: "30%", paddingRight: "0.3rem" }}
+        >
+          <CustomInput
+            {...register("email.address", {
+              required: {
+                value: true,
+                message: l("Please enter your e-mail."),
+              },
+              validate: (value) => {
+                const user = getValues().email.user;
+                if (emailRegEx.test(`${user}@${value}`)) {
+                  return true;
+                } else {
+                  return l("Please check your email format.");
+                }
+              },
+            })}
+            placeholder={"example.com"}
+            type="text"
+            onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
+              enterKeyUpEventHandler(e);
+            }}
+            disabled={disabledEmailAddress}
+            clearButton={disabledEmailAddress ? false : setValue}
+          />
+        </DefaultCol>
+        <DefaultCol style={{ minWidth: "20%", maxWidth: "30%" }}>
+          <CustomDropdown
+            onClickItemHandler={(label) => {
+              // console.log(label);
+              if (label === "Enter directly") setDisabledEmailAddress(false);
+              else {
+                setValue("email.address", label);
+                setDisabledEmailAddress(true);
+              }
+            }}
+            itemAlign="end"
+            align="right"
+            initText={emailEnterDirectly}
+            items={[
+              {
+                key: "Enter directly",
+                label: emailEnterDirectly,
+                href: "#",
+                color: "#323232",
+              },
+              {
+                key: "gmail.com",
+                label: "gmail.com",
+                href: "#",
+                color: "#d64a2e",
+              },
+              {
+                key: "naver.com",
+                label: "naver.com",
+                href: "#",
+                color: "#32ad13",
+              },
+              {
+                key: "hotmail.com",
+                label: "hotmail.com",
+                href: "#",
+                color: "#fb7623",
+              },
+              {
+                key: "daum.com",
+                label: "daum.com",
+                href: "#",
+                color: "#337dfc",
+              },
+              {
+                key: "hanmail.net",
+                label: "hanmail.net",
+                href: "#",
+                color: "#337dfc",
+              },
+              {
+                key: "nate.com",
+                label: "nate.com",
+                href: "#",
+                color: "#ff1e1e",
+              },
+              {
+                key: "kakao.com",
+                label: "kakao.com",
+                href: "#",
+                color: "#ffad29",
+              },
+              {
+                key: "yahoo.co.kr",
+                label: "yahoo.co.kr",
+                href: "#",
+                color: "#8d3bff",
+              },
+            ]}
           />
         </DefaultCol>
       </DefaultRow>
@@ -289,8 +411,10 @@ export const SignInForm = ({
       <DefaultRow>
         <CenterCol>
           <div style={{ color: "hotpink" }}>
-            {getErrorMsg(errors, "email", "required") ||
-              getErrorMsg(errors, "email", "pattern") ||
+            {getErrorMsg(errors, "email.user", "required") ||
+              getErrorMsg(errors, "email.user", "validate") ||
+              getErrorMsg(errors, "email.address", "required") ||
+              getErrorMsg(errors, "email.address", "validate") ||
               getErrorMsg(errors, "password", "required") ||
               getErrorMsg(errors, "password", "minLength") ||
               l(errorMsg)}

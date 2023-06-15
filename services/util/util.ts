@@ -3,7 +3,7 @@ import CryptoJS from "crypto-js";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { FieldErrors, FieldValues, useForm } from "react-hook-form";
+import { FieldErrors, FieldValues } from "react-hook-form";
 import { FocusEvent, KeyboardEvent } from "react";
 import { cookies } from "next/dist/client/components/headers";
 
@@ -197,8 +197,14 @@ const getErrorMsg = (
   value: string,
   type: string
 ) => {
-  if (errors[value]?.type === type) return errors[value]?.message as string;
-  else return null;
+  if(value.indexOf(".") > -1) {
+    const values = value.split(".");
+    const error = errors[values[0]] as FieldValues;
+    if (error && error[values[1]]?.type === type) return error[values[1]]?.message as string;
+  } else {
+    if (errors[value]?.type === type) return errors[value]?.message as string;
+  }
+  return null;
 };
 
 // 엔터 입력 시 submit 버튼 클릭 효과

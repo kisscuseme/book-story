@@ -16,7 +16,7 @@ export default function SignIn() {
       </TopBar>
       <DefaultTitle>{l("Book Story")}</DefaultTitle>
       <SignInForm
-        emailPlaceholder={l("E-mail")}
+        emailEnterDirectly={l("Enter directly")}
         passwordPlaceholder={l("Password")}
         signInButtonText={l("Sign In")}
         resetPasswordButtonText={l("Reset Password")}

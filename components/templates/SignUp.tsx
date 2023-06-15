@@ -15,7 +15,7 @@ export default function SignUp() {
       </TopBar>
       <DefaultTitle>{l("Create an account")}</DefaultTitle>
       <SignUpForm
-        emailPlaceholder={l("E-mail")}
+        emailEnterDirectly={l("Enter directly")}
         namePlaceholder={l("Name")}
         passwordPlaceholder={l("Password")}
         reconfirmPasswordPlaceholder={l("Reconfirm Password")}

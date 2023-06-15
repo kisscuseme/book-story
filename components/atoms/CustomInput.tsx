@@ -33,6 +33,10 @@ const CustomFormControl = styled(FormControl)`
   &::placeholder {
     color: #afafaf;
   }
+  &:disabled {
+    opacity: 0.5;
+    background-color: transparent;
+  }
 `;
 
 /**
@@ -55,7 +59,7 @@ export const CustomInput = forwardRef(
     const [text, setText] = useState("");
     const wrapperStyle = {
       borderBottom: "1px solid #000000",
-      paddingRight: `${clearButton ? "1.5rem" : "0"}`,
+      paddingRight: `${clearButton && text ? "1.5rem" : "0"}`,
     };
     let inputRef: HTMLInputElement | null = null;
 
