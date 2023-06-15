@@ -32,8 +32,8 @@ export const DefaultContainer = styled(Container)`
   min-width: 375px;
   min-height: 100vh;
   height: 100%;
-  padding-left: 1.3rem;
-  padding-right: 1.3rem;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
 `;
 
 // 기본 Row 스타일 정의

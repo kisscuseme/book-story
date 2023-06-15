@@ -163,7 +163,7 @@ export default function SignUpForm({
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>
         <DefaultCol
-          style={{ minWidth: "20%", maxWidth: "30%", paddingRight: "0.3rem" }}
+          style={{ minWidth: "20%", maxWidth: "31%", paddingRight: "0.3rem" }}
         >
           <CustomInput
             {...register("email.address", {
