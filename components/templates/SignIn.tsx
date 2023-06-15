@@ -17,7 +17,7 @@ export default function SignIn() {
       <DefaultTitle>{l("Book Story")}</DefaultTitle>
       <SignInForm
         emailEnterDirectly={l("Enter directly")}
-        passwordPlaceholder={l("Password")}
+        passwordPlaceholder={`${l("Password")} (${l("6 or more letters or numbers")})`}
         signInButtonText={l("Sign In")}
         resetPasswordButtonText={l("Reset Password")}
         signUpButtonText={l("Sign Up")}

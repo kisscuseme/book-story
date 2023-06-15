@@ -17,8 +17,8 @@ export default function SignUp() {
       <SignUpForm
         emailEnterDirectly={l("Enter directly")}
         namePlaceholder={l("Name")}
-        passwordPlaceholder={l("Password")}
-        reconfirmPasswordPlaceholder={l("Reconfirm Password")}
+        passwordPlaceholder={`${l("Password")} (${l("6 or more letters or numbers")})`}
+        reconfirmPasswordPlaceholder={`${l("Reconfirm Password")} (${l("6 or more letters or numbers")})`}
         signUpButtonText={l("Create")}
       />
     </DefaultContainer>
