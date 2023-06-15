@@ -58,7 +58,7 @@ export default function ShowToast() {
       >
         <ToastContainer
           className="p-3"
-          position={"top-center"}
+          position={"bottom-center"}
           style={{ zIndex: 1, position: "fixed" }}
           ref={nodeRef}
         >
