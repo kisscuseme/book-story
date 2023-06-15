@@ -35,7 +35,7 @@ const CustomFormControl = styled(FormControl)`
     color: #afafaf;
   }
   &:disabled {
-    color: #737373;
+    color: #515151;
     background-color: #e7e7e7;
     border-radius: 0.3rem;
   }
