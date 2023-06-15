@@ -26,6 +26,7 @@ const CustomFormControl = styled(FormControl)`
   width: 100%;
   padding: 0;
   border-radius: 0;
+  padding: 0 0.3rem;
   &:focus {
     box-shadow: unset;
     background-color: transparent;
@@ -34,8 +35,9 @@ const CustomFormControl = styled(FormControl)`
     color: #afafaf;
   }
   &:disabled {
-    opacity: 0.5;
-    background-color: transparent;
+    color: #737373;
+    background-color: #e7e7e7;
+    border-radius: 0.3rem;
   }
 `;
 
