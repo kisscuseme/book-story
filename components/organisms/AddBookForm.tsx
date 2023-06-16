@@ -104,7 +104,6 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             onClick={(e) => {
               const values = getValues();
               getNLBooksData(values.keyword).then((res: any) => {
-                console.log(res);
                 const data = res.data.result[0];
                 const parser = new DOMParser();
                 const title = parser.parseFromString(data.titleInfo, "text/html").querySelector("body")?.textContent;
