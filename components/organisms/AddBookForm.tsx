@@ -88,7 +88,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             {...register("keyword")}
             placeholder={
               firstLoading
-                ? componentsTextData.bookAuthorPlaceholder
+                ? componentsTextData.searchKeywordPlaceholder
                 : l("Enter a keyword.")
             }
             clearButton={setValue}
@@ -115,7 +115,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
               });
             }}
           >
-            {firstLoading ? componentsTextData.addButton : l("Search")}
+            {firstLoading ? componentsTextData.searchButton : l("Search")}
           </CustomButton>
         </DefaultCol>
       </Row>
