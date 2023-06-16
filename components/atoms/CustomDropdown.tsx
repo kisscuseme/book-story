@@ -1,12 +1,18 @@
 "use client";
 
-import { Dropdown, SSRProvider } from "react-bootstrap";
-import { useEffect, useState } from "react";
+import {
+  Dropdown,
+  FormControl,
+  FormControlProps,
+  SSRProvider,
+} from "react-bootstrap";
+import { CSSProperties, Children, ForwardRefExoticComponent, ReactNode, RefAttributes, forwardRef, useEffect, useState } from "react";
 import { DropdownProps } from "react-bootstrap";
 import { AlignType } from "react-bootstrap/esm/types";
 import { ThemeProvider, styled } from "styled-components";
 import { useRecoilValue } from "recoil";
 import { rerenderDataState } from "@/states/states";
+import { CustomInput } from "./CustomInput";
 
 interface DropdownOwnProps {
   /**
@@ -49,6 +55,10 @@ interface DropdownOwnProps {
    * Title
    */
   title?: string;
+  /**
+   * custom menu
+   */
+  customMenu?: ForwardRefExoticComponent<CustomMenuProps & RefAttributes<HTMLInputElement>>;
 }
 
 export type CustomDropdownProps = DropdownOwnProps &
@@ -105,6 +115,46 @@ const StyledDropdownMenu = styled(Dropdown.Menu)`
   padding: ${(props) => props.theme.padding};
 `;
 
+interface CustomMenuProps {
+  children: ReactNode[];
+  style: CSSProperties;
+  className: string;
+  "aria-labelledby": string;
+}
+
+export const CustomMenu = forwardRef(
+  (
+    { children, style, className, "aria-labelledby": labeledBy }: CustomMenuProps,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => {
+    const [value, setValue] = useState("");
+
+    return (
+      <div
+        ref={ref}
+        style={style}
+        className={className}
+        aria-labelledby={labeledBy}
+      >
+        <FormControl
+          autoFocus
+          className="mx-3 my-2 w-auto"
+          placeholder="Type to filter..."
+          onChange={(e) => setValue(e.target.value)}
+          value={value}
+        />
+        <ul className="list-unstyled">
+          {Children.toArray(children).filter(
+            (child: any) =>
+              !value || child.props.children.toLowerCase().startsWith(value)
+          )}
+        </ul>
+      </div>
+    );
+  }
+);
+CustomMenu.displayName = "CustomMenu";
+
 /**
  * 기본 드롭다운 컴포넌트
  */
@@ -119,6 +169,7 @@ export const CustomDropdown = ({
   onClickItemHandler,
   title,
   align = "right",
+  customMenu,
   ...props
 }: CustomDropdownProps) => {
   const [selectedText, setSelectedText] = useState(initText);
@@ -128,15 +179,20 @@ export const CustomDropdown = ({
   const rerenderData = useRecoilValue(rerenderDataState);
 
   useEffect(() => {
-    if(initText) setSelectedText(initText);
+    if (initText) setSelectedText(initText);
   }, [rerenderData]);
 
   const theme = {
     backgroundColor: currentBackgroundColor,
     color: currentColor,
-    fontSize: size === "large" ? "1rem" : size === "medium" ? "0.9rem" : "0.8rem",
+    fontSize:
+      size === "large" ? "1rem" : size === "medium" ? "0.9rem" : "0.8rem",
     padding:
-      size === "large" ? "0.3rem 0.5rem" : size === "medium" ? "0.3rem 0.45rem" : "0.3rem 0.4rem",
+      size === "large"
+        ? "0.3rem 0.5rem"
+        : size === "medium"
+        ? "0.3rem 0.45rem"
+        : "0.3rem 0.4rem",
   };
 
   return (
@@ -150,7 +206,7 @@ export const CustomDropdown = ({
         </ThemeProvider>
 
         <ThemeProvider theme={theme}>
-          <StyledDropdownMenu>
+          <StyledDropdownMenu as={customMenu}>
             {items &&
               items.map((item) => (
                 <Dropdown.Item

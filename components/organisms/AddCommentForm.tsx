@@ -6,7 +6,7 @@ import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
-import { CustomDropdown } from "../atoms/CustomDropdown";
+import { CustomDropdown, CustomMenu } from "../atoms/CustomDropdown";
 import {
   decrypt,
   encrypt,
@@ -128,6 +128,7 @@ export default function AddCommentForm({
       <Row style={{ paddingLeft: "0.6rem", marginLeft: "0" }}>
         <DefaultCol style={{ maxWidth: "22%" }}>
           <CustomDropdown
+            // customMenu={CustomMenu}
             onClickItemHandler={(label) => {
               // console.log(label);
               setCommentType(label);
