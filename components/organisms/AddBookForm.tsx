@@ -10,13 +10,14 @@ import { enterKeyUpEventHandler, getErrorMsg, l } from "@/services/util/util";
 import { CustomInput } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
+import { getNLBooksData } from "@/services/api/books";
 
 interface AddBookFormProps {
   componentsTextData: Record<string, string>;
 }
 
 export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
-  const { register, handleSubmit, formState, setValue } = useForm();
+  const { register, handleSubmit, formState, setValue, getValues } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowToast = useSetRecoilState(showToastState);
   const userInfo = useRecoilValue(userInfoState);
@@ -79,6 +80,53 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
       }}
     >
       <Row>
+        <DefaultCol style={{ maxWidth: "4rem" }}>
+          검색 : 
+        </DefaultCol>
+        <DefaultCol style={{ paddingLeft: "0" }}>
+          <CustomInput
+            {...register("keyword")}
+            placeholder={
+              firstLoading
+                ? componentsTextData.bookAuthorPlaceholder
+                : l("Enter a keyword.")
+            }
+            clearButton={setValue}
+          />
+        </DefaultCol>
+        <DefaultCol style={{ maxWidth: "5rem", paddingLeft: "0" }}>
+          <CustomButton
+            backgroundColor="#5b5b5b"
+            color="#ffffff"
+            size="sm"
+            align="right"
+            type="button"
+            onClick={(e) => {
+              const values = getValues();
+              getNLBooksData(values.keyword).then((res: any) => {
+                const data = res.data.result[0];
+                const parser = new DOMParser();
+                const title = parser.parseFromString(data.titleInfo, "text/html").querySelector("body")?.textContent;
+                const authorHtml= parser.parseFromString(data.authorInfo, "text/html");
+                authorHtml.querySelector(".searching_txt")?.remove();
+                const author = authorHtml.querySelector("body")?.textContent;
+                setValue("title", title);
+                setValue("author", author);
+              });
+            }}
+          >
+            {firstLoading ? componentsTextData.addButton : l("Search")}
+          </CustomButton>
+        </DefaultCol>
+      </Row>
+      <Row>
+        <DefaultCol>
+          <div style={{ color: "hotpink", paddingTop: "0.3rem" }}>
+            {getErrorMsg(formState.errors, "title", "required")}
+          </div>
+        </DefaultCol>
+      </Row>
+      <Row>
         <DefaultCol style={{ minWidth: "45%" }}>
           <CustomInput
             {...register("title", {
@@ -108,12 +156,12 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             clearButton={setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ paddingLeft: "0" }}>
+        <DefaultCol style={{ maxWidth: "5rem", paddingLeft: "0" }}>
           <CustomButton
             backgroundColor="#5b5b5b"
             color="#ffffff"
             size="sm"
-            align="left"
+            align="right"
             type="button"
             onClick={(e) => {
               e.currentTarget.form?.requestSubmit();

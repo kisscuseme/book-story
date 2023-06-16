@@ -1,5 +1,4 @@
 import { getCookie, l } from "@/services/util/util";
-import { cookies } from "next/dist/client/components/headers";
 import { DefaultContainer, DefaultTitle } from "../atoms/DefaultAtoms";
 import { TopBar } from "../molecules/TopBar";
 import { LanguageSelectorForServer } from "../organisms/LanguageSelectorForServer";

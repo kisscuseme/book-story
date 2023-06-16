@@ -28,6 +28,7 @@ import { CustomButton } from "../atoms/CustomButton";
 import { styled } from "styled-components";
 import { CustomInput } from "../atoms/CustomInput";
 import { CustomDropdown } from "../atoms/CustomDropdown";
+import { getNLBooksData } from "@/services/api/books";
 
 // sign in form props
 export interface SignInFormProps {
@@ -73,6 +74,9 @@ export const SignInForm = ({
   const [disabledEmailAddress, setDisabledEmailAddress] = useState(false);
 
   useEffect(() => {
+    getNLBooksData("토지").then(data => {
+      console.log(data)
+    });
     // 최초 로딩 시 input 컴포넌트 값에 기존 로그인 이메일 바인딩
     if (savedEmail) {
       const email = savedEmail.split("@");
