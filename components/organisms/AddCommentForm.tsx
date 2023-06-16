@@ -1,25 +1,19 @@
 import { getUserPath, insertData } from "@/services/firebase/db";
-import {
-  bookListState,
-  showModalState,
-  showToastState,
-  userInfoState,
-} from "@/states/states";
+import { bookListState, showToastState, userInfoState } from "@/states/states";
 import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Button,
-  Form,
-  Row,
-  Toast,
-  ToastContainer,
-  useAccordionButton,
-} from "react-bootstrap";
+import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomDropdown } from "../atoms/CustomDropdown";
-import { enterKeyUpEventHandler, getErrorMsg, l } from "@/services/util/util";
+import {
+  decrypt,
+  encrypt,
+  enterKeyUpEventHandler,
+  getErrorMsg,
+  l,
+} from "@/services/util/util";
 import { CustomButton } from "../atoms/CustomButton";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { CustomInput } from "../atoms/CustomInput";
@@ -78,7 +72,7 @@ export default function AddCommentForm({
             const comment = {
               id: data.docId,
               type: data.data.type,
-              text: data.data.text,
+              text: decrypt(data.data.text, userInfo?.uid+data.docId),
               timestamp: tempTimestamp + 1,
             };
             if (tempBookList[i].comments) {
@@ -111,6 +105,10 @@ export default function AddCommentForm({
       data: {
         type: type,
         text: text,
+      },
+      encryptData: {
+        field: "text",
+        key: userInfo?.uid || "",
       },
     });
   };

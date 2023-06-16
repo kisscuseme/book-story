@@ -9,12 +9,14 @@ export const getNLBooksData = (kwd: string) => {
     let urlParams = new URLSearchParams("");
     urlParams.append("key", apiKey || "");
     urlParams.append("apiType", "json");
+    urlParams.append("category", "도서");
     urlParams.append("kwd", kwd);
     axios({
       method: "get",
       url: `${url}?${urlParams.toString()}`,
     })
       .then(function (response) {
+        console.log(response);
         resolve(response);
       })
       .catch((error) => reject(error));

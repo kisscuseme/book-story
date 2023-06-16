@@ -20,6 +20,7 @@ import {
 } from "firebase/firestore";
 import { firebaseDb } from "./firebase";
 import { WhereConfigType } from "@/types/types";
+import { encrypt } from "../util/util";
 
 // 한 번에 조회할 데이터 개수 제한
 const defaultLimitNumber = 15;
@@ -128,6 +129,10 @@ const updateData = async (updateInfo: {
 const insertData = async (insertInfo: {
   path: string;
   data: WithFieldValue<DocumentData>;
+  encryptData?: {
+    field: string;
+    key: string;
+  };
 }) => {
   try {
     // Get a new write batch
@@ -135,6 +140,12 @@ const insertData = async (insertInfo: {
 
     const docRef = doc(collection(firebaseDb, insertInfo.path));
     const dataRef = doc(firebaseDb, insertInfo.path, docRef.id);
+    if (insertInfo.encryptData) {
+      insertInfo.data[insertInfo.encryptData.field] = encrypt(
+        insertInfo.data[insertInfo.encryptData.field],
+        insertInfo.encryptData.key + docRef.id
+      );
+    }
     const data = {
       timestamp: Timestamp.now(),
       ...insertInfo.data,
@@ -166,7 +177,7 @@ const deleteData = async (deleteInfo: {
 
     if (deleteInfo.confirmPath) {
       const confirmData = await queryData([], deleteInfo.confirmPath, 1);
-      if(confirmData.dataList.length > 0) {
+      if (confirmData.dataList.length > 0) {
         batch.set(dataRef, { status: "deleted" });
       }
     }

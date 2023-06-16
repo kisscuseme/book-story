@@ -2,16 +2,14 @@ import { admin } from "@/services/firebase/firebase.admin";
 import Home from "../page";
 import BookStory from "@/components/templates/BookStory";
 import { BookType, CommentType } from "@/types/types";
-import { getCookie, l } from "@/services/util/util";
+import { decrypt, getCookie, l } from "@/services/util/util";
 import { getUserPath } from "@/services/firebase/db";
 import { queryDataFromServer } from "@/services/firebase/db.admin";
 
 const BookStoryPage = async () => {
   try {
     // firebase 서버 토큰 검증
-    const token = await admin
-      .auth()
-      .verifyIdToken(getCookie("token") || "");
+    const token = await admin.auth().verifyIdToken(getCookie("token") || "");
     if (token.uid !== "") {
       const componentsTextData: Record<string, string> = {
         title: l("My bookshelf"),
@@ -25,7 +23,7 @@ const BookStoryPage = async () => {
         verseLabel: l("Verse"),
         feelLabel: l("Feel"),
         enterContentPlaceholder: l("Enter your content."),
-        noContentViewed: l("No content viewed.")
+        noContentViewed: l("No content viewed."),
       };
 
       // 서버로부터 데이터 가져오기
@@ -38,7 +36,7 @@ const BookStoryPage = async () => {
         "desc"
       );
       const serverBookData: BookType[] = [];
-      if(books.dataList.length > 0) {
+      if (books.dataList.length > 0) {
         await (() => {
           return new Promise((resolve) => {
             books.dataList.map(async (book) => {
@@ -56,7 +54,7 @@ const BookStoryPage = async () => {
               comments.dataList.map((comment) => {
                 commentList.push({
                   id: comment.id,
-                  text: comment.text,
+                  text: decrypt(comment.text, token.uid + comment.id),
                   type: comment.type,
                   transType: l(comment.type),
                   timestamp: comment.timestamp.toMillis(),

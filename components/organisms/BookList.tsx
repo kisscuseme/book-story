@@ -3,7 +3,7 @@
 import { Accordion, Row } from "react-bootstrap";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomButton } from "../atoms/CustomButton";
-import { l } from "@/services/util/util";
+import { decrypt, l } from "@/services/util/util";
 import { accordionCustomStyle } from "../molecules/CustomMolecules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
@@ -194,7 +194,7 @@ export default function BookList({
             dataCommentList.push({
               id: commentData.id,
               type: commentData.type,
-              text: commentData.text,
+              text: decrypt(commentData.text, userInfo?.uid + commentData.id),
               timestamp: commentData.timestamp.toMillis(),
             });
           });
@@ -269,7 +269,7 @@ export default function BookList({
           dataList.push({
             id: data.id,
             type: data.type,
-            text: data.text,
+            text: decrypt(data.text, userInfo?.uid + data.id),
             timestamp: data.timestamp.toMillis(),
           });
         });
@@ -418,7 +418,11 @@ export default function BookList({
                       />
                     </span>
                     <span
-                      style={{ paddingLeft: "0.3rem", paddingRight: "0.3rem", fontSize: "1.15rem" }}
+                      style={{
+                        paddingLeft: "0.3rem",
+                        paddingRight: "0.3rem",
+                        fontSize: "1.15rem",
+                      }}
                     >
                       {book.title}
                       {book.author && (
