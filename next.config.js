@@ -2,7 +2,11 @@
 const withPlugins = require("next-compose-plugins");
 const withPWA = require("next-pwa");
 
-const nextConfig = {};
+const nextConfig = {
+  compiler: {
+    styledComponents: true,
+  },
+};
 
 module.exports = withPlugins(
   [

@@ -5,8 +5,10 @@ import {
   Button,
   ButtonProps,
   Col,
+  ColProps,
   Container,
   Row,
+  SSRProvider,
 } from "react-bootstrap";
 import { styled } from "styled-components";
 import { CustomButton } from "./CustomButton";
@@ -42,9 +44,17 @@ export const DefaultRow = styled(Row)`
 `;
 
 // 기본 Col 스타일 정의
-export const DefaultCol = styled(Col)`
+const StyledCol = styled(Col)`
   margin: auto;
 `;
+
+export const DefaultCol = ({ ...props }: ColProps) => {
+  return (
+    <SSRProvider>
+      <StyledCol {...props}>{props.children}</StyledCol>
+    </SSRProvider>
+  );
+};
 
 // 그룹 버튼 스타일 정의
 export const GroupButton = styled(CustomButton)`
