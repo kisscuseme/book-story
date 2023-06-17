@@ -19,7 +19,7 @@ const BookStoryPage = async () => {
         searchKeywordPlaceholder: l("Enter a keyword."),
         addButton: l("Add"),
         editButton: l("Edit"),
-        searchButton: l("Search"),
+        searchTitle: l("Search"),
         verseLabel: l("Verse"),
         feelLabel: l("Feel"),
         enterContentPlaceholder: l("Enter your content."),

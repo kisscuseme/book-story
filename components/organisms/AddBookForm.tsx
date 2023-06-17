@@ -115,7 +115,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
       }}
     >
       <Row>
-        <DefaultCol style={{ maxWidth: "5rem" }}>{l("Search")} :</DefaultCol>
+        <DefaultCol style={{ maxWidth: "5rem" }}>{firstLoading ? componentsTextData.searchTitle : l("Search")} :</DefaultCol>
         <DefaultCol style={{ paddingLeft: "0" }}>
           <CustomDropdown
             id="search-dropdown"
