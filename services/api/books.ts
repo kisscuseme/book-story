@@ -14,7 +14,7 @@ export const getNLBooksData = (kwd: string) => {
       url: `${url}?${urlParams.toString()}`,
     })
       .then(function (response) {
-        console.log(response);
+        // console.log(response);
         const dataList: any[] = response.data.result;
         const result: Record<string, any>[] = [];
         if(dataList) {

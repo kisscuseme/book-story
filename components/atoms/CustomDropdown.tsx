@@ -155,7 +155,6 @@ export const CustomDropdown = ({
       <StyledDropdownMenu
         renderOnMount={true}
         style={{
-          width: "100%",
           marginTop: "0.2rem",
           borderWidth: "0",
           padding: "0.5rem 0",
@@ -201,7 +200,10 @@ export const CustomDropdown = ({
               <div className={id}>
                 {items && items?.length > 0 ? (
                   <style>{`
-                    .${id} .dropdown-menu {display: block;
+                    .${id} .dropdown-menu {
+                      display: block;
+                      margin-left: -4.5rem;
+                      width: calc(100% + 4.5rem);
                   }`}</style>
                 ) : (
                   <style>{`

@@ -123,14 +123,14 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
           <CustomDropdown
             id="search-dropdown"
             items={searchList}
-            initText="test"
+            initText=""
+            align="left"
             onClickItemHandler={(label) => {
               setValue("title", label.title);
               setValue("author", label.author);
               setValue("keyword", "");
               setKeyword("");
             }}
-            align="left"
             customToggle={
               <CustomInput
                 {...register("keyword")}
