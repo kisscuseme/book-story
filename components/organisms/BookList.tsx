@@ -122,7 +122,7 @@ export default function BookList({
 
   const queryBookData = async () => {
     try {
-      if (userInfo?.uid) {
+      if (!firstLoading && userInfo?.uid) {
         const bookPath = `${getUserPath()}/${userInfo?.uid}/books`;
         const bookData = await queryData(
           [],
@@ -232,7 +232,7 @@ export default function BookList({
 
   const queryCommentData = async () => {
     try {
-      if (userInfo?.uid) {
+      if (!firstLoading && userInfo?.uid) {
         const path = `${getUserPath()}/${
           userInfo?.uid
         }/books/${targetLoadingComment}/comments`;

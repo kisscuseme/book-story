@@ -9,7 +9,6 @@ import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomDropdown } from "../atoms/CustomDropdown";
 import {
   decrypt,
-  encrypt,
   enterKeyUpEventHandler,
   getErrorMsg,
   l,
