@@ -75,7 +75,7 @@ export default function EditCommentForm({
         const comment = {
           id: data.docId,
           type: data.data.type,
-          text: decrypt(data.data.text, bookId + data.docId),
+          text: decrypt(data.data.text, userInfo?.uid + data.docId),
         };
         for (let i = 0; i < tempBookList.length; i++) {
           if (tempBookList[i].id === bookId) {
@@ -114,7 +114,7 @@ export default function EditCommentForm({
       docId: commentId,
       data: {
         type: type,
-        text: encrypt(text, bookId + commentId),
+        text: encrypt(text, userInfo?.uid + commentId),
       },
     });
   };
