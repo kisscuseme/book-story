@@ -191,6 +191,7 @@ export default function SignUpForm({
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "8rem" }}>
           <CustomDropdown
+          id="signUpEmailSelector"
             onClickItemHandler={(label) => {
               // console.log(label);
               if (label === "Enter directly") setDisabledEmailAddress(false);

@@ -45,6 +45,7 @@ export const LanguageSelectorForServer = ({
       initText={getLanguageName(langForServer)}
       items={data}
       onClickItemHandler={selectLanguage}
+      id="LanguageSelectorForServer"
     />
   );
 };

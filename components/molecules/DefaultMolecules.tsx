@@ -8,7 +8,7 @@ const StyledDivisionLine = styled.div`
   margin: 0.7rem;
 `;
 
-export const DivisionLine = ({ color = "#ffffff" }: { color?: string }) => {
+const DivisionLine = ({ color = "#ffffff" }: { color?: string }) => {
   const theme = {
     borderColor: color,
   };
@@ -18,3 +18,5 @@ export const DivisionLine = ({ color = "#ffffff" }: { color?: string }) => {
     </ThemeProvider>
   );
 };
+
+export { DivisionLine };

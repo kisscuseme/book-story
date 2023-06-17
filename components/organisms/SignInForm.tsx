@@ -74,9 +74,6 @@ export const SignInForm = ({
   const [disabledEmailAddress, setDisabledEmailAddress] = useState(false);
 
   useEffect(() => {
-    getNLBooksData("토지").then(data => {
-      console.log(data)
-    });
     // 최초 로딩 시 input 컴포넌트 값에 기존 로그인 이메일 바인딩
     if (savedEmail) {
       const email = savedEmail.split("@");
@@ -291,6 +288,7 @@ export const SignInForm = ({
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "8rem" }}>
           <CustomDropdown
+            id="signInEmailSelector"
             onClickItemHandler={(label) => {
               // console.log(label);
               if (label === "Enter directly") setDisabledEmailAddress(false);

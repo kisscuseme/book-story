@@ -50,6 +50,7 @@ export const LanguageSelectorForClient = () => {
       initText={getLanguageName(i18next.language)}
       items={data}
       onClickItemHandler={selectLanguage}
+      id="LanguageSelectorForClient"
     />
   ) : (
     <></>

@@ -210,7 +210,7 @@ export const CustomDropdown = ({
                     .${id} .dropdown-menu {display: none;
                   }`}</style>
                 )}
-                <Dropdown.Header>{customToggle}</Dropdown.Header>
+                <Dropdown.Header id={id}>{customToggle}</Dropdown.Header>
                 {makeItemComponents()}
               </div>
             }

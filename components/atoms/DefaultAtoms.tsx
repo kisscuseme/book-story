@@ -1,9 +1,7 @@
 "use client";
 
-import { forwardRef } from "react";
 import {
   Button,
-  ButtonProps,
   Col,
   ColProps,
   Container,
@@ -14,18 +12,9 @@ import { styled } from "styled-components";
 import { CustomButton } from "./CustomButton";
 
 // 기본 버튼 스타일 정의
-const StyledButton = styled(Button)`
+const DefaultButton = styled(Button)`
   float: right;
 `;
-export const DefaultButton = forwardRef((props: ButtonProps, ref) => {
-  const { children, ...otherProps } = props;
-  return (
-    <StyledButton {...otherProps} ref={ref}>
-      {children}
-    </StyledButton>
-  );
-});
-DefaultButton.displayName = "DefaultButton";
 
 // 기본 컨테이너 스타일 정의
 export const DefaultContainer = styled(Container)`
