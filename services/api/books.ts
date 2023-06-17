@@ -1,5 +1,3 @@
-// https://www.nl.go.kr/NL/search/openApi/search.do?key=43177592ebcc8c511727678be582e083865ccbef6f5f8dcfb4bdb63f7db36465&kwd=%ED%86%A0%EC%A7%80
-
 import axios from "axios";
 
 export const getNLBooksData = (kwd: string) => {
@@ -16,8 +14,20 @@ export const getNLBooksData = (kwd: string) => {
       url: `${url}?${urlParams.toString()}`,
     })
       .then(function (response) {
-        console.log(response);
-        resolve(response);
+        // console.log(response);
+        const dataList: any[] = response.data.result;
+        const result: Record<string, any>[] = [];
+        if(dataList) {
+          dataList.map(data => {
+            result.push({
+              title: data.titleInfo,
+              author: data.authorInfo,
+            });
+          });
+          resolve(result);
+        } else {
+          resolve([]);
+        }
       })
       .catch((error) => reject(error));
   });

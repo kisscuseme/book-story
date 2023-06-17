@@ -6,11 +6,17 @@ import { Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
-import { enterKeyUpEventHandler, getErrorMsg, l } from "@/services/util/util";
+import {
+  enterKeyUpEventHandler,
+  getErrorMsg,
+  getTextfromHtmlString,
+  l,
+} from "@/services/util/util";
 import { CustomInput } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
 import { getNLBooksData } from "@/services/api/books";
+import { CustomDropdown, DropdownDataProps } from "../atoms/CustomDropdown";
 
 interface AddBookFormProps {
   componentsTextData: Record<string, string>;
@@ -23,10 +29,39 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
   const userInfo = useRecoilValue(userInfoState);
   const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchList, setSearchList] = useState<DropdownDataProps[]>([]);
+  const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
     setFirstLoading(false);
   }, []);
+
+  useEffect(() => {
+    let debounce: NodeJS.Timeout;
+    if (keyword) {
+      debounce = setTimeout(() => {
+        const tempSearchList: DropdownDataProps[] = [];
+        getNLBooksData(keyword).then((res: any) => {
+          res.map((data: any) => {
+            tempSearchList.push({
+              key: tempSearchList.length.toString(),
+              label: `${data.title} / ${data.author}`,
+              refData: {
+                title: getTextfromHtmlString(data.title),
+                author: getTextfromHtmlString(data.author),
+              },
+            });
+          });
+          setSearchList(tempSearchList);
+        });
+      }, 200);
+    } else {
+      setSearchList([]);
+    }
+    return () => {
+      clearTimeout(debounce);
+    };
+  }, [keyword]);
 
   // Book 데이터 추가 시 react query 활용
   const insertBookMutation = useMutation(insertData, {
@@ -80,43 +115,37 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
       }}
     >
       <Row>
-        <DefaultCol style={{ maxWidth: "5rem" }}>
-          {l("Search")} : 
-        </DefaultCol>
+        <DefaultCol style={{ maxWidth: "5rem" }}>{l("Search")} :</DefaultCol>
         <DefaultCol style={{ paddingLeft: "0" }}>
-          <CustomInput
-            {...register("keyword")}
-            placeholder={
-              firstLoading
-                ? componentsTextData.searchKeywordPlaceholder
-                : l("Enter a keyword.")
-            }
-            clearButton={setValue}
-          />
-        </DefaultCol>
-        <DefaultCol style={{ maxWidth: "5rem", paddingLeft: "0" }}>
-          <CustomButton
-            backgroundColor="#5b5b5b"
-            color="#ffffff"
-            size="sm"
-            align="right"
-            type="button"
-            onClick={(e) => {
-              const values = getValues();
-              getNLBooksData(values.keyword).then((res: any) => {
-                const data = res.data.result[0];
-                const parser = new DOMParser();
-                const title = parser.parseFromString(data.titleInfo, "text/html").querySelector("body")?.textContent;
-                const authorHtml= parser.parseFromString(data.authorInfo, "text/html");
-                authorHtml.querySelector(".searching_txt")?.remove();
-                const author = authorHtml.querySelector("body")?.textContent;
-                setValue("title", title);
-                setValue("author", author);
-              });
+          <CustomDropdown
+            id="search-dropdown"
+            items={searchList}
+            initText="test"
+            onClickItemHandler={(label) => {
+              setValue("title", label.title);
+              setValue("author", label.author);
+              setValue("keyword", "");
+              setKeyword("");
             }}
-          >
-            {firstLoading ? componentsTextData.searchButton : l("Search")}
-          </CustomButton>
+            align="left"
+            customToggle={
+              <CustomInput
+                {...register("keyword")}
+                placeholder={
+                  firstLoading
+                    ? componentsTextData.searchKeywordPlaceholder
+                    : l("Enter a keyword.")
+                }
+                clearButton={(field, value) => {
+                  setValue(field, value);
+                  setKeyword("");
+                }}
+                onChange={(e) => {
+                  setKeyword(e.target.value);
+                }}
+              />
+            }
+          />
         </DefaultCol>
       </Row>
       <Row>

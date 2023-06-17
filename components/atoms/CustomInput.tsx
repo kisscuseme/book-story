@@ -47,8 +47,8 @@ const CustomFormControl = styled(FormControl)`
  * 참고: https://ko.legacy.reactjs.org/docs/forwarding-refs.html
  */
 interface CustomInputOwnProps {
-  onChange: ChangeHandler;
-  clearButton?: UseFormSetValue<FieldValues> | boolean;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  clearButton?: UseFormSetValue<FieldValues> | boolean | (() => void);
 }
 
 type CustomInputProps = CustomInputOwnProps & FormControlProps;

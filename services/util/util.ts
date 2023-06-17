@@ -116,7 +116,7 @@ const setCookie = (
 ) => {
   const date = new Date();
   date.setTime(date.getTime() + unixTime);
-  if(typeof document !== "undefined") {
+  if (typeof document !== "undefined") {
     document.cookie =
       encodeURIComponent(name) +
       "=" +
@@ -125,7 +125,9 @@ const setCookie = (
       date.toUTCString() +
       ";path=/";
   } else {
-    cookies().set(name, value, {maxAge: Math.floor((unixTime - date.getTime())/1000)});
+    cookies().set(name, value, {
+      maxAge: Math.floor((unixTime - date.getTime()) / 1000),
+    });
   }
 };
 
@@ -142,7 +144,7 @@ const getCookie = (name: string) => {
 
 // 쿠키 delete
 const deleteCookie = (name: string) => {
-  if(typeof document !== "undefined") {
+  if (typeof document !== "undefined") {
     document.cookie =
       encodeURIComponent(name) + "=; expires=Thu, 01 JAN 1999 00:00:10 GMT";
   } else {
@@ -197,10 +199,11 @@ const getErrorMsg = (
   value: string,
   type: string
 ) => {
-  if(value.indexOf(".") > -1) {
+  if (value.indexOf(".") > -1) {
     const values = value.split(".");
     const error = errors[values[0]] as FieldValues;
-    if (error && error[values[1]]?.type === type) return error[values[1]]?.message as string;
+    if (error && error[values[1]]?.type === type)
+      return error[values[1]]?.message as string;
   } else {
     if (errors[value]?.type === type) return errors[value]?.message as string;
   }
@@ -224,6 +227,18 @@ const onFocusHandler = (e: FocusEvent<HTMLInputElement>) => {
   }, 100);
 };
 
+const getHtmlfromString = (string: string) => {
+  const divTag = document.createElement("div");
+  divTag.innerHTML = string;
+  return divTag;
+};
+
+const getTextfromHtmlString = (htmlString: string) => {
+  const divTag = document.createElement("div");
+  divTag.innerHTML = htmlString;
+  return divTag.textContent;
+};
+
 export {
   emailRegEx,
   checkEmail,
@@ -243,4 +258,6 @@ export {
   getErrorMsg,
   enterKeyUpEventHandler,
   onFocusHandler,
+  getHtmlfromString,
+  getTextfromHtmlString,
 };
