@@ -55,10 +55,12 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
           });
           setSearchList(tempSearchList);
         });
-      }, 200);
+      }, 500);
     } else {
       setSearchList([]);
     }
+
+    // 이전 작업 Clean
     return () => {
       clearTimeout(debounce);
     }
