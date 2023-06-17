@@ -6,7 +6,7 @@ import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
-import { CustomDropdown, CustomMenu } from "../atoms/CustomDropdown";
+import { CustomDropdown } from "../atoms/CustomDropdown";
 import {
   decrypt,
   encrypt,
