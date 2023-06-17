@@ -32,21 +32,22 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchList, setSearchList] = useState<DropdownDataProps[]>([]);
   const [keyword, setKeyword] = useState("");
+  const [debounce, setDebounce] = useState<NodeJS.Timeout>();
 
   useEffect(() => {
     setFirstLoading(false);
   }, []);
 
   useEffect(() => {
-    let debounce: NodeJS.Timeout;
+    if(debounce) clearTimeout(debounce);
     if (keyword) {
-      debounce = setTimeout(() => {
+      setDebounce(setTimeout(() => {
         const tempSearchList: DropdownDataProps[] = [];
         getNLBooksData(keyword).then((res: any) => {
           res.map((data: any) => {
             tempSearchList.push({
               key: tempSearchList.length.toString(),
-              label: `${data.title} / ${data.author}`,
+              label: `${data.title}${data.author && (" / " + data.author)}`,
               refData: {
                 title: getTextfromHtmlString(data.title),
                 author: getTextfromHtmlString(data.author),
@@ -55,13 +56,10 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
           });
           setSearchList(tempSearchList);
         });
-      }, 200);
+      }, 200));
     } else {
       setSearchList([]);
     }
-    return () => {
-      clearTimeout(debounce);
-    };
   }, [keyword]);
 
   // Book 데이터 추가 시 react query 활용

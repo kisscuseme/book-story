@@ -1,3 +1,6 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanssc.css);
+@import url(http://fonts.googleapis.com/earlyaccess/notosanstc.css);
+
 body {
   --bs-body-bg: #efefef;
 }
@@ -14,17 +17,9 @@ body {
   unicode-range: U+0020-007E, U+AC00-D7A3, U+3131-318E;
 }
 
-@font-face {
-  font-family: 'Ma Shan Zheng';
-  src: local('Ma Shan Zheng'), url('https://fonts.cdnfonts.com/s/29953/MaShanZheng-Regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  unicode-range: U+4E00-9FD5;
-}
-
 .container,
 .container-fluid {
-  font-family: 'GangwonEdu_OTFBoldA', 'Ma Shan Zheng', 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'GangwonEdu_OTFBoldA', 'Noto Sans TC', 'Noto Sans SC', 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   -webkit-tap-highlight-color: transparent;
   background-color: #f2f2f2;
   min-height: 100vh;
