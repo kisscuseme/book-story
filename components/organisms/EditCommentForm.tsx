@@ -13,6 +13,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomDropdown } from "../atoms/CustomDropdown";
 import {
+  encrypt,
   enterKeyUpEventHandler,
   getErrorMsg,
   l,
@@ -112,7 +113,7 @@ export default function EditCommentForm({
       docId: commentId,
       data: {
         type: type,
-        text: text,
+        text: encrypt(text, bookId + commentId),
       },
     });
   };
@@ -226,9 +227,7 @@ export default function EditCommentForm({
             ]}
           />
         </DefaultCol>
-        <DefaultCol
-          style={{ paddingLeft: "0", paddingRight: "0.3rem" }}
-        >
+        <DefaultCol style={{ paddingLeft: "0", paddingRight: "0.3rem" }}>
           <CustomInput
             {...register("text", {
               required: {
@@ -280,7 +279,7 @@ export default function EditCommentForm({
             color="#767676"
             size="sm"
             align="right"
-            style={{marginRight: "0.7rem"}}
+            style={{ marginRight: "0.7rem" }}
             type="button"
             onClick={(e) => {
               e.currentTarget.form?.requestSubmit();
