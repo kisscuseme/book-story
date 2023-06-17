@@ -91,18 +91,17 @@ export default function BookList({
     // 서버로부터 전달 받은 마지막 데이터 키 값을 다음 로드할 데이터 기준점으로 활용
     // 서버와 클라이언트 간 lastVisible 데이터 구조가 일치하지 않아 추가함
     if (userInfo?.uid) {
-      console.log(bookList);
       if (bookLastVisible?.constructor === String) {
         const path = `${getUserPath()}/${userInfo?.uid}/books`;
         getLastVisible(path, bookLastVisible).then((data) => {
           setNextLastVisible(data);
         });
       }
-      if (bookList.length > 0) {
+      if (serverBookData.length > 0) {
         const tempCommentLastVisible = {
           ...nextCommentLastVisible,
         };
-        bookList.map(async (book, index) => {
+        serverBookData.map(async (book, index) => {
           if (book.commentLastVisible?.constructor === String) {
             const path = `${getUserPath()}/${userInfo?.uid}/books/${
               book.id
@@ -113,7 +112,7 @@ export default function BookList({
             );
             tempCommentLastVisible[book.id] = lastVisible;
           }
-          if (bookList.length === index + 1) {
+          if (serverBookData.length === index + 1) {
             setNextCommentLastVisible(tempCommentLastVisible);
           }
         });
