@@ -11,6 +11,7 @@ import {
   getErrorMsg,
   getTextfromHtmlString,
   l,
+  onFocusHandler,
 } from "@/services/util/util";
 import { CustomInput } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
@@ -143,6 +144,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
                 onChange={(e) => {
                   setKeyword(e.target.value);
                 }}
+                onFocus={onFocusHandler}
               />
             }
           />
@@ -171,6 +173,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             }
             onKeyUp={enterKeyUpEventHandler}
             clearButton={setValue}
+            onFocus={onFocusHandler}
           />
         </DefaultCol>
         <DefaultCol style={{ minWidth: "35%" }}>
@@ -183,6 +186,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             }
             onKeyUp={enterKeyUpEventHandler}
             clearButton={setValue}
+            onFocus={onFocusHandler}
           />
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "5rem", paddingLeft: "0" }}>

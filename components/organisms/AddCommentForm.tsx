@@ -12,6 +12,7 @@ import {
   enterKeyUpEventHandler,
   getErrorMsg,
   l,
+  onFocusHandler,
 } from "@/services/util/util";
 import { CustomButton } from "../atoms/CustomButton";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
@@ -172,6 +173,7 @@ export default function AddCommentForm({
             }
             onKeyUp={enterKeyUpEventHandler}
             clearButton={setValue}
+            onFocus={onFocusHandler}
           />
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "20%", paddingLeft: "0" }}>
