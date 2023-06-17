@@ -1,5 +1,10 @@
 import { deleteData, getUserPath, updateData } from "@/services/firebase/db";
-import { bookListState, showModalState, showToastState, userInfoState } from "@/states/states";
+import {
+  bookListState,
+  showModalState,
+  showToastState,
+  userInfoState,
+} from "@/states/states";
 import { BookType, CommentType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
@@ -185,7 +190,7 @@ export default function EditCommentForm({
           paddingLeft: "0.95rem",
         }}
       >
-        <DefaultCol style={{ maxWidth: "20%" }}>
+        <DefaultCol style={{ maxWidth: "4.7rem" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
               // console.log(label);
@@ -222,7 +227,7 @@ export default function EditCommentForm({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ minWidth: "45%", paddingLeft: "0", paddingRight: "0.3rem" }}
+          style={{ paddingLeft: "0", paddingRight: "0.3rem" }}
         >
           <CustomInput
             {...register("text", {
@@ -244,29 +249,15 @@ export default function EditCommentForm({
         </DefaultCol>
         <DefaultCol
           style={{
-            maxWidth: "40%",
-            display: "flex",
-            justifyContent: "space-evenly",
+            maxWidth: "8rem",
             paddingLeft: "0",
           }}
         >
           <CustomButton
-            backgroundColor="#d1d1d1"
-            color="#767676"
-            size="sm"
-            align="left"
-            type="button"
-            onClick={(e) => {
-              e.currentTarget.form?.requestSubmit();
-            }}
-          >
-            {firstLoading ? componentsTextData.editButton : l("Edit")}
-          </CustomButton>
-          <CustomButton
             backgroundColor="#ffd1d1"
             color="#ff6f6f"
             size="sm"
-            align="left"
+            align="right"
             type="button"
             onClick={(e) => {
               setShowModal({
@@ -284,13 +275,24 @@ export default function EditCommentForm({
           >
             {firstLoading ? componentsTextData.editButton : l("Delete")}
           </CustomButton>
+          <CustomButton
+            backgroundColor="#d1d1d1"
+            color="#767676"
+            size="sm"
+            align="right"
+            style={{marginRight: "0.7rem"}}
+            type="button"
+            onClick={(e) => {
+              e.currentTarget.form?.requestSubmit();
+            }}
+          >
+            {firstLoading ? componentsTextData.editButton : l("Edit")}
+          </CustomButton>
         </DefaultCol>
       </Row>
       <Row>
         <DefaultCol>
-          <div
-            style={{ color: "hotpink", paddingTop: "0.3rem" }}
-          >
+          <div style={{ color: "hotpink", paddingTop: "0.3rem" }}>
             {getErrorMsg(formState.errors, "text", "required") ||
               getErrorMsg(formState.errors, "text", "validate")}
           </div>

@@ -233,7 +233,7 @@ export const SignInForm = ({
     >
       <TranslationFromClient />
       <DefaultRow>
-        <DefaultCol style={{ minWidth: "25%", paddingRight: "0" }}>
+        <DefaultCol style={{ paddingRight: "0" }}>
           <CustomInput
             {...register("email.user", {
               required: {
@@ -263,7 +263,7 @@ export const SignInForm = ({
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>
         <DefaultCol
-          style={{ minWidth: "20%", maxWidth: "31%", paddingRight: "0.3rem" }}
+          style={{ maxWidth: "7rem", paddingRight: "0.3rem" }}
         >
           <CustomInput
             {...register("email.address", {
@@ -289,7 +289,7 @@ export const SignInForm = ({
             clearButton={disabledEmailAddress ? false : setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ minWidth: "20%", maxWidth: "30%" }}>
+        <DefaultCol style={{ maxWidth: "8rem" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
               // console.log(label);

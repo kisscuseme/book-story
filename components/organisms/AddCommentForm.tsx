@@ -125,8 +125,8 @@ export default function AddCommentForm({
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingLeft: "0.6rem", marginLeft: "0" }}>
-        <DefaultCol style={{ maxWidth: "22%" }}>
+      <Row style={{ paddingLeft: "0.3rem", marginLeft: "0" }}>
+        <DefaultCol style={{ maxWidth: "5rem" }}>
           <CustomDropdown
             // customMenu={CustomMenu}
             onClickItemHandler={(label) => {
@@ -158,7 +158,7 @@ export default function AddCommentForm({
             ]}
           />
         </DefaultCol>
-        <DefaultCol style={{ minWidth: "58%", paddingLeft: "0.3rem" }}>
+        <DefaultCol style={{ paddingLeft: "0.3rem" }}>
           <CustomInput
             {...register("text", {
               required: {
@@ -176,12 +176,12 @@ export default function AddCommentForm({
             onFocus={onFocusHandler}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: "20%", paddingLeft: "0" }}>
+        <DefaultCol style={{ maxWidth: "3.5rem", paddingLeft: "0" }}>
           <CustomButton
             backgroundColor="#5b5b5b"
             color="#ffffff"
             size="sm"
-            align="left"
+            align="right"
             type="button"
             onClick={(e) => {
               e.currentTarget.form?.requestSubmit();

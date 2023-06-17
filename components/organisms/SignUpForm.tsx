@@ -133,7 +133,7 @@ export default function SignUpForm({
     >
       <TranslationFromClient />
       <DefaultRow>
-        <DefaultCol style={{ minWidth: "25%", paddingRight: "0" }}>
+        <DefaultCol style={{ paddingRight: "0" }}>
           <CustomInput
             {...register("email.user", {
               required: {
@@ -163,7 +163,7 @@ export default function SignUpForm({
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>
         <DefaultCol
-          style={{ minWidth: "20%", maxWidth: "31%", paddingRight: "0.3rem" }}
+          style={{ maxWidth: "7rem", paddingRight: "0.3rem" }}
         >
           <CustomInput
             {...register("email.address", {
@@ -189,7 +189,7 @@ export default function SignUpForm({
             clearButton={disabledEmailAddress ? false : setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ minWidth: "20%", maxWidth: "30%" }}>
+        <DefaultCol style={{ maxWidth: "8rem" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
               // console.log(label);
@@ -202,60 +202,70 @@ export default function SignUpForm({
             itemAlign="end"
             align="right"
             initText={emailEnterDirectly}
+            backgroundColor="#f8f8f8"
             items={[
               {
                 key: "Enter directly",
                 label: emailEnterDirectly,
                 href: "#",
                 color: "#323232",
+                backgroundColor: "#f8f8f8",
               },
               {
                 key: "gmail.com",
                 label: "gmail.com",
                 href: "#",
                 color: "#d64a2e",
+                backgroundColor: "#f8f8f8",
               },
               {
                 key: "naver.com",
                 label: "naver.com",
                 href: "#",
                 color: "#32ad13",
+                backgroundColor: "#f8f8f8",
               },
               {
                 key: "hotmail.com",
                 label: "hotmail.com",
                 href: "#",
                 color: "#fb7623",
+                backgroundColor: "#f8f8f8",
               },
               {
                 key: "daum.com",
                 label: "daum.com",
                 href: "#",
                 color: "#337dfc",
+                backgroundColor: "#f8f8f8",
               },
               {
                 key: "hanmail.net",
                 label: "hanmail.net",
                 href: "#",
                 color: "#337dfc",
+                backgroundColor: "#f8f8f8",
               },
               {
                 key: "nate.com",
                 label: "nate.com",
                 href: "#",
                 color: "#ff1e1e",
+                backgroundColor: "#f8f8f8",
               },
               {
                 key: "kakao.com",
                 label: "kakao.com",
                 href: "#",
                 color: "#ffad29",
+                backgroundColor: "#f8f8f8",
               },
               {
                 key: "yahoo.co.kr",
                 label: "yahoo.co.kr",
                 href: "#",
                 color: "#8d3bff",
+                backgroundColor: "#f8f8f8",
               },
             ]}
           />

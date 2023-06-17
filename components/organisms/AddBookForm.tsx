@@ -115,7 +115,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row>
+      <Row style={{paddingBottom: "0.5rem"}}>
         <DefaultCol style={{ maxWidth: "5rem" }}>{firstLoading ? componentsTextData.searchTitle : l("Search")} :</DefaultCol>
         <DefaultCol style={{ paddingLeft: "0" }}>
           <CustomDropdown
@@ -189,7 +189,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             onFocus={onFocusHandler}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: "5rem", paddingLeft: "0" }}>
+        <DefaultCol style={{ maxWidth: "3.5rem", paddingLeft: "0" }}>
           <CustomButton
             backgroundColor="#5b5b5b"
             color="#ffffff"

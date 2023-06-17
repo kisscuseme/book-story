@@ -151,8 +151,8 @@ export default function EditBookForm({
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingLeft: "1.1rem", marginLeft: "0" }}>
-        <DefaultCol style={{ minWidth: "30%", paddingLeft: "0" }}>
+      <Row style={{ paddingLeft: "1.1rem", marginLeft: "0", paddingBottom: "0.5rem" }}>
+        <DefaultCol style={{ paddingLeft: "0", minWidth: "30%", maxWidth: "50%" }}>
           <CustomInput
             {...register("title", {
               required: {
@@ -172,7 +172,7 @@ export default function EditBookForm({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "25%", paddingLeft: "0", paddingRight: "0.3rem" }}
+          style={{ paddingLeft: "0", paddingRight: "0.3rem", maxWidth: "25%" }}
         >
           <CustomInput
             {...register("author")}
@@ -184,29 +184,15 @@ export default function EditBookForm({
         </DefaultCol>
         <DefaultCol
           style={{
-            maxWidth: "40%",
-            display: "flex",
-            justifyContent: "space-evenly",
             paddingLeft: "0",
+            maxWidth: "8rem"
           }}
         >
-          <CustomButton
-            backgroundColor="#d1d1d1"
-            color="#767676"
-            size="sm"
-            align="left"
-            type="button"
-            onClick={(e) => {
-              e.currentTarget.form?.requestSubmit();
-            }}
-          >
-            {firstLoading ? componentsTextData.editButton : l("Edit")}
-          </CustomButton>
           <CustomButton
             backgroundColor="#ffd1d1"
             color="#ff6f6f"
             size="sm"
-            align="left"
+            align="right"
             type="button"
             onClick={(e) => {
               setShowModal({
@@ -223,6 +209,19 @@ export default function EditBookForm({
             }}
           >
             {firstLoading ? componentsTextData.editButton : l("Delete")}
+          </CustomButton>
+          <CustomButton
+            backgroundColor="#d1d1d1"
+            color="#767676"
+            size="sm"
+            align="right"
+            style={{marginRight: "0.7rem"}}
+            type="button"
+            onClick={(e) => {
+              e.currentTarget.form?.requestSubmit();
+            }}
+          >
+            {firstLoading ? componentsTextData.editButton : l("Edit")}
           </CustomButton>
         </DefaultCol>
       </Row>
