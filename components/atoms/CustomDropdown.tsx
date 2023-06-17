@@ -152,7 +152,16 @@ export const CustomDropdown = ({
 
   const makeItemComponents = () => {
     return (
-      <StyledDropdownMenu renderOnMount={true} style={{ width: "100%" }}>
+      <StyledDropdownMenu
+        renderOnMount={true}
+        style={{
+          width: "100%",
+          marginTop: "0.2rem",
+          borderWidth: "0",
+          padding: "0.5rem 0",
+          boxShadow: "0.05rem 0.05rem 0.2rem 0.05rem #9d9d9d11",
+        }}
+      >
         {items &&
           items.map((item) => (
             <Dropdown.Item
@@ -161,7 +170,7 @@ export const CustomDropdown = ({
               eventKey={item["key"]}
               onClick={() => {
                 setSelectedText(item["label"]);
-                if(item["refData"]) onClickItemHandler(item["refData"])
+                if (item["refData"]) onClickItemHandler(item["refData"]);
                 else onClickItemHandler(item["key"]);
                 if (item["backgroundColor"])
                   setCurrentBackgroundColor(item["backgroundColor"]);
