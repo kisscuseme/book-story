@@ -13,6 +13,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomDropdown } from "../atoms/CustomDropdown";
 import {
+  decrypt,
   encrypt,
   enterKeyUpEventHandler,
   getErrorMsg,
@@ -74,7 +75,7 @@ export default function EditCommentForm({
         const comment = {
           id: data.docId,
           type: data.data.type,
-          text: data.data.text,
+          text: decrypt(data.data.text, bookId + data.docId),
         };
         for (let i = 0; i < tempBookList.length; i++) {
           if (tempBookList[i].id === bookId) {
