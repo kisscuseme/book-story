@@ -113,6 +113,7 @@ export default function BookList({
             tempCommentLastVisible[book.id] = lastVisible;
           }
           if (bookList.length === index + 1) {
+            console.log(index, tempCommentLastVisible);
             setNextCommentLastVisible(tempCommentLastVisible);
           }
         });
@@ -552,7 +553,11 @@ export default function BookList({
                         (commentIsLoading || commentIsFetching) &&
                         targetLoadingComment === book.id ? (
                           <CustomButton align="left" color="#b5b5b5">
-                            <CustomSpinner animation="border" size="sm" />
+                            <CustomSpinner
+                              animation="border"
+                              size="sm"
+                              style={{ opacity: "0.5" }}
+                            />
                           </CustomButton>
                         ) : (
                           <CustomButton
