@@ -32,16 +32,15 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchList, setSearchList] = useState<DropdownDataProps[]>([]);
   const [keyword, setKeyword] = useState("");
-  const [debounce, setDebounce] = useState<NodeJS.Timeout>();
+  let debounce: NodeJS.Timeout;
 
   useEffect(() => {
     setFirstLoading(false);
   }, []);
 
   useEffect(() => {
-    if(debounce) clearTimeout(debounce);
     if (keyword) {
-      setDebounce(setTimeout(() => {
+      debounce = setTimeout(() => {
         const tempSearchList: DropdownDataProps[] = [];
         getNLBooksData(keyword).then((res: any) => {
           res.map((data: any) => {
@@ -56,9 +55,12 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
           });
           setSearchList(tempSearchList);
         });
-      }, 200));
+      }, 200);
     } else {
       setSearchList([]);
+    }
+    return () => {
+      clearTimeout(debounce);
     }
   }, [keyword]);
 
