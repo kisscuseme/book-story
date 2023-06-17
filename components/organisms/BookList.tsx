@@ -91,6 +91,7 @@ export default function BookList({
     // 서버로부터 전달 받은 마지막 데이터 키 값을 다음 로드할 데이터 기준점으로 활용
     // 서버와 클라이언트 간 lastVisible 데이터 구조가 일치하지 않아 추가함
     if (userInfo?.uid) {
+      console.log(bookList);
       if (bookLastVisible?.constructor === String) {
         const path = `${getUserPath()}/${userInfo?.uid}/books`;
         getLastVisible(path, bookLastVisible).then((data) => {
@@ -113,7 +114,6 @@ export default function BookList({
             tempCommentLastVisible[book.id] = lastVisible;
           }
           if (bookList.length === index + 1) {
-            console.log(index, tempCommentLastVisible);
             setNextCommentLastVisible(tempCommentLastVisible);
           }
         });
