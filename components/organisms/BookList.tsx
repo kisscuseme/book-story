@@ -186,6 +186,7 @@ export default function BookList({
     retry: 0,
     onSuccess: (data) => {
       if (data) {
+        console.log(decrypt);
         // 조회 성공 시 중복 데이터 제거 (추가된 데이터가 있을 경우 db 재조회를 하지 않고 걸러내기 위함)
         const dataBookList: BookType[] = [];
         data.dataList.map((bookData) => {
@@ -263,6 +264,7 @@ export default function BookList({
     retry: 0,
     onSuccess: (data) => {
       if (data) {
+        console.log(decrypt);
         // 조회 성공 시 중복 데이터 제거 (추가된 데이터가 있을 경우 db 재조회를 하지 않고 걸러내기 위함)
         const dataList: CommentType[] = [];
         data.dataList.map((data) => {

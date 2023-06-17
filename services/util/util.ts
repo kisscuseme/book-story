@@ -181,6 +181,7 @@ const encrypt = (payload: string, key: string) => {
 // 복호화
 const decrypt = (encrypted: string, key: string) => {
   try {
+    console.log(useEncrypt);
     if (!useEncrypt || !key) {
       // console.log("No Key.");
       return encrypted;
