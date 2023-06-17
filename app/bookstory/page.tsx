@@ -31,7 +31,7 @@ const BookStoryPage = async () => {
       const books = await queryDataFromServer(
         [],
         fullPath,
-        3,
+        5,
         "timestamp",
         "desc"
       );

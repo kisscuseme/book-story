@@ -127,7 +127,7 @@ export default function BookList({
         const bookData = await queryData(
           [],
           bookPath,
-          3,
+          5,
           lastVisible,
           "timestamp",
           "desc"
