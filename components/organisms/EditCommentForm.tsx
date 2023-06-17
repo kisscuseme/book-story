@@ -187,7 +187,7 @@ export default function EditCommentForm({
     >
       <Row
         style={{
-          paddingLeft: "0.95rem",
+          paddingLeft: "1.2rem",
         }}
       >
         <DefaultCol style={{ maxWidth: "4.7rem" }}>

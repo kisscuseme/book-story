@@ -152,15 +152,8 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
           />
         </DefaultCol>
       </Row>
-      <Row>
+      <Row style={{paddingBottom: "0.5rem"}}>
         <DefaultCol>
-          <div style={{ color: "hotpink", paddingTop: "0.3rem" }}>
-            {getErrorMsg(formState.errors, "title", "required")}
-          </div>
-        </DefaultCol>
-      </Row>
-      <Row>
-        <DefaultCol style={{ minWidth: "45%" }}>
           <CustomInput
             {...register("title", {
               required: {
@@ -178,6 +171,8 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             onFocus={onFocusHandler}
           />
         </DefaultCol>
+      </Row>
+      <Row>
         <DefaultCol style={{ minWidth: "35%" }}>
           <CustomInput
             {...register("author")}

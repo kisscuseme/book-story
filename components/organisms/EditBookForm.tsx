@@ -151,8 +151,8 @@ export default function EditBookForm({
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingLeft: "1.1rem", marginLeft: "0", paddingBottom: "0.5rem" }}>
-        <DefaultCol style={{ paddingLeft: "0", minWidth: "30%", maxWidth: "50%" }}>
+      <Row style={{paddingLeft: "1rem"}}>
+        <DefaultCol style={{paddingBottom: "0.5rem"}}>
           <CustomInput
             {...register("title", {
               required: {
@@ -171,9 +171,9 @@ export default function EditBookForm({
             clearButton={setValue}
           />
         </DefaultCol>
-        <DefaultCol
-          style={{ paddingLeft: "0", paddingRight: "0.3rem", maxWidth: "25%" }}
-        >
+      </Row>
+      <Row style={{ paddingBottom: "0.5rem", paddingLeft: "1rem" }}>
+        <DefaultCol>
           <CustomInput
             {...register("author")}
             placeholder={book.author||l("Book author")||componentsTextData.bookAuthorPlaceholder}
