@@ -10,6 +10,7 @@ import { CustomDropdown } from "../atoms/CustomDropdown";
 import {
   decrypt,
   enterKeyUpEventHandler,
+  getCookie,
   getErrorMsg,
   l,
   onFocusHandler,
@@ -127,7 +128,7 @@ export default function AddCommentForm({
       style={{ paddingLeft: "0.5rem" }}
     >
       <Row style={{ marginLeft: "0" }}>
-        <DefaultCol style={{maxWidth: "4.7rem", paddingLeft: "0" }}>
+        <DefaultCol style={{maxWidth: `${getCookie("lang") === "kr" ? "3.9rem" : "5.2rem"}`, paddingLeft: "0" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
               // console.log(label);
@@ -162,7 +163,7 @@ export default function AddCommentForm({
             ]}
           />
         </DefaultCol>
-        <DefaultCol>
+        <DefaultCol style={{ paddingLeft: "0", paddingRight: "0" }}>
           <CustomInput
             {...register("text", {
               required: {
@@ -180,7 +181,7 @@ export default function AddCommentForm({
             onFocus={onFocusHandler}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: "3.5rem", paddingLeft: "0" }}>
+        <DefaultCol style={{ maxWidth: "3.9rem", paddingLeft: "0" }}>
           <CustomButton
             backgroundColor="#5b5b5b"
             color="#ffffff"

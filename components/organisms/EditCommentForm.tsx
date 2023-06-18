@@ -16,6 +16,7 @@ import {
   decrypt,
   encrypt,
   enterKeyUpEventHandler,
+  getCookie,
   getErrorMsg,
   l,
   onFocusHandler,
@@ -191,7 +192,7 @@ export default function EditCommentForm({
       }}
     >
       <Row style={{ marginLeft: "0" }}>
-        <DefaultCol style={{ maxWidth: "4.9rem", paddingLeft: "0" }}>
+        <DefaultCol style={{ maxWidth: `${getCookie("lang") === "kr" ? "3.4rem" : "4.7rem"}`, paddingLeft: "0" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
               // console.log(label);
@@ -227,7 +228,7 @@ export default function EditCommentForm({
             ]}
           />
         </DefaultCol>
-        <DefaultCol style={{ paddingLeft: "0", paddingRight: "0.3rem" }}>
+        <DefaultCol style={{ paddingLeft: "0", paddingRight: "0" }}>
           <CustomInput
             {...register("text", {
               required: {

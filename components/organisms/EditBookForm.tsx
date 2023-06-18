@@ -190,7 +190,7 @@ export default function EditBookForm({
         </DefaultCol>
       </Row>
       <Row style={{ paddingBottom: "0.5rem" }}>
-        <DefaultCol>
+        <DefaultCol style={{ paddingRight: "0" }}>
           <CustomInput
             {...register("author")}
             placeholder={
