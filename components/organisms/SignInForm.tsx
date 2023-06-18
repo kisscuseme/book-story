@@ -257,7 +257,7 @@ export const SignInForm = ({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "0.8rem", paddingLeft: "0.5rem", paddingRight: "0" }}
+          style={{ maxWidth: "0.8rem", paddingLeft: "0.4rem", paddingRight: "0" }}
         >
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>
@@ -288,7 +288,7 @@ export const SignInForm = ({
             clearButton={disabledEmailAddress ? false : setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: "8rem" }}>
+        <DefaultCol style={{ maxWidth: `${getCookie("lang") !== "en" ? "6rem" : "8rem"}` }}>
           <CustomDropdown
             id="signInEmailSelector"
             onClickItemHandler={(label) => {
@@ -363,7 +363,7 @@ export const SignInForm = ({
               },
               {
                 key: "yahoo.co.kr",
-                label: "Yahoo Korea",
+                label: "Yahoo",
                 href: "#",
                 color: "#f8f8f8",
                 backgroundColor: "#8d3bff",

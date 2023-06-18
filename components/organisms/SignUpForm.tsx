@@ -1,7 +1,7 @@
 "use client";
 
 import { signUp } from "@/services/firebase/auth";
-import { emailRegEx, getErrorMsg, l, setCookie } from "@/services/util/util";
+import { emailRegEx, getCookie, getErrorMsg, l, setCookie } from "@/services/util/util";
 import {
   rerenderDataState,
   showModalState,
@@ -158,12 +158,12 @@ export default function SignUpForm({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "0.8rem", paddingLeft: "0.3rem", paddingRight: "0" }}
+          style={{ maxWidth: "0.8rem", paddingLeft: "0.4rem", paddingRight: "0" }}
         >
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "8rem", paddingRight: "0.3rem" }}
+          style={{ maxWidth: "30%", minWidth: "7.5rem", paddingRight: "0.3rem" }}
         >
           <CustomInput
             {...register("email.address", {
@@ -189,7 +189,7 @@ export default function SignUpForm({
             clearButton={disabledEmailAddress ? false : setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: "8rem" }}>
+        <DefaultCol style={{ maxWidth: `${getCookie("lang") !== "en" ? "6rem" : "8rem"}` }}>
           <CustomDropdown
             id="signUpEmailSelector"
             onClickItemHandler={(label) => {
@@ -264,7 +264,7 @@ export default function SignUpForm({
               },
               {
                 key: "yahoo.co.kr",
-                label: "Yahoo Korea",
+                label: "Yahoo",
                 href: "#",
                 color: "#f8f8f8",
                 backgroundColor: "#8d3bff",
