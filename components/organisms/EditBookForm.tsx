@@ -1,5 +1,10 @@
 import { deleteData, getUserPath, updateData } from "@/services/firebase/db";
-import { bookListState, showModalState, showToastState, userInfoState } from "@/states/states";
+import {
+  bookListState,
+  showModalState,
+  showToastState,
+  userInfoState,
+} from "@/states/states";
 import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
@@ -151,9 +156,10 @@ export default function EditBookForm({
       onKeyDown={(e) => {
         if (e.key === "Enter") e.preventDefault();
       }}
+      style={{ paddingLeft: "0.5rem" }}
     >
-      <Row style={{paddingLeft: "1rem"}}>
-        <DefaultCol style={{paddingBottom: "0.5rem"}}>
+      <Row>
+        <DefaultCol style={{ paddingBottom: "0.5rem" }}>
           <SearchBookForm
             setValue={setValue}
             register={register}
@@ -162,8 +168,8 @@ export default function EditBookForm({
           />
         </DefaultCol>
       </Row>
-      <Row style={{paddingLeft: "1rem"}}>
-        <DefaultCol style={{paddingBottom: "0.5rem"}}>
+      <Row>
+        <DefaultCol style={{ paddingBottom: "0.5rem" }}>
           <CustomInput
             {...register("title", {
               required: {
@@ -183,11 +189,15 @@ export default function EditBookForm({
           />
         </DefaultCol>
       </Row>
-      <Row style={{ paddingBottom: "0.5rem", paddingLeft: "1rem" }}>
+      <Row style={{ paddingBottom: "0.5rem" }}>
         <DefaultCol>
           <CustomInput
             {...register("author")}
-            placeholder={book.author||`${l("Book author")} (${l("Enter directly")})`||componentsTextData.bookAuthorPlaceholder}
+            placeholder={
+              book.author ||
+              `${l("Book author")} (${l("Enter directly")})` ||
+              componentsTextData.bookAuthorPlaceholder
+            }
             onFocus={onFocusHandler}
             onKeyUp={enterKeyUpEventHandler}
             clearButton={setValue}
@@ -196,7 +206,7 @@ export default function EditBookForm({
         <DefaultCol
           style={{
             paddingLeft: "0",
-            maxWidth: "8rem"
+            maxWidth: "8rem",
           }}
         >
           <CustomButton
@@ -226,7 +236,7 @@ export default function EditBookForm({
             color="#767676"
             size="sm"
             align="right"
-            style={{marginRight: "0.7rem"}}
+            style={{ marginRight: "0.7rem" }}
             type="button"
             onClick={(e) => {
               e.currentTarget.form?.requestSubmit();

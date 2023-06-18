@@ -209,7 +209,8 @@ export const CustomDropdown = ({
                   }`}</style>
                 ) : (
                   <style>{`
-                    .${id} .dropdown-menu {display: none;
+                    .${id} .dropdown-menu {
+                      display: none;
                   }`}</style>
                 )}
                 <Dropdown.Header id={id}>{customToggle}</Dropdown.Header>

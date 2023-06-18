@@ -124,9 +124,10 @@ export default function AddCommentForm({
       onKeyDown={(e) => {
         if (e.key === "Enter") e.preventDefault();
       }}
+      style={{ paddingLeft: "0.5rem" }}
     >
-      <Row style={{ paddingLeft: "0.3rem", marginLeft: "0" }}>
-        <DefaultCol style={{maxWidth: "5.3rem"}}>
+      <Row style={{ marginLeft: "0" }}>
+        <DefaultCol style={{maxWidth: "4.7rem", paddingLeft: "0" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
               // console.log(label);

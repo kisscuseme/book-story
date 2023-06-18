@@ -13,7 +13,7 @@ const Home = () => {
         if (data) {
           // 서버 인증에 필요한 토큰 값 저장
           setCookie("token", await data.getIdToken(true));
-          // Diary 페이지 이동
+          // 메인 페이지 이동
           window.location.replace("/bookstory");
         } else {
           // 로그인이 안 되어 있는 경우 토큰 값 초기화
