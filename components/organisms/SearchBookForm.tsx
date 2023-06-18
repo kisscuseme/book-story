@@ -88,6 +88,7 @@ export default function SearchBookForm({
             setKeyword(e.target.value);
           }}
           onFocus={onFocusHandler}
+          placeholderColor="#cc96ff"
         />
       }
     />

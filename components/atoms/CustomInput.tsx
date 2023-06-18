@@ -1,7 +1,7 @@
-import React, { ChangeEvent, forwardRef, useEffect, useState } from "react";
+import React, { ChangeEvent, forwardRef, useState } from "react";
 import { FormControl, FormControlProps } from "react-bootstrap";
-import { ChangeHandler, FieldValues, UseFormSetValue } from "react-hook-form";
-import { styled } from "styled-components";
+import { FieldValues, UseFormSetValue } from "react-hook-form";
+import { ThemeProvider, styled } from "styled-components";
 
 // 삭제 버튼 스타일 정의
 const ClearButton = styled.button`
@@ -32,7 +32,7 @@ const CustomFormControl = styled(FormControl)`
     background-color: transparent;
   }
   &::placeholder {
-    color: #afafaf;
+    color: ${props => props.theme.placeholderColor};
   }
   &:disabled {
     color: #515151;
@@ -49,13 +49,14 @@ const CustomFormControl = styled(FormControl)`
 interface CustomInputOwnProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   clearButton?: UseFormSetValue<FieldValues> | boolean | (() => void);
+  placeholderColor?: string;
 }
 
 type CustomInputProps = CustomInputOwnProps & FormControlProps;
 
 export const CustomInput = forwardRef(
   (
-    { onChange, clearButton, ...props }: CustomInputProps,
+    { onChange, clearButton, placeholderColor, ...props }: CustomInputProps,
     ref: React.ForwardedRef<HTMLInputElement>
   ) => {
     const [text, setText] = useState("");
@@ -71,7 +72,7 @@ export const CustomInput = forwardRef(
     };
 
     const refHandler = (target: HTMLInputElement) => {
-      if(target) {
+      if (target) {
         if (typeof ref === "function") ref(target);
         if (!inputRef) inputRef = target;
         if (target.value === "" && text !== "") setText("");
@@ -79,13 +80,19 @@ export const CustomInput = forwardRef(
       }
     };
 
+    const theme = {
+      placeholderColor: placeholderColor ? placeholderColor : "#afafaf"
+    }
+
     return (
       <div style={wrapperStyle}>
-        <CustomFormControl
-          ref={refHandler}
-          onChange={onChangeHandler}
-          {...props}
-        />
+        <ThemeProvider theme={theme}>
+          <CustomFormControl
+            ref={refHandler}
+            onChange={onChangeHandler}
+            {...props}
+          />
+        </ThemeProvider>
         {clearButton && text && (
           <ClearButton
             type="button"
@@ -95,7 +102,8 @@ export const CustomInput = forwardRef(
               if (inputRef) {
                 inputRef.value = "";
                 // react hook form을 사용할 경우 setValue 함수를 참조하여 값 초기화에 사용
-                if(typeof clearButton === "function") clearButton(inputRef.name, "");
+                if (typeof clearButton === "function")
+                  clearButton(inputRef.name, "");
               }
             }}
           >
