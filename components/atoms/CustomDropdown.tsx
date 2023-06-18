@@ -104,8 +104,9 @@ const StyledDropdownToggle = styled(Dropdown.Toggle)`
 `;
 
 const StyledDropdownMenu = styled(Dropdown.Menu)`
-  --bs-dropdown-link-active-color: #fff;
-  --bs-dropdown-link-active-bg: #6e6e6e;
+  --bs-dropdown-link-active-color: #000000;
+  --bs-dropdown-link-active-bg: #d7d7d7;
+  --bs-dropdown-link-hover-bg: #eaeaea;
   font-size: ${(props) => props.theme.fontSize};
   padding: ${(props) => props.theme.padding};
   --bs-dropdown-bg: ${(props) =>
