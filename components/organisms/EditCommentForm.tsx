@@ -205,7 +205,7 @@ export default function EditCommentForm({
             initText={
               firstLoading && comment.transType
                 ? comment.transType
-                : l(comment.type)
+                : l(commentType)
             }
             items={[
               {

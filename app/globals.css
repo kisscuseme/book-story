@@ -1,9 +1,9 @@
 body {
-  --bs-body-bg: #f5ebff;
+  --bs-body-bg: #fbf6ff;
 }
 
 .offcanvas.offcanvas-end {
-  --bs-offcanvas-bg: #f5ebff;
+  --bs-offcanvas-bg: #fbf6ff;
 }
 
 @font-face {

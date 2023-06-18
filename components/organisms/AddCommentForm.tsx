@@ -138,7 +138,7 @@ export default function AddCommentForm({
             backgroundColor={"#ff7878"}
             color="#ffffff"
             initText={
-              firstLoading ? componentsTextData.verseLabel : l("Passage")
+              firstLoading ? componentsTextData.verseLabel : l(commentType)
             }
             items={[
               {
