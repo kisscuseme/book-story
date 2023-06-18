@@ -1,4 +1,4 @@
-import React, { ChangeEvent, forwardRef, useState } from "react";
+import React, { ChangeEvent, forwardRef, useEffect, useState } from "react";
 import { FormControl, FormControlProps } from "react-bootstrap";
 import { ChangeHandler, FieldValues, UseFormSetValue } from "react-hook-form";
 import { styled } from "styled-components";
@@ -71,10 +71,12 @@ export const CustomInput = forwardRef(
     };
 
     const refHandler = (target: HTMLInputElement) => {
-      if (typeof ref === "function") ref(target);
-      if (!inputRef) inputRef = target;
-      if (target && target.value === "" && text !== "") setText("");
-      if (target && target.value !== "" && text === "") setText(target.value);
+      if(target) {
+        if (typeof ref === "function") ref(target);
+        if (!inputRef) inputRef = target;
+        if (target.value === "" && text !== "") setText("");
+        if (target.value !== "" && text === "") setText(target.value);
+      }
     };
 
     return (

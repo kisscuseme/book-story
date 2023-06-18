@@ -15,6 +15,7 @@ import {
 import { CustomButton } from "../atoms/CustomButton";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { CustomInput } from "../atoms/CustomInput";
+import SearchBookForm from "./SearchBookForm";
 
 interface EditBookFormProps {
   book: BookType;
@@ -151,6 +152,16 @@ export default function EditBookForm({
         if (e.key === "Enter") e.preventDefault();
       }}
     >
+      <Row style={{paddingLeft: "1rem"}}>
+        <DefaultCol style={{paddingBottom: "0.5rem"}}>
+          <SearchBookForm
+            setValue={setValue}
+            register={register}
+            componentsTextData={componentsTextData}
+            book={book}
+          />
+        </DefaultCol>
+      </Row>
       <Row style={{paddingLeft: "1rem"}}>
         <DefaultCol style={{paddingBottom: "0.5rem"}}>
           <CustomInput

@@ -16,7 +16,7 @@ const BookStoryPage = async () => {
         addBookFormTitle: l("Add a book"),
         bookTitlePlaceholder: l("Book Title"),
         bookAuthorPlaceholder: l("Book author"),
-        searchKeywordPlaceholder: l("Enter a keyword."),
+        searchKeywordPlaceholder: `${l("Please enter your keywords.")} (${l("book title or author")})`,
         addButton: l("Add"),
         editButton: l("Edit"),
         searchTitle: l("Search"),

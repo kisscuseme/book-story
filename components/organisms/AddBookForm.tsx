@@ -9,62 +9,29 @@ import { DefaultCol } from "../atoms/DefaultAtoms";
 import {
   enterKeyUpEventHandler,
   getErrorMsg,
-  getTextfromHtmlString,
   l,
   onFocusHandler,
 } from "@/services/util/util";
 import { CustomInput } from "../atoms/CustomInput";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
-import { getNLBooksData } from "@/services/api/books";
-import { CustomDropdown, DropdownDataProps } from "../atoms/CustomDropdown";
+import SearchBookForm from "./SearchBookForm";
 
 interface AddBookFormProps {
   componentsTextData: Record<string, string>;
 }
 
 export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
-  const { register, handleSubmit, formState, setValue, getValues } = useForm();
+  const { register, handleSubmit, formState, setValue } = useForm();
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowToast = useSetRecoilState(showToastState);
   const userInfo = useRecoilValue(userInfoState);
   const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [searchList, setSearchList] = useState<DropdownDataProps[]>([]);
-  const [keyword, setKeyword] = useState("");
-  let debounce: NodeJS.Timeout;
 
   useEffect(() => {
     setFirstLoading(false);
   }, []);
-
-  useEffect(() => {
-    if (keyword) {
-      debounce = setTimeout(() => {
-        const tempSearchList: DropdownDataProps[] = [];
-        getNLBooksData(keyword).then((res: any) => {
-          res.map((data: any) => {
-            tempSearchList.push({
-              key: tempSearchList.length.toString(),
-              label: `${data.title}${data.author && (" / " + data.author)}`,
-              refData: {
-                title: getTextfromHtmlString(data.title),
-                author: getTextfromHtmlString(data.author),
-              },
-            });
-          });
-          setSearchList(tempSearchList);
-        });
-      }, 500);
-    } else {
-      setSearchList([]);
-    }
-
-    // 이전 작업 Clean
-    return () => {
-      clearTimeout(debounce);
-    }
-  }, [keyword]);
 
   // Book 데이터 추가 시 react query 활용
   const insertBookMutation = useMutation(insertData, {
@@ -118,37 +85,11 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
       }}
     >
       <Row style={{paddingBottom: "0.5rem"}}>
-        <DefaultCol style={{ maxWidth: "5rem" }}>{firstLoading ? componentsTextData.searchTitle : l("Search")} :</DefaultCol>
-        <DefaultCol style={{ paddingLeft: "0" }}>
-          <CustomDropdown
-            id="search-dropdown"
-            items={searchList}
-            initText=""
-            align="left"
-            onClickItemHandler={(label) => {
-              setValue("title", label.title);
-              setValue("author", label.author);
-              setValue("keyword", "");
-              setKeyword("");
-            }}
-            customToggle={
-              <CustomInput
-                {...register("keyword")}
-                placeholder={
-                  firstLoading
-                    ? componentsTextData.searchKeywordPlaceholder
-                    : l("Enter a keyword.")
-                }
-                clearButton={(field, value) => {
-                  setValue(field, value);
-                  setKeyword("");
-                }}
-                onChange={(e) => {
-                  setKeyword(e.target.value);
-                }}
-                onFocus={onFocusHandler}
-              />
-            }
+        <DefaultCol>
+          <SearchBookForm
+            register={register}
+            setValue={setValue}
+            componentsTextData={componentsTextData}
           />
         </DefaultCol>
       </Row>

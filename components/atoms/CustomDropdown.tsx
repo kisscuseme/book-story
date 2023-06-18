@@ -202,8 +202,8 @@ export const CustomDropdown = ({
                   <style>{`
                     .${id} .dropdown-menu {
                       display: block;
-                      margin-left: -4.5rem;
-                      width: calc(100% + 4.5rem);
+                      margin-left: -0rem;
+                      width: calc(100% + 0rem);
                   }`}</style>
                 ) : (
                   <style>{`

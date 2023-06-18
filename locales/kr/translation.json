@@ -85,5 +85,6 @@
   "Enter directly": "직접 입력",
   "6 or more letters or numbers": "6자리 이상의 문자 또는 숫자",
   "Search": "검색",
-  "Enter a keyword.": "검색어를 입력하세요."
+  "Please enter your keywords.": "검색어를 입력하세요.",
+  "book title or author": "책 제목 또는 저자"
 }
