@@ -257,12 +257,12 @@ export const SignInForm = ({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "3%", paddingLeft: "0.3rem", paddingRight: "0" }}
+          style={{ maxWidth: "0.8rem", paddingLeft: "0.3rem", paddingRight: "0" }}
         >
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "7rem", paddingRight: "0.3rem" }}
+          style={{ maxWidth: "8rem", paddingRight: "0.3rem" }}
         >
           <CustomInput
             {...register("email.address", {
@@ -314,7 +314,7 @@ export const SignInForm = ({
               },
               {
                 key: "gmail.com",
-                label: "G-Mail",
+                label: "Gmail",
                 href: "#",
                 color: "#f8f8f8",
                 backgroundColor: "#d64a2e",
