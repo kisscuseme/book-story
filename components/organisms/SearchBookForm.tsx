@@ -78,7 +78,7 @@ export default function SearchBookForm({
           placeholder={
             firstLoading
               ? componentsTextData.searchKeywordPlaceholder
-              : `${l("Please enter your keywords.")} (${l("book title or author")})`
+              : `${l("Enter keywords here to search.")} (${l("title or author")})`
           }
           clearButton={(field, value) => {
             setValue(field, value);

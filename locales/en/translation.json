@@ -66,7 +66,7 @@
   "An error occurred while logging out.": "An error occurred while logging out.",
   "All data cannot be recovered.": "All data cannot be recovered.",
   "Add a book": "Add a book",
-  "Book Title": "Book Title",
+  "Book title": "Book title",
   "Book author": "Book author",
   "My bookshelf": "My bookshelf",
   "Passage": "Passage",
@@ -85,6 +85,6 @@
   "Enter directly": "Enter directly",
   "6 or more letters or numbers": "6 or more letters or numbers",
   "Search": "Search",
-  "Please enter your keywords.": "Please enter your keywords.",
-  "book title or author": "book title or author"
+  "Enter keywords here to search.": "Enter keywords here to search.",
+  "title or author": "title or author"
 }
