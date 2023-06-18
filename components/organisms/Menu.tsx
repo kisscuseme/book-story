@@ -85,7 +85,7 @@ export default function Menu() {
   };
 
   return (
-    <Navbar expand={false}>
+    <Navbar expand={false} style={{float: "right"}}>
       <NavbarToggle aria-controls={`nav-1`} />
       <NavbarOffcanvas id={`nav-1`} aria-labelledby={`nav-2`} placement="end">
         <Offcanvas.Header closeButton>

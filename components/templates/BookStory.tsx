@@ -1,7 +1,11 @@
 "use client";
 
 import { l } from "@/services/util/util";
-import { DefaultContainer, DefaultTitle } from "../atoms/DefaultAtoms";
+import {
+  DefaultCol,
+  DefaultContainer,
+  DefaultTitle,
+} from "../atoms/DefaultAtoms";
 import { TopBar } from "../molecules/TopBar";
 import TranslationFromClient from "../organisms/TranslationFromClient";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -11,6 +15,8 @@ import BookList from "../organisms/BookList";
 import Menu from "../organisms/Menu";
 import { checkLogin } from "@/services/firebase/auth";
 import { BookType, LastVisibleType } from "@/types/types";
+import { Image } from "react-bootstrap";
+import Link from "next/link";
 
 export default function BookStory({
   serverBookData,
@@ -45,7 +51,14 @@ export default function BookStory({
     <DefaultContainer>
       <TranslationFromClient />
       <TopBar>
-        <Menu />
+        <DefaultCol>
+          <Link href="/">
+            <Image src="/images/logo.png" width={"36px"} style={{rotate: "-5deg"}} />
+          </Link>
+        </DefaultCol>
+        <DefaultCol>
+          <Menu />
+        </DefaultCol>
       </TopBar>
       <DefaultTitle>
         {firstLoading ? componentsTextData.title : l("My bookshelf")}

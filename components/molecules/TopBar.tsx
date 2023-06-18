@@ -12,7 +12,7 @@ const TopBarRow = styled(DefaultRow)`
 export const TopBar = ({ children }: { children: ReactNode }) => {
   return (
     <TopBarRow>
-      <DefaultCol>{children}</DefaultCol>
+      {children}
     </TopBarRow>
   );
 };
