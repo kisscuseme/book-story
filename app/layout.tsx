@@ -8,7 +8,7 @@ import ShowToast from "@/components/organisms/ShowToast";
 
 // 기본 메타 정보
 export const metadata = {
-  metadataBase: new URL('https://bookstory.kisscuseme.com'),
+  metadataBase: new URL('https://book-story.kisscuseme.com'),
   title: "Book Story",
   description: "Write a review",
   openGraph: {
