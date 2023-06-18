@@ -192,7 +192,7 @@ export default function EditCommentForm({
           paddingLeft: "1.2rem",
         }}
       >
-        <DefaultCol style={{ maxWidth: "4.7rem" }}>
+        <DefaultCol style={{ maxWidth: "5.4rem" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
               // console.log(label);
@@ -201,7 +201,7 @@ export default function EditCommentForm({
             itemAlign="start"
             align="left"
             size="small"
-            backgroundColor={comment.type === "Verse" ? "#ff7878" : "#5561ff"}
+            backgroundColor={comment.type === "Passage" ? "#ff7878" : "#5561ff"}
             color="#ffffff"
             initText={
               firstLoading && comment.transType
@@ -210,17 +210,17 @@ export default function EditCommentForm({
             }
             items={[
               {
-                key: "Verse",
+                key: "Passage",
                 label: firstLoading
                   ? componentsTextData.verseLabel
-                  : l("Verse"),
+                  : l("Passage"),
                 href: "#",
                 backgroundColor: "#ff7878",
                 color: "#ffffff",
               },
               {
-                key: "Feel",
-                label: firstLoading ? componentsTextData.feelLabel : l("Feel"),
+                key: "Feeling",
+                label: firstLoading ? componentsTextData.feelLabel : l("Feeling"),
                 href: "#",
                 backgroundColor: "#5561ff",
                 color: "#ffffff",
@@ -233,7 +233,7 @@ export default function EditCommentForm({
             {...register("text", {
               required: {
                 value: true,
-                message: l("Enter your content."),
+                message: l("Enter a passage or feeling from the book."),
               },
               validate: (value) => {
                 if (value !== comment.text || commentType !== comment.type)

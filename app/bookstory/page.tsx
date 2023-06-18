@@ -20,9 +20,9 @@ const BookStoryPage = async () => {
         addButton: l("Add"),
         editButton: l("Edit"),
         searchTitle: l("Search"),
-        verseLabel: l("Verse"),
-        feelLabel: l("Feel"),
-        enterContentPlaceholder: l("Enter your content."),
+        verseLabel: l("Passage"),
+        feelLabel: l("Feeling"),
+        enterContentPlaceholder: l("Enter a passage or feeling from the book."),
         noContentViewed: l("No content viewed."),
       };
 

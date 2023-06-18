@@ -488,19 +488,19 @@ export default function BookList({
                               <span
                                 style={{
                                   color:
-                                    comment.type === "Verse"
+                                    comment.type === "Passage"
                                       ? "#ff7768"
                                       : "#5561ff",
-                                  minWidth: "40px",
                                   display: "inline-flex",
                                 }}
                               >
                                 {firstLoading
                                   ? comment.transType
                                   : l(comment.type)}
-                              </span>{" "}
+                              </span>
                               <span
                                 style={{
+                                  paddingLeft: "0.5rem",
                                   color: "#6b6b6b",
                                   paddingRight: "0.3rem",
                                 }}

@@ -31,7 +31,7 @@ export default function AddCommentForm({
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowToast = useSetRecoilState(showToastState);
   const userInfo = useRecoilValue(userInfoState);
-  const [commentType, setCommentType] = useState("Verse");
+  const [commentType, setCommentType] = useState("Passage");
   const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const closeAccordion = useAccordionButton(book.id || "");
@@ -72,7 +72,7 @@ export default function AddCommentForm({
             const comment = {
               id: data.docId,
               type: data.data.type,
-              text: decrypt(data.data.text, userInfo?.uid+data.docId),
+              text: decrypt(data.data.text, userInfo?.uid + data.docId),
               timestamp: tempTimestamp + 1,
             };
             if (tempBookList[i].comments) {
@@ -126,9 +126,8 @@ export default function AddCommentForm({
       }}
     >
       <Row style={{ paddingLeft: "0.3rem", marginLeft: "0" }}>
-        <DefaultCol style={{ maxWidth: "5rem" }}>
+        <DefaultCol style={{maxWidth: "5.3rem"}}>
           <CustomDropdown
-            // customMenu={CustomMenu}
             onClickItemHandler={(label) => {
               // console.log(label);
               setCommentType(label);
@@ -137,20 +136,24 @@ export default function AddCommentForm({
             align="left"
             backgroundColor={"#ff7878"}
             color="#ffffff"
-            initText={firstLoading ? componentsTextData.verseLabel : l("Verse")}
+            initText={
+              firstLoading ? componentsTextData.verseLabel : l("Passage")
+            }
             items={[
               {
-                key: "Verse",
+                key: "Passage",
                 label: firstLoading
                   ? componentsTextData.verseLabel
-                  : l("Verse"),
+                  : l("Passage"),
                 href: "#",
                 backgroundColor: "#ff7878",
                 color: "#ffffff",
               },
               {
-                key: "Feel",
-                label: firstLoading ? componentsTextData.feelLabel : l("Feel"),
+                key: "Feeling",
+                label: firstLoading
+                  ? componentsTextData.feelLabel
+                  : l("Feeling"),
                 href: "#",
                 backgroundColor: "#5561ff",
                 color: "#ffffff",
@@ -158,18 +161,18 @@ export default function AddCommentForm({
             ]}
           />
         </DefaultCol>
-        <DefaultCol style={{ paddingLeft: "0.3rem" }}>
+        <DefaultCol>
           <CustomInput
             {...register("text", {
               required: {
                 value: true,
-                message: l("Enter your content."),
+                message: l("Enter a passage or feeling from the book."),
               },
             })}
             placeholder={
               firstLoading
                 ? componentsTextData.enterContentPlaceholder
-                : l("Enter your content.")
+                : l("Enter a passage or feeling from the book.")
             }
             onKeyUp={enterKeyUpEventHandler}
             clearButton={setValue}
