@@ -128,7 +128,7 @@ export default function AddCommentForm({
       style={{ paddingLeft: "0.5rem" }}
     >
       <Row style={{ marginLeft: "0" }}>
-        <DefaultCol style={{maxWidth: `${getCookie("lang") === "kr" ? "3.9rem" : "5.2rem"}`, paddingLeft: "0" }}>
+        <DefaultCol style={{maxWidth: `${getCookie("lang") !== "en" ? "3.9rem" : "5.2rem"}`, paddingLeft: "0" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
               // console.log(label);

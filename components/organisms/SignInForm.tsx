@@ -257,7 +257,7 @@ export const SignInForm = ({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "0.8rem", paddingLeft: "0.3rem", paddingRight: "0" }}
+          style={{ maxWidth: "0.8rem", paddingLeft: "0.5rem", paddingRight: "0" }}
         >
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>

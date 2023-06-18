@@ -192,7 +192,7 @@ export default function EditCommentForm({
       }}
     >
       <Row style={{ marginLeft: "0" }}>
-        <DefaultCol style={{ maxWidth: `${getCookie("lang") === "kr" ? "3.4rem" : "4.7rem"}`, paddingLeft: "0" }}>
+        <DefaultCol style={{ maxWidth: `${getCookie("lang") !== "en" ? "3.4rem" : "4.7rem"}`, paddingLeft: "0" }}>
           <CustomDropdown
             onClickItemHandler={(label) => {
               // console.log(label);
