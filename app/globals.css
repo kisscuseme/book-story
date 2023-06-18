@@ -1,9 +1,9 @@
 body {
-  --bs-body-bg: #efefef;
+  --bs-body-bg: #f5ebff;
 }
 
 .offcanvas.offcanvas-end {
-  --bs-offcanvas-bg: #efefef;
+  --bs-offcanvas-bg: #f5ebff;
 }
 
 @font-face {
@@ -1604,7 +1604,6 @@ body {
 .container-fluid {
   font-family: 'GangwonEdu_OTFBoldA', 'Noto Sans SC', 'Noto Sans TC', 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   -webkit-tap-highlight-color: transparent;
-  background-color: #f2f2f2;
   min-height: 100vh;
 }
 

@@ -187,7 +187,7 @@ export default function EditBookForm({
         <DefaultCol>
           <CustomInput
             {...register("author")}
-            placeholder={book.author||l("Book author")||componentsTextData.bookAuthorPlaceholder}
+            placeholder={book.author||`${l("Book author")} (${l("Enter directly")})`||componentsTextData.bookAuthorPlaceholder}
             onFocus={onFocusHandler}
             onKeyUp={enterKeyUpEventHandler}
             clearButton={setValue}

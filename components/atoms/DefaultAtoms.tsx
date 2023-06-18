@@ -28,7 +28,7 @@ DefaultButton.displayName = "DefaultButton";
 // 기본 컨테이너 스타일 정의
 export const DefaultContainer = styled(Container)`
   background-color: transparent;
-  max-width: 550px;
+  max-width: 768px;
   min-width: 375px;
   min-height: 100vh;
   height: 100%;

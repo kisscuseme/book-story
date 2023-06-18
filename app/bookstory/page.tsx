@@ -14,8 +14,8 @@ const BookStoryPage = async () => {
       const componentsTextData: Record<string, string> = {
         title: l("My bookshelf"),
         addBookFormTitle: l("Add a book"),
-        bookTitlePlaceholder: l("Book title"),
-        bookAuthorPlaceholder: l("Book author"),
+        bookTitlePlaceholder: `${l("Book title")} (${l("Enter directly")})`,
+        bookAuthorPlaceholder: `${l("Book author")} (${l("Enter directly")})`,
         searchKeywordPlaceholder: `${l("Enter keywords here to search.")} (${l("title or author")})`,
         addButton: l("Add"),
         editButton: l("Edit"),

@@ -262,7 +262,7 @@ export const SignInForm = ({
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "8rem", paddingRight: "0.3rem" }}
+          style={{ maxWidth: "30%", minWidth: "7.5rem", paddingRight: "0.3rem" }}
         >
           <CustomInput
             {...register("email.address", {

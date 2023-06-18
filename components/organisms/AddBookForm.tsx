@@ -105,7 +105,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             placeholder={
               firstLoading
                 ? componentsTextData.bookTitlePlaceholder
-                : l("Book title")
+                : `${l("Book title")} (${l("Enter directly")})`
             }
             onKeyUp={enterKeyUpEventHandler}
             clearButton={setValue}
@@ -120,7 +120,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
             placeholder={
               firstLoading
                 ? componentsTextData.bookAuthorPlaceholder
-                : l("Book author")
+                : `${l("Book author")} (${l("Enter directly")})`
             }
             onKeyUp={enterKeyUpEventHandler}
             clearButton={setValue}

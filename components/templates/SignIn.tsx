@@ -6,7 +6,7 @@ import { SignInForm } from "../organisms/SignInForm";
 
 export default function SignIn() {
   return (
-    <DefaultContainer>
+    <DefaultContainer style={{maxWidth: "550px"}}>
       <TopBar>
         {/* 서버에서 번역을 적용하기 위한 컴포넌트 */}
         <LanguageSelectorForServer
