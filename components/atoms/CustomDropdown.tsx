@@ -108,6 +108,10 @@ const StyledDropdownMenu = styled(Dropdown.Menu)`
   --bs-dropdown-link-active-bg: #6e6e6e;
   font-size: ${(props) => props.theme.fontSize};
   padding: ${(props) => props.theme.padding};
+  --bs-dropdown-bg: ${(props) =>
+    props.theme.backgroundColor === "transparent"
+      ? "#ffffff"
+      : props.theme.backgroundColor};
 `;
 
 /**

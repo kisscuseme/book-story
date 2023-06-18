@@ -182,9 +182,11 @@ export const SignInForm = ({
 
   const resetPasswordClickHandler = () => {
     const data = getValues();
-    if (data.email === "") {
+    console.log(data);
+    const email = `${data.email.user}@${data.email.address}`;
+    if (email === "@") {
       setErrorMsg("Please enter your e-mail.");
-    } else if (!checkEmail(data.email)) {
+    } else if (!checkEmail(email)) {
       setErrorMsg("Please check your email format.");
     } else {
       try {
@@ -192,10 +194,10 @@ export const SignInForm = ({
           show: true,
           title: l("Check"),
           content: l("Would you like to send a password reset e-mail to ?", {
-            email: data.email,
+            email: email,
           }),
           confirm: () => {
-            resetPasswordMutation.mutate(data.email);
+            resetPasswordMutation.mutate(email);
           },
         });
       } catch (error: any) {
