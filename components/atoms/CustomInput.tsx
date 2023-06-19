@@ -1,6 +1,6 @@
 import React, { ChangeEvent, forwardRef, useState } from "react";
 import { FormControl, FormControlProps } from "react-bootstrap";
-import { FieldValues, UseFormSetValue } from "react-hook-form";
+import { UseFormSetValue } from "react-hook-form";
 import { ThemeProvider, styled } from "styled-components";
 
 // 삭제 버튼 스타일 정의
@@ -48,7 +48,7 @@ const CustomFormControl = styled(FormControl)`
  */
 interface CustomInputOwnProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  clearButton?: UseFormSetValue<FieldValues> | boolean | (() => void);
+  clearButton?: UseFormSetValue<any> | boolean | (() => void);
   placeholderColor?: string;
 }
 

@@ -28,7 +28,8 @@ import { CustomButton } from "../atoms/CustomButton";
 import { styled } from "styled-components";
 import { CustomInput } from "../atoms/CustomInput";
 import { CustomDropdown } from "../atoms/CustomDropdown";
-import { getNLBooksData } from "@/services/api/books";
+import { object, string } from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 // sign in form props
 export interface SignInFormProps {
@@ -61,6 +62,26 @@ export const SignInForm = ({
   const setShowModal = useSetRecoilState(showModalState);
   const setShowToast = useSetRecoilState(showToastState);
   const savedEmail = getCookie("email") || "";
+  const schema = object({
+    email: object().shape({
+      user: string().required(l("Please enter your e-mail.")),
+      domain: string()
+        .required(l("Please enter your e-mail."))
+        .test(
+          "check-format-domain",
+          l("Please check your email format."),
+          (value: any) => {
+            const user = getValues().email.user;
+            if (emailRegEx.test(`${user}@${value}`)) {
+              return true;
+            }
+          }
+        ),
+    }),
+    password: string()
+      .required(l("Please enter your password."))
+      .min(6, l("Please enter a password of at least 6 digits.")),
+  });
   const {
     register,
     handleSubmit,
@@ -68,17 +89,17 @@ export const SignInForm = ({
     getValues,
     setValue,
     formState: { errors },
-  } = useForm(); // react hook form 기능 활용
+  } = useForm({ resolver: yupResolver(schema) }); // react hook form 기능 활용
   const submitRef = useRef<HTMLButtonElement>(null);
   const rerenderData = useRecoilValue(rerenderDataState);
-  const [disabledEmailAddress, setDisabledEmailAddress] = useState(false);
+  const [disabledEmailDomain, setDisabledEmailDomain] = useState(false);
 
   useEffect(() => {
     // 최초 로딩 시 input 컴포넌트 값에 기존 로그인 이메일 바인딩
     if (savedEmail) {
       const email = savedEmail.split("@");
       setValue("email.user", email[0]);
-      setValue("email.address", email[1]);
+      setValue("email.domain", email[1]);
     }
   }, []);
 
@@ -183,7 +204,7 @@ export const SignInForm = ({
   const resetPasswordClickHandler = () => {
     const data = getValues();
     console.log(data);
-    const email = `${data.email.user}@${data.email.address}`;
+    const email = `${data.email.user}@${data.email.domain}`;
     if (email === "@") {
       setErrorMsg("Please enter your e-mail.");
     } else if (!checkEmail(email)) {
@@ -225,7 +246,7 @@ export const SignInForm = ({
       onSubmit={handleSubmit((data) => {
         setErrorMsg("");
         signInMutation.mutate({
-          email: `${data.email.user}@${data.email.address}`,
+          email: `${data.email.user}@${data.email.domain}`,
           password: data.password,
         });
       })}
@@ -234,20 +255,7 @@ export const SignInForm = ({
       <DefaultRow>
         <DefaultCol style={{ paddingRight: "0" }}>
           <CustomInput
-            {...register("email.user", {
-              required: {
-                value: true,
-                message: l("Please enter your e-mail."),
-              },
-              validate: (value) => {
-                const address = getValues().email.address;
-                if (emailRegEx.test(`${value}@${address}`)) {
-                  return true;
-                } else {
-                  return l("Please check your email format.");
-                }
-              },
-            })}
+            {...register("email.user")}
             placeholder={"user"}
             type="text"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -257,46 +265,45 @@ export const SignInForm = ({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "0.8rem", paddingLeft: "0.4rem", paddingRight: "0" }}
+          style={{
+            maxWidth: "0.8rem",
+            paddingLeft: "0.4rem",
+            paddingRight: "0",
+          }}
         >
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "30%", minWidth: "7.5rem", paddingRight: "0.3rem" }}
+          style={{
+            maxWidth: "30%",
+            minWidth: "7.5rem",
+            paddingRight: "0.3rem",
+          }}
         >
           <CustomInput
-            {...register("email.address", {
-              required: {
-                value: true,
-                message: l("Please enter your e-mail."),
-              },
-              validate: (value) => {
-                const user = getValues().email.user;
-                if (emailRegEx.test(`${user}@${value}`)) {
-                  return true;
-                } else {
-                  return l("Please check your email format.");
-                }
-              },
-            })}
+            {...register("email.domain")}
             placeholder={"example.com"}
             type="text"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
-            disabled={disabledEmailAddress}
-            clearButton={disabledEmailAddress ? false : setValue}
+            disabled={disabledEmailDomain}
+            clearButton={disabledEmailDomain ? false : setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: `${getCookie("lang") !== "en" ? "6rem" : "8rem"}` }}>
+        <DefaultCol
+          style={{
+            maxWidth: `${getCookie("lang") !== "en" ? "6rem" : "8rem"}`,
+          }}
+        >
           <CustomDropdown
             id="signInEmailSelector"
             onClickItemHandler={(label) => {
               // console.log(label);
-              if (label === "Enter directly") setDisabledEmailAddress(false);
+              if (label === "Enter directly") setDisabledEmailDomain(false);
               else {
-                setValue("email.address", label);
-                setDisabledEmailAddress(true);
+                setValue("email.domain", label);
+                setDisabledEmailDomain(true);
               }
             }}
             itemAlign="end"
@@ -375,16 +382,7 @@ export const SignInForm = ({
       <DefaultRow>
         <DefaultCol>
           <CustomInput
-            {...register("password", {
-              required: {
-                value: true,
-                message: l("Please enter your password."),
-              },
-              minLength: {
-                value: 6,
-                message: l("Please enter a password of at least 6 digits."),
-              },
-            })}
+            {...register("password")}
             placeholder={passwordPlaceholder}
             type="password"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -427,11 +425,10 @@ export const SignInForm = ({
         <CenterCol>
           <div style={{ color: "hotpink" }}>
             {getErrorMsg(errors, "email.user", "required") ||
-              getErrorMsg(errors, "email.user", "validate") ||
-              getErrorMsg(errors, "email.address", "required") ||
-              getErrorMsg(errors, "email.address", "validate") ||
+              getErrorMsg(errors, "email.domain", "required") ||
+              getErrorMsg(errors, "email.domain", "check-format-domain") ||
               getErrorMsg(errors, "password", "required") ||
-              getErrorMsg(errors, "password", "minLength") ||
+              getErrorMsg(errors, "password", "min") ||
               l(errorMsg)}
           </div>
         </CenterCol>

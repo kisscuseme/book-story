@@ -52,7 +52,7 @@ export default function SignUpForm({
   } = useForm(); // react hook form 기능 활용
   const submitRef = useRef<HTMLButtonElement>(null);
   const rerenderData = useRecoilValue(rerenderDataState);
-  const [disabledEmailAddress, setDisabledEmailAddress] = useState(false);
+  const [disabledEmailDomain, setDisabledEmailDomain] = useState(false);
 
   useEffect(() => {}, [rerenderData]);
 
@@ -75,7 +75,7 @@ export default function SignUpForm({
           // 이메일 정보 쿠키에 저장
           setCookie(
             "email",
-            `${registerInfo.email.user}@${registerInfo.email.address}`
+            `${registerInfo.email.user}@${registerInfo.email.domain}`
           );
           setShowModal({
             show: true,
@@ -126,7 +126,7 @@ export default function SignUpForm({
     <Form
       onSubmit={handleSubmit((data) => {
         signUpHandleSubmit(
-          `${data.email.user}@${data.email.address}`,
+          `${data.email.user}@${data.email.domain}`,
           data.password
         );
       })}
@@ -141,8 +141,8 @@ export default function SignUpForm({
                 message: l("Please enter your e-mail."),
               },
               validate: (value) => {
-                const address = getValues().email.address;
-                if (emailRegEx.test(`${value}@${address}`)) {
+                const domain = getValues().email.domain;
+                if (emailRegEx.test(`${value}@${domain}`)) {
                   return true;
                 } else {
                   return l("Please check your email format.");
@@ -166,7 +166,7 @@ export default function SignUpForm({
           style={{ maxWidth: "30%", minWidth: "7.5rem", paddingRight: "0.3rem" }}
         >
           <CustomInput
-            {...register("email.address", {
+            {...register("email.domain", {
               required: {
                 value: true,
                 message: l("Please enter your e-mail."),
@@ -185,8 +185,8 @@ export default function SignUpForm({
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
               enterKeyUpEventHandler(e);
             }}
-            disabled={disabledEmailAddress}
-            clearButton={disabledEmailAddress ? false : setValue}
+            disabled={disabledEmailDomain}
+            clearButton={disabledEmailDomain ? false : setValue}
           />
         </DefaultCol>
         <DefaultCol style={{ maxWidth: `${getCookie("lang") !== "en" ? "6rem" : "8rem"}` }}>
@@ -194,10 +194,10 @@ export default function SignUpForm({
             id="signUpEmailSelector"
             onClickItemHandler={(label) => {
               // console.log(label);
-              if (label === "Enter directly") setDisabledEmailAddress(false);
+              if (label === "Enter directly") setDisabledEmailDomain(false);
               else {
-                setValue("email.address", label);
-                setDisabledEmailAddress(true);
+                setValue("email.domain", label);
+                setDisabledEmailDomain(true);
               }
             }}
             itemAlign="end"
@@ -353,8 +353,8 @@ export default function SignUpForm({
           <div style={{ color: "hotpink" }}>
             {getErrorMsg(errors, "email.user", "required") ||
               getErrorMsg(errors, "email.user", "validate") ||
-              getErrorMsg(errors, "email.address", "required") ||
-              getErrorMsg(errors, "email.address", "validate") ||
+              getErrorMsg(errors, "email.domain", "required") ||
+              getErrorMsg(errors, "email.domain", "validate") ||
               getErrorMsg(errors, "name", "required") ||
               getErrorMsg(errors, "password", "required") ||
               getErrorMsg(errors, "password", "minWidth") ||
