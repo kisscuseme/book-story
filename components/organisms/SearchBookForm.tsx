@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { CustomDropdown, DropdownDataProps } from "../atoms/CustomDropdown";
 import { getNLBooksData } from "@/services/api/books";
 import { getTextfromHtmlString, l, onFocusHandler } from "@/services/util/util";
-import { FieldValues, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import {
+  FieldValue,
+  FieldValues,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 import { CustomInput } from "../atoms/CustomInput";
 import { BookType } from "@/types/types";
 import { useRecoilState } from "recoil";
@@ -78,9 +83,11 @@ export default function SearchBookForm({
           placeholder={
             firstLoading
               ? componentsTextData.searchKeywordPlaceholder
-              : `${l("Enter keywords here to search.")} (${l("title or author")})`
+              : `${l("Enter keywords here to search.")} (${l(
+                  "title or author"
+                )})`
           }
-          clearButton={(field, value) => {
+          clearButton={(field: string, value: string) => {
             setValue(field, value);
             setKeyword("");
           }}

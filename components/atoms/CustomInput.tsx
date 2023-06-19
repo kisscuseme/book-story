@@ -1,6 +1,6 @@
 import React, { ChangeEvent, forwardRef, useState } from "react";
 import { FormControl, FormControlProps } from "react-bootstrap";
-import { UseFormSetValue } from "react-hook-form";
+import { UseFormSetValue, FieldValues } from "react-hook-form";
 import { ThemeProvider, styled } from "styled-components";
 
 // 삭제 버튼 스타일 정의
@@ -32,7 +32,7 @@ const CustomFormControl = styled(FormControl)`
     background-color: transparent;
   }
   &::placeholder {
-    color: ${props => props.theme.placeholderColor};
+    color: ${(props) => props.theme.placeholderColor};
   }
   &:disabled {
     color: #515151;
@@ -81,8 +81,8 @@ export const CustomInput = forwardRef(
     };
 
     const theme = {
-      placeholderColor: placeholderColor ? placeholderColor : "#afafaf"
-    }
+      placeholderColor: placeholderColor ? placeholderColor : "#afafaf",
+    };
 
     return (
       <div style={wrapperStyle}>
