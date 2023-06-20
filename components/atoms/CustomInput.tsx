@@ -1,13 +1,13 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ChangeEvent, forwardRef, useState } from "react";
-import { FormControl, FormControlProps } from "react-bootstrap";
+import { FormControl, FormControlProps, Row } from "react-bootstrap";
 import { UseFormSetValue } from "react-hook-form";
 import { ThemeProvider, styled } from "styled-components";
+import { DefaultCol } from "./DefaultAtoms";
 
 // 삭제 버튼 스타일 정의
 const InnerButton = styled.button`
-  position: absolute;
   font-weight: 700;
   border: none;
   color: #9e9e9e;
@@ -82,7 +82,7 @@ export const CustomInput = forwardRef(
 
     const wrapperStyle = {
       borderBottom: "1px solid #000000",
-      paddingRight: `${buttonPadding.toString()}rem`,
+      margin: "0",
     };
     let inputRef: HTMLInputElement | null = null;
 
@@ -105,58 +105,64 @@ export const CustomInput = forwardRef(
     };
 
     const clearButtonTheme = {
-      right: "max(calc((100% - 550px) / 2 + 0.9rem), 0.9rem)",
+      right: "none",
     };
     const passwordVisibleButtonTheme = {
-      right: buttonPadding === 2.8 ? "max(calc((100% - 550px) / 2 + 1.8rem), 1.8rem)" : "max(calc((100% - 550px) / 2 + 0.9rem), 0.9rem)",
+      right: "none",
     };
 
     return (
-      <div style={wrapperStyle}>
-        <ThemeProvider theme={theme}>
-          <CustomFormControl
-            ref={refHandler}
-            onChange={onChangeHandler}
-            type={inputType}
-            {...props}
-          />
-        </ThemeProvider>
-        {passwordVisibleButton && text && (
-          <ThemeProvider theme={passwordVisibleButtonTheme}>
-            <InnerButton
-              type="button"
-              tabIndex={-1}
-              onClick={() => {
-                if(passwordVisibleButton) {
-                  if(inputType === "password") setInputType("text");
-                  else setInputType("password");
-                }
-              }}
-            >
-              {inputType === "password" ? <FontAwesomeIcon size="xs" icon={faEye}/> : <FontAwesomeIcon size="xs" icon={faEyeSlash}/>}
-            </InnerButton>
+      <Row style={wrapperStyle}>
+        <DefaultCol style={{padding: "0"}}>
+          <ThemeProvider theme={theme}>
+            <CustomFormControl
+              ref={refHandler}
+              onChange={onChangeHandler}
+              type={inputType}
+              {...props}
+            />
           </ThemeProvider>
+        </DefaultCol>
+        {passwordVisibleButton && text && (
+          <DefaultCol style={{maxWidth: "1.5rem", paddingLeft: "0" }}>
+            <ThemeProvider theme={passwordVisibleButtonTheme}>
+              <InnerButton
+                type="button"
+                tabIndex={-1}
+                onClick={() => {
+                  if(passwordVisibleButton) {
+                    if(inputType === "password") setInputType("text");
+                    else setInputType("password");
+                  }
+                }}
+              >
+                {inputType === "password" ? <FontAwesomeIcon size="xs" icon={faEye}/> : <FontAwesomeIcon size="xs" icon={faEyeSlash}/>}
+              </InnerButton>
+            </ThemeProvider>
+          </DefaultCol>
         )}
         {clearButton && text && (
-          <ThemeProvider theme={clearButtonTheme}>
-            <InnerButton
-              type="button"
-              tabIndex={-1}
-              onClick={() => {
-                setText("");
-                if (inputRef) {
-                  inputRef.value = "";
-                  // react hook form을 사용할 경우 setValue 함수를 참조하여 값 초기화에 사용
-                  if (typeof clearButton === "function")
-                    clearButton(inputRef.name, "");
-                }
-              }}
-            >
-              x
-            </InnerButton>
-          </ThemeProvider>
+          <DefaultCol style={{maxWidth: "2rem", paddingLeft: "0.7rem" }}>
+            <ThemeProvider theme={clearButtonTheme}>
+              <InnerButton
+                type="button"
+                tabIndex={-1}
+                onClick={() => {
+                  setText("");
+                  if (inputRef) {
+                    inputRef.value = "";
+                    // react hook form을 사용할 경우 setValue 함수를 참조하여 값 초기화에 사용
+                    if (typeof clearButton === "function")
+                      clearButton(inputRef.name, "");
+                  }
+                }}
+              >
+                x
+              </InnerButton>
+            </ThemeProvider>
+          </DefaultCol>
         )}
-      </div>
+      </Row>
     );
   }
 );
