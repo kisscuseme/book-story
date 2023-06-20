@@ -142,7 +142,7 @@ export const CustomInput = forwardRef(
           </DefaultCol>
         )}
         {clearButton && text && (
-          <DefaultCol style={{maxWidth: "1.2rem", padding: "0" }}>
+          <DefaultCol style={{maxWidth: "1.5rem", padding: "0" }}>
             <ThemeProvider theme={clearButtonTheme}>
               <InnerButton
                 type="button"
