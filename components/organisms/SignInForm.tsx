@@ -70,9 +70,9 @@ export const SignInForm = ({
         .test(
           "check-format-domain",
           l("Please check your email format."),
-          (value: any) => {
+          (domain: string) => {
             const user = getValues().email.user;
-            if (emailRegEx.test(`${user}@${value}`)) {
+            if (emailRegEx.test(`${user}@${domain}`)) {
               return true;
             }
           }
@@ -93,6 +93,7 @@ export const SignInForm = ({
   const submitRef = useRef<HTMLButtonElement>(null);
   const rerenderData = useRecoilValue(rerenderDataState);
   const [disabledEmailDomain, setDisabledEmailDomain] = useState(false);
+  const [passwordType, setPasswordType] = useState("password");
 
   useEffect(() => {
     // 최초 로딩 시 input 컴포넌트 값에 기존 로그인 이메일 바인딩
@@ -389,6 +390,7 @@ export const SignInForm = ({
               enterKeyUpEventHandler(e);
             }}
             clearButton={setValue}
+            passwordVisibleButton={true}
           />
         </DefaultCol>
       </DefaultRow>

@@ -349,11 +349,6 @@ export default function BookList({
     }
   }, [commentLastVisible]);
 
-  const test = (a: any, b: any) => {
-    console.log(a, b);
-    return "test";
-  };
-
   return (
     <>
       <style>{accordionCustomStyle}</style>

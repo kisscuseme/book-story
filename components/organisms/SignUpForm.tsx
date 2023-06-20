@@ -310,6 +310,7 @@ export default function SignUpForm({
               enterKeyUpEventHandler(e);
             }}
             clearButton={setValue}
+            passwordVisibleButton={true}
           />
         </DefaultCol>
       </DefaultRow>
@@ -338,6 +339,7 @@ export default function SignUpForm({
               enterKeyUpEventHandler(e);
             }}
             clearButton={setValue}
+            passwordVisibleButton={true}
           />
         </DefaultCol>
       </DefaultRow>
