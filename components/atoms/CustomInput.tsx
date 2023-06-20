@@ -105,7 +105,10 @@ export const CustomInput = forwardRef(
     };
 
     const clearButtonTheme = {
-      right: buttonPadding === 2.8 ? "0.9rem" : "none",
+      right: "max(calc((100% - 550px) / 2 + 0.9rem), 0.9rem)",
+    };
+    const passwordVisibleButtonTheme = {
+      right: buttonPadding === 2.8 ? "max(calc((100% - 550px) / 2 + 1.8rem), 1.8rem)" : "max(calc((100% - 550px) / 2 + 0.9rem), 0.9rem)",
     };
 
     return (
@@ -119,18 +122,20 @@ export const CustomInput = forwardRef(
           />
         </ThemeProvider>
         {passwordVisibleButton && text && (
-          <InnerButton
-            type="button"
-            tabIndex={-1}
-            onClick={() => {
-              if(passwordVisibleButton) {
-                if(inputType === "password") setInputType("text");
-                else setInputType("password");
-              }
-            }}
-          >
-            {inputType === "password" ? <FontAwesomeIcon size="xs" icon={faEye}/> : <FontAwesomeIcon size="xs" icon={faEyeSlash}/>}
-          </InnerButton>
+          <ThemeProvider theme={passwordVisibleButtonTheme}>
+            <InnerButton
+              type="button"
+              tabIndex={-1}
+              onClick={() => {
+                if(passwordVisibleButton) {
+                  if(inputType === "password") setInputType("text");
+                  else setInputType("password");
+                }
+              }}
+            >
+              {inputType === "password" ? <FontAwesomeIcon size="xs" icon={faEye}/> : <FontAwesomeIcon size="xs" icon={faEyeSlash}/>}
+            </InnerButton>
+          </ThemeProvider>
         )}
         {clearButton && text && (
           <ThemeProvider theme={clearButtonTheme}>
