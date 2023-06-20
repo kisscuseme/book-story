@@ -1,7 +1,13 @@
 "use client";
 
 import { signUp } from "@/services/firebase/auth";
-import { emailRegEx, getCookie, getErrorMsg, l, setCookie } from "@/services/util/util";
+import {
+  emailRegEx,
+  getCookie,
+  getErrorMsg,
+  l,
+  setCookie,
+} from "@/services/util/util";
 import {
   rerenderDataState,
   showModalState,
@@ -23,6 +29,8 @@ import TranslationFromClient from "./TranslationFromClient";
 import { CustomButton } from "../atoms/CustomButton";
 import { CustomInput } from "../atoms/CustomInput";
 import { CustomDropdown } from "../atoms/CustomDropdown";
+import { object, string } from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 // sign up form props
 export interface SignUpFormProps {
@@ -42,6 +50,35 @@ export default function SignUpForm({
 }: SignUpFormProps) {
   const setShowModal = useSetRecoilState(showModalState);
   const setShowToast = useSetRecoilState(showToastState);
+  const schema = object({
+    email: object().shape({
+      user: string().required(l("Please enter your e-mail.")),
+      domain: string()
+        .required(l("Please enter your e-mail."))
+        .test(
+          "check-format-domain",
+          l("Please check your email format."),
+          (domain: string) => {
+            const user = getValues().email.user;
+            if (emailRegEx.test(`${user}@${domain}`)) {
+              return true;
+            }
+          }
+        ),
+    }),
+    name: string().required(l("Enter your name, please.")),
+    password: string()
+      .required(l("Please enter your password."))
+      .min(6, l("Please enter a password of at least 6 digits.")),
+    reconfirmPassword: string().test(
+      "check-reconfirm-password",
+      l("The entered password and reconfirm password are not the same."),
+      (reconfirmPassword: string | undefined) => {
+        const password = getValues().password;
+        if (reconfirmPassword && reconfirmPassword === password) return true;
+      }
+    ),
+  });
   const {
     register,
     handleSubmit,
@@ -49,7 +86,7 @@ export default function SignUpForm({
     getValues,
     setValue,
     formState: { errors },
-  } = useForm(); // react hook form 기능 활용
+  } = useForm({ resolver: yupResolver(schema) }); // react hook form 기능 활용
   const submitRef = useRef<HTMLButtonElement>(null);
   const rerenderData = useRecoilValue(rerenderDataState);
   const [disabledEmailDomain, setDisabledEmailDomain] = useState(false);
@@ -135,20 +172,7 @@ export default function SignUpForm({
       <DefaultRow>
         <DefaultCol style={{ paddingRight: "0" }}>
           <CustomInput
-            {...register("email.user", {
-              required: {
-                value: true,
-                message: l("Please enter your e-mail."),
-              },
-              validate: (value) => {
-                const domain = getValues().email.domain;
-                if (emailRegEx.test(`${value}@${domain}`)) {
-                  return true;
-                } else {
-                  return l("Please check your email format.");
-                }
-              },
-            })}
+            {...register("email.user")}
             placeholder={"user"}
             type="text"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -158,28 +182,23 @@ export default function SignUpForm({
           />
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "0.8rem", paddingLeft: "0.4rem", paddingRight: "0" }}
+          style={{
+            maxWidth: "0.8rem",
+            paddingLeft: "0.4rem",
+            paddingRight: "0",
+          }}
         >
           <div style={{ color: "#5f5f5f" }}>@</div>
         </DefaultCol>
         <DefaultCol
-          style={{ maxWidth: "30%", minWidth: "7.5rem", paddingRight: "0.3rem" }}
+          style={{
+            maxWidth: "30%",
+            minWidth: "7.5rem",
+            paddingRight: "0.3rem",
+          }}
         >
           <CustomInput
-            {...register("email.domain", {
-              required: {
-                value: true,
-                message: l("Please enter your e-mail."),
-              },
-              validate: (value) => {
-                const user = getValues().email.user;
-                if (emailRegEx.test(`${user}@${value}`)) {
-                  return true;
-                } else {
-                  return l("Please check your email format.");
-                }
-              },
-            })}
+            {...register("email.domain")}
             placeholder={"example.com"}
             type="text"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -189,7 +208,11 @@ export default function SignUpForm({
             clearButton={disabledEmailDomain ? false : setValue}
           />
         </DefaultCol>
-        <DefaultCol style={{ maxWidth: `${getCookie("lang") !== "en" ? "6rem" : "8rem"}` }}>
+        <DefaultCol
+          style={{
+            maxWidth: `${getCookie("lang") !== "en" ? "6rem" : "8rem"}`,
+          }}
+        >
           <CustomDropdown
             id="signUpEmailSelector"
             onClickItemHandler={(label) => {
@@ -276,12 +299,7 @@ export default function SignUpForm({
       <DefaultRow>
         <DefaultCol>
           <CustomInput
-            {...register("name", {
-              required: {
-                value: true,
-                message: l("Enter your name, please."),
-              },
-            })}
+            {...register("name")}
             placeholder={namePlaceholder}
             type="text"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -294,16 +312,7 @@ export default function SignUpForm({
       <DefaultRow>
         <DefaultCol>
           <CustomInput
-            {...register("password", {
-              required: {
-                value: true,
-                message: l("Please enter your password."),
-              },
-              minLength: {
-                value: 6,
-                message: l("Please enter a password of at least 6 digits."),
-              },
-            })}
+            {...register("password")}
             placeholder={passwordPlaceholder}
             type="password"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -317,22 +326,7 @@ export default function SignUpForm({
       <DefaultRow>
         <DefaultCol>
           <CustomInput
-            {...register("reconfirmPassword", {
-              required: {
-                value: true,
-                message: l(
-                  "The entered password and reconfirm password are not the same."
-                ),
-              },
-              validate: (value) => {
-                const password = getValues()["password"];
-                if (value === password) return true;
-                else
-                  return l(
-                    "The entered password and reconfirm password are not the same."
-                  );
-              },
-            })}
+            {...register("reconfirmPassword")}
             placeholder={reconfirmPasswordPlaceholder}
             type="password"
             onKeyUp={(e: KeyboardEvent<HTMLInputElement>) => {
@@ -354,14 +348,16 @@ export default function SignUpForm({
         <CenterCol>
           <div style={{ color: "hotpink" }}>
             {getErrorMsg(errors, "email.user", "required") ||
-              getErrorMsg(errors, "email.user", "validate") ||
               getErrorMsg(errors, "email.domain", "required") ||
-              getErrorMsg(errors, "email.domain", "validate") ||
+              getErrorMsg(errors, "email.domain", "check-format-domain") ||
               getErrorMsg(errors, "name", "required") ||
               getErrorMsg(errors, "password", "required") ||
-              getErrorMsg(errors, "password", "minWidth") ||
-              getErrorMsg(errors, "reconfirmPassword", "required") ||
-              getErrorMsg(errors, "reconfirmPassword", "validate")}
+              getErrorMsg(errors, "password", "min") ||
+              getErrorMsg(
+                errors,
+                "reconfirmPassword",
+                "check-reconfirm-password"
+              )}
           </div>
         </CenterCol>
       </DefaultRow>
