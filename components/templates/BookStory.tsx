@@ -48,10 +48,10 @@ export default function BookStory({
   });
 
   return (
-    <DefaultContainer>
+    <DefaultContainer style={{paddingTop: "50px"}}>
       <TranslationFromClient />
       <TopBar>
-        <DefaultCol>
+        <DefaultCol style={{paddingLeft: "1.3rem"}}>
           <Link href="/">
             <Image src="/images/logo.png" width={"36px"} style={{rotate: "-5deg"}} />
           </Link>

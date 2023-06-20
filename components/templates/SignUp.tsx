@@ -10,7 +10,7 @@ import { LanguageSelectorForServer } from "../organisms/LanguageSelectorForServe
 
 export default function SignUp() {
   return (
-    <DefaultContainer style={{ maxWidth: "550px" }}>
+    <DefaultContainer style={{ maxWidth: "550px", paddingTop: "50px" }}>
       <TopBar>
         <DefaultCol>
           {/* 서버에서 번역을 적용하기 위한 컴포넌트 */}
