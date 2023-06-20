@@ -585,7 +585,7 @@ export default function BookList({
                     )
                   )}
                   {bookList.length !== index + 1 && (
-                    <DivisionLine color="#f5f5f5" />
+                    <DivisionLine color="#f0e7ff" />
                   )}
                 </Accordion.Item>
               );

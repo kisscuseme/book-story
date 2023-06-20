@@ -88,12 +88,12 @@ export const SignInForm = ({
     reset,
     getValues,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) }); // react hook form 기능 활용
   const submitRef = useRef<HTMLButtonElement>(null);
   const rerenderData = useRecoilValue(rerenderDataState);
   const [disabledEmailDomain, setDisabledEmailDomain] = useState(false);
-  const [passwordType, setPasswordType] = useState("password");
 
   useEffect(() => {
     // 최초 로딩 시 input 컴포넌트 값에 기존 로그인 이메일 바인딩
@@ -103,6 +103,15 @@ export const SignInForm = ({
       setValue("email.domain", email[1]);
     }
   }, []);
+
+  useEffect(() => {
+    const emailUser = getValues().email.user;
+    if(emailUser) {
+      const splitUser = emailUser.split("@");
+      setValue("email.user", splitUser[0]);
+      if(splitUser.length > 1 && splitUser[1]) setValue("email.domain", splitUser[1]);
+    }
+  },[watch('email.user')]);
 
   useEffect(() => {}, [rerenderData]);
 

@@ -85,11 +85,21 @@ export default function SignUpForm({
     reset,
     getValues,
     setValue,
+    watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) }); // react hook form 기능 활용
   const submitRef = useRef<HTMLButtonElement>(null);
   const rerenderData = useRecoilValue(rerenderDataState);
   const [disabledEmailDomain, setDisabledEmailDomain] = useState(false);
+
+  useEffect(() => {
+    const emailUser = getValues().email.user;
+    if(emailUser) {
+      const splitUser = emailUser.split("@");
+      setValue("email.user", splitUser[0]);
+      if(splitUser.length > 1 && splitUser[1]) setValue("email.domain", splitUser[1]);
+    }
+  },[watch('email.user')]);
 
   useEffect(() => {}, [rerenderData]);
 
