@@ -1,4 +1,4 @@
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ChangeEvent, forwardRef, useState } from "react";
 import { FormControl, FormControlProps, Row } from "react-bootstrap";
@@ -124,7 +124,7 @@ export const CustomInput = forwardRef(
           </ThemeProvider>
         </DefaultCol>
         {passwordVisibleButton && text && (
-          <DefaultCol style={{maxWidth: "1.5rem", paddingLeft: "0" }}>
+          <DefaultCol style={{maxWidth: "2rem", paddingLeft: "0" }}>
             <ThemeProvider theme={passwordVisibleButtonTheme}>
               <InnerButton
                 type="button"
@@ -136,13 +136,13 @@ export const CustomInput = forwardRef(
                   }
                 }}
               >
-                {inputType === "password" ? <FontAwesomeIcon size="xs" icon={faEye}/> : <FontAwesomeIcon size="xs" icon={faEyeSlash}/>}
+                {inputType === "password" ? <FontAwesomeIcon size="sm" icon={faEye}/> : <FontAwesomeIcon size="sm" icon={faEyeSlash}/>}
               </InnerButton>
             </ThemeProvider>
           </DefaultCol>
         )}
         {clearButton && text && (
-          <DefaultCol style={{maxWidth: "2rem", paddingLeft: "0.7rem" }}>
+          <DefaultCol style={{maxWidth: "1.2rem", padding: "0" }}>
             <ThemeProvider theme={clearButtonTheme}>
               <InnerButton
                 type="button"
@@ -157,7 +157,7 @@ export const CustomInput = forwardRef(
                   }
                 }}
               >
-                x
+              <FontAwesomeIcon size="xs" icon={faXmark}/>
               </InnerButton>
             </ThemeProvider>
           </DefaultCol>
