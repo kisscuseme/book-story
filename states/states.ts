@@ -59,7 +59,9 @@ export const mainListAccordionActiveState = atom<AccordionEventKey | null>({
 });
 
 // 선택된 sub list accordion 키 값
-export const subListAccordionActiveState = atom<Record<string, AccordionEventKey>>({
+export const subListAccordionActiveState = atom<
+  Record<string, AccordionEventKey>
+>({
   key: "subListAccordionActiveState",
   default: {},
 });
@@ -74,4 +76,9 @@ export const selectedLanguageState = atom<string | null>({
 export const bookListState = atom<BookType[]>({
   key: "bookListState",
   default: [],
+});
+
+export const allowSearchState = atom<boolean>({
+  key: "allowSearchState",
+  default: false,
 });

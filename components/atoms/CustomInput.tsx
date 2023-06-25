@@ -113,7 +113,7 @@ export const CustomInput = forwardRef(
 
     return (
       <Row style={wrapperStyle}>
-        <DefaultCol style={{padding: "0"}}>
+        <DefaultCol style={{padding: "0.1rem 0"}}>
           <ThemeProvider theme={theme}>
             <CustomFormControl
               ref={refHandler}

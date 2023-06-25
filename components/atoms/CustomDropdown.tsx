@@ -180,7 +180,7 @@ export const CustomDropdown = ({
             >
               <div
                 dangerouslySetInnerHTML={{ __html: item["label"] }}
-                style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+                style={{ overflow: "hidden", textOverflow: "ellipsis", color: item["key"] === "-1" ? "#819ef8" : "inherit" }}
               ></div>
             </Dropdown.Item>
           ))}

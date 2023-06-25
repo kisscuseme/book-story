@@ -1,5 +1,6 @@
 import { deleteData, getUserPath, updateData } from "@/services/firebase/db";
 import {
+  allowSearchState,
   bookListState,
   showModalState,
   showToastState,
@@ -11,16 +12,12 @@ import { Button, Form, Row, useAccordionButton } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
-import {
-  enterKeyUpEventHandler,
-  getErrorMsg,
-  l,
-  onFocusHandler,
-} from "@/services/util/util";
+import { getErrorMsg, l } from "@/services/util/util";
 import { CustomButton } from "../atoms/CustomButton";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
-import { CustomInput } from "../atoms/CustomInput";
 import SearchBookForm from "./SearchBookForm";
+import { object, string } from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface EditBookFormProps {
   book: BookType;
@@ -31,7 +28,22 @@ export default function EditBookForm({
   book,
   componentsTextData,
 }: EditBookFormProps) {
-  const { register, handleSubmit, setValue, formState, getValues } = useForm();
+  const schema = object({
+    title: string().required(l("Please enter the title of the book.")),
+    author: string().test(
+      "check-no-change",
+      l("Everything is the same."),
+      (author) => {
+        const title = getValues().title;
+        if (author !== book.author || title !== book.title) {
+          return true;
+        }
+      }
+    ),
+  });
+  const { register, handleSubmit, setValue, formState, getValues } = useForm({
+    resolver: yupResolver(schema),
+  });
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowModal = useSetRecoilState(showModalState);
   const setShowToast = useSetRecoilState(showToastState);
@@ -40,6 +52,7 @@ export default function EditBookForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const closeAccordion = useAccordionButton(book.id || "");
   const closeAccordionButtonRef = useRef<HTMLButtonElement>(null);
+  const setAllowSearch = useSetRecoilState(allowSearchState);
 
   useEffect(() => {
     setValue("title", book.title);
@@ -76,6 +89,7 @@ export default function EditBookForm({
         }
         setBookList(tempBookList);
         setIsSubmitting(false);
+        setAllowSearch(false);
         closeAccordionButtonRef.current?.click();
       }
     },
@@ -129,6 +143,7 @@ export default function EditBookForm({
         tempBookList.pop();
         setBookList(tempBookList);
         setIsSubmitting(false);
+        setAllowSearch(false);
       }
     },
   });
@@ -150,7 +165,7 @@ export default function EditBookForm({
       onSubmit={handleSubmit((data) => {
         if (!isSubmitting) {
           setIsSubmitting(true);
-          updateBookHandler(book.id, data.title, data.author);
+          updateBookHandler(book.id, data.title, data.author || "");
         }
       })}
       onKeyDown={(e) => {
@@ -158,49 +173,26 @@ export default function EditBookForm({
       }}
       style={{ paddingLeft: "0.5rem" }}
     >
-      <Row>
-        <DefaultCol style={{ paddingBottom: "0.5rem" }}>
+      <Row style={{ paddingBottom: "0.5rem" }}>
+        <DefaultCol>
           <SearchBookForm
-            setValue={setValue}
-            register={register}
-            componentsTextData={componentsTextData}
             book={book}
-          />
-        </DefaultCol>
-      </Row>
-      <Row>
-        <DefaultCol style={{ paddingBottom: "0.5rem" }}>
-          <CustomInput
-            {...register("title", {
-              required: {
-                value: true,
-                message: l("Please enter the title of the book."),
-              },
-              validate: (value) => {
-                const author = getValues()["author"];
-                if (value !== book.title || author !== book.author) return true;
-                else return l("Everything is the same.");
-              },
-            })}
+            register={register}
+            setValue={setValue}
+            name="title"
             placeholder={book.title}
-            onFocus={onFocusHandler}
-            onKeyUp={enterKeyUpEventHandler}
-            clearButton={setValue}
           />
         </DefaultCol>
       </Row>
       <Row style={{ paddingBottom: "0.5rem" }}>
         <DefaultCol style={{ paddingRight: "0" }}>
-          <CustomInput
-            {...register("author")}
-            placeholder={
-              book.author ||
-              `${l("Book author")} (${l("Enter directly")})` ||
-              componentsTextData.bookAuthorPlaceholder
-            }
-            onFocus={onFocusHandler}
-            onKeyUp={enterKeyUpEventHandler}
-            clearButton={setValue}
+          <SearchBookForm
+            book={book}
+            register={register}
+            setValue={setValue}
+            name="author"
+            placeholder={book.author}
+            searchDisabled={true}
           />
         </DefaultCol>
         <DefaultCol
@@ -250,7 +242,8 @@ export default function EditBookForm({
         <DefaultCol>
           <div style={{ color: "hotpink", paddingTop: "0.3rem" }}>
             {getErrorMsg(formState.errors, "title", "required") ||
-              getErrorMsg(formState.errors, "title", "validate")}
+              getErrorMsg(formState.errors, "title", "validate") ||
+              getErrorMsg(formState.errors, "author", "check-no-change")}
           </div>
         </DefaultCol>
       </Row>

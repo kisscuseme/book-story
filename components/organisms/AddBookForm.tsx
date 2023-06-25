@@ -1,33 +1,36 @@
 import { getUserPath, insertData } from "@/services/firebase/db";
-import { bookListState, showToastState, userInfoState } from "@/states/states";
+import { allowSearchState, bookListState, showToastState, userInfoState } from "@/states/states";
 import { BookType } from "@/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { Form, Row } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { DefaultCol } from "../atoms/DefaultAtoms";
-import {
-  enterKeyUpEventHandler,
-  getErrorMsg,
-  l,
-  onFocusHandler,
-} from "@/services/util/util";
-import { CustomInput } from "../atoms/CustomInput";
+import { getErrorMsg, l } from "@/services/util/util";
 import { CustomButton } from "../atoms/CustomButton";
 import { useEffect, useState } from "react";
 import SearchBookForm from "./SearchBookForm";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { object, string } from "yup";
 
 interface AddBookFormProps {
   componentsTextData: Record<string, string>;
 }
 
 export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
-  const { register, handleSubmit, formState, setValue } = useForm();
+  const schema = object({
+    title: string().required(l("Please enter the title of the book.")),
+    author: string()
+  });
+  const { register, handleSubmit, formState, setValue } = useForm({
+    resolver: yupResolver(schema),
+  });
   const [bookList, setBookList] = useRecoilState(bookListState);
   const setShowToast = useSetRecoilState(showToastState);
   const userInfo = useRecoilValue(userInfoState);
   const [firstLoading, setFirstLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const setAllowSearch = useSetRecoilState(allowSearchState);
 
   useEffect(() => {
     setFirstLoading(false);
@@ -53,6 +56,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
         setValue("title", "");
         setValue("author", "");
         setIsSubmitting(false);
+        setAllowSearch(false);
       }
     },
     onError(error) {
@@ -77,54 +81,31 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
       onSubmit={handleSubmit((data) => {
         if (!isSubmitting) {
           setIsSubmitting(true);
-          insertBookHandler(data.title, data.author);
+          insertBookHandler(data.title, data.author||"");
         }
       })}
       onKeyDown={(e) => {
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{paddingBottom: "0.5rem"}}>
+      <Row style={{ paddingBottom: "0.5rem" }}>
         <DefaultCol>
           <SearchBookForm
             register={register}
             setValue={setValue}
-            componentsTextData={componentsTextData}
-          />
-        </DefaultCol>
-      </Row>
-      <Row style={{paddingBottom: "0.5rem"}}>
-        <DefaultCol>
-          <CustomInput
-            {...register("title", {
-              required: {
-                value: true,
-                message: l("Please enter the title of the book."),
-              },
-            })}
-            placeholder={
-              firstLoading
-                ? componentsTextData.bookTitlePlaceholder
-                : `${l("Book title")} (${l("Enter directly")})`
-            }
-            onKeyUp={enterKeyUpEventHandler}
-            clearButton={setValue}
-            onFocus={onFocusHandler}
+            name="title"
+            placeholder={firstLoading ? componentsTextData.bookTitlePlaceholder : `${l("Book title")}`}
           />
         </DefaultCol>
       </Row>
       <Row>
         <DefaultCol style={{ minWidth: "35%" }}>
-          <CustomInput
-            {...register("author")}
-            placeholder={
-              firstLoading
-                ? componentsTextData.bookAuthorPlaceholder
-                : `${l("Book author")} (${l("Enter directly")})`
-            }
-            onKeyUp={enterKeyUpEventHandler}
-            clearButton={setValue}
-            onFocus={onFocusHandler}
+          <SearchBookForm
+            register={register}
+            setValue={setValue}
+            name="author"
+            placeholder={firstLoading ? componentsTextData.bookAuthorPlaceholder : `${l("Book author")}`}
+            searchDisabled={true}
           />
         </DefaultCol>
         <DefaultCol style={{ maxWidth: "3.5rem", paddingLeft: "0" }}>

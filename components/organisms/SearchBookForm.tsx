@@ -1,59 +1,66 @@
 import { useEffect, useState } from "react";
 import { CustomDropdown, DropdownDataProps } from "../atoms/CustomDropdown";
 import { getNLBooksData } from "@/services/api/books";
-import { getTextfromHtmlString, l, onFocusHandler } from "@/services/util/util";
-import {
-  FieldValue,
-  FieldValues,
-  UseFormRegister,
-  UseFormSetValue,
-} from "react-hook-form";
+import { getTextfromHtmlString, onFocusHandler } from "@/services/util/util";
+import { UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { CustomInput } from "../atoms/CustomInput";
 import { BookType } from "@/types/types";
 import { useRecoilState } from "recoil";
-import { rerenderDataState } from "@/states/states";
+import { allowSearchState, rerenderDataState } from "@/states/states";
 
 interface SearchBookFormProps {
   book?: BookType;
-  setValue: UseFormSetValue<FieldValues>;
-  register: UseFormRegister<FieldValues>;
-  componentsTextData: Record<string, string>;
+  setValue: UseFormSetValue<any>;
+  register: UseFormRegister<any>;
+  name: string;
+  placeholder?: string;
+  searchDisabled?: boolean;
 }
 
 export default function SearchBookForm({
   book,
   setValue,
   register,
-  componentsTextData,
+  name,
+  placeholder,
+  searchDisabled = false,
 }: SearchBookFormProps) {
   const [searchList, setSearchList] = useState<DropdownDataProps[]>([]);
   const [keyword, setKeyword] = useState("");
   let debounce: NodeJS.Timeout;
-  const [firstLoading, setFirstLoading] = useState(true);
   const [rerenderData, setRerenderData] = useRecoilState(rerenderDataState);
+  const searchBookForm = register(name);
+  const [allowSearch, setAllowSearch] = useRecoilState(allowSearchState);
+  const [continueSearch, setContinueSearch] = useState(false);
 
   useEffect(() => {
-    setFirstLoading(false);
-  });
+    setContinueSearch(false);
+  }, []);
 
   useEffect(() => {
-    if (keyword) {
+    if (!searchDisabled && allowSearch && continueSearch && keyword) {
       debounce = setTimeout(() => {
         const tempSearchList: DropdownDataProps[] = [];
         getNLBooksData(keyword).then((res: any) => {
-          res.map((data: any) => {
+          if (res.length > 0) {
             tempSearchList.push({
-              key: tempSearchList.length.toString(),
-              label: `${data.title}${data.author && " / " + data.author}`,
-              refData: {
-                title: getTextfromHtmlString(data.title),
-                author: getTextfromHtmlString(data.author),
-              },
+              key: "-1",
+              label: `직접 입력`,
             });
-          });
+            res.map((data: any) => {
+              tempSearchList.push({
+                key: tempSearchList.length.toString(),
+                label: `${data.title}${data.author && " / " + data.author}`,
+                refData: {
+                  title: getTextfromHtmlString(data.title),
+                  author: getTextfromHtmlString(data.author),
+                },
+              });
+            });
+          }
           setSearchList(tempSearchList);
         });
-      }, 500);
+      }, 200);
     } else {
       setSearchList([]);
     }
@@ -64,38 +71,47 @@ export default function SearchBookForm({
     };
   }, [keyword]);
 
+  useEffect(() => {
+    if (allowSearch === false && searchList.length > 0) setSearchList([]);
+  }, [searchList]);
+
   return (
     <CustomDropdown
-      id={`search-dropdown${book ? "-" + book?.id : ""}`}
+      id={`search-dropdown${"-" + name}${book ? "-" + book?.id : ""}`}
       items={searchList}
       initText=""
       align="left"
       onClickItemHandler={(label) => {
-        setValue("title", label.title);
-        setValue("author", label.author);
-        setValue("keyword", "");
+        if (label !== "-1") {
+          setValue("title", label.title);
+          setValue("author", label.author);
+        }
         setKeyword("");
         setRerenderData(!rerenderData);
+        if (!searchDisabled) {
+          setContinueSearch(false);
+          setAllowSearch(false);
+        }
       }}
       customToggle={
         <CustomInput
-          {...register("keyword")}
-          placeholder={
-            firstLoading
-              ? componentsTextData.searchKeywordPlaceholder
-              : `${l("Enter keywords here to search.")} (${l(
-                  "title or author"
-                )})`
-          }
+          {...searchBookForm}
+          ref={(target) => {
+            searchBookForm.ref(target);
+            if (target?.value !== keyword) setKeyword(target?.value || "");
+            if (!searchDisabled && target?.value === "")
+              setContinueSearch(true);
+          }}
+          placeholder={placeholder}
           clearButton={(field: string, value: string) => {
             setValue(field, value);
             setKeyword("");
           }}
           onChange={(e) => {
             setKeyword(e.target.value);
+            if (!searchDisabled) setAllowSearch(true);
           }}
           onFocus={onFocusHandler}
-          placeholderColor="#cc96ff"
         />
       }
     />
