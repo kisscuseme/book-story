@@ -51,7 +51,7 @@ export default function BookStory({
     <DefaultContainer style={{paddingTop: "50px"}}>
       <TranslationFromClient />
       <TopBar>
-        <DefaultCol style={{paddingLeft: "1.3rem"}}>
+        <DefaultCol style={{paddingLeft: "0.5rem"}}>
           <Link href="/">
             <Image src="/images/logo.png" width={"36px"} style={{rotate: "-5deg"}} />
           </Link>

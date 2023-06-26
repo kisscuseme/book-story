@@ -9,7 +9,8 @@ const TopBarRow = styled(Row)`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  margin: 0%;
+  width: 100%;
   background-color: #dddddd;
   z-index: 100;
   box-shadow: 0.05rem 0.05rem 0.2rem #c6c6c6;
