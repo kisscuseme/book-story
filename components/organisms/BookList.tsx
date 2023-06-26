@@ -424,12 +424,12 @@ export default function BookList({
                                 style={{
                                   width: "1.6rem",
                                   height: "1.6rem",
-                                  display: "inline-block",
-                                  verticalAlign: "sub"
+                                  display: "inline",
+                                  marginRight: "0.5rem"
                                 }}
                               >
                                 <FontAwesomeIcon
-                                  style={{width: "1rem"}}
+                                  style={{ width: "1rem" }}
                                   icon={faBook}
                                   color="#d1d1d1"
                                   size="1x"
@@ -439,9 +439,7 @@ export default function BookList({
                                 style={{
                                   paddingRight: "0.4rem",
                                   fontSize: "1.15rem",
-                                  height: "1.6rem",
-                                  display: "inline-block",
-                                  verticalAlign: "sub"
+                                  display: "inline",
                                 }}
                               >
                                 {book.title}
@@ -457,14 +455,14 @@ export default function BookList({
                               >
                                 <span
                                   style={{
-                                    width: "0.9rem",
-                                    height: "0.9rem",
-                                    display: "inline-block",
-                                    verticalAlign: "sub",
+                                    width: "1.2rem",
+                                    height: "1.2rem",
+                                    display: "inline",
+                                    marginRight: "0.3rem"
                                   }}
                                 >
                                   <FontAwesomeIcon
-                                    style={{width: "0.6rem"}}
+                                    style={{ width: "0.6rem" }}
                                     icon={faUser}
                                     color="#d1d1d1"
                                     size="xs"
@@ -474,8 +472,7 @@ export default function BookList({
                                   style={{
                                     paddingRight: "0.2rem",
                                     fontSize: "0.9rem",
-                                    display: "inline-block",
-                                    verticalAlign: "sub",
+                                    display: "inline",
                                   }}
                                 >
                                   {book.author}
@@ -489,12 +486,13 @@ export default function BookList({
                         >
                           <span
                             style={{
-                              width: "0.75rem",
-                              height: "0.75rem",
-                              display: "inline-flex",
+                              width: "1rem",
+                              height: "1rem",
+                              display: "inline",
                             }}
                           >
                             <FontAwesomeIcon
+                              style={{ width: "0.75rem" }}
                               icon={faPenToSquare}
                               color={
                                 book.id === mainListAccordionActive
@@ -549,21 +547,24 @@ export default function BookList({
                                         comment.type === "Passage"
                                           ? "#5561ff"
                                           : "#ff7768",
-                                      display: "inline-block",
+                                      display: "inline",
                                     }}
                                   >
                                     <span
                                       style={{
                                         width: "1rem",
                                         height: "1rem",
-                                        display: "inline-block",
-                                        verticalAlign: "sub",
+                                        display: "inline",
+                                        marginRight: "0.3rem"
                                       }}
                                     >
                                       <FontAwesomeIcon
-                                        style={{width: "0.7rem"}}
-                                        icon={comment.type === "Passage"
-                                        ? faPaperclip : faHeart}
+                                        style={{ width: "0.7rem" }}
+                                        icon={
+                                          comment.type === "Passage"
+                                            ? faPaperclip
+                                            : faHeart
+                                        }
                                         size="xs"
                                       />
                                     </span>
@@ -572,9 +573,7 @@ export default function BookList({
                                     style={{
                                       color: "#6b6b6b",
                                       paddingRight: "0.3rem",
-                                      height: "1rem",
-                                      display: "inline-block",
-                                      verticalAlign: "sub",
+                                      display: "inline",
                                     }}
                                   >
                                     {comment.text}
@@ -583,11 +582,11 @@ export default function BookList({
                                     style={{
                                       width: "0.6rem",
                                       height: "0.6rem",
-                                      display: "inline-block",
-                                      verticalAlign: "sub",
+                                      display: "inline",
                                     }}
                                   >
                                     <FontAwesomeIcon
+                                      style={{ width: "0.6rem" }}
                                       icon={faPenToSquare}
                                       color={
                                         `${book.id}.${comment.id}` ===
