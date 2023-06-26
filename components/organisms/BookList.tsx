@@ -8,6 +8,8 @@ import { accordionCustomStyle } from "../molecules/CustomMolecules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
+  faCaretDown,
+  faCaretUp,
   faHeart,
   faPaperclip,
   faPenToSquare,
@@ -378,7 +380,21 @@ export default function BookList({
                   {firstLoading
                     ? componentsTextData.addBookFormTitle
                     : l("Add a book")}{" "}
-                  <span style={{ fontSize: "0.9rem" }}>{fold ? "▲" : "▼"}</span>
+                  <span style={{ fontSize: "0.9rem", display: "inline" }}>
+                    {fold ? (
+                      <FontAwesomeIcon
+                        style={{ width: "0.6rem" }}
+                        icon={faCaretUp}
+                        size="1x"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        style={{ width: "0.6rem" }}
+                        icon={faCaretDown}
+                        size="1x"
+                      />
+                    )}
+                  </span>
                 </div>
               </Accordion.Header>
               <Accordion.Body>
@@ -425,7 +441,7 @@ export default function BookList({
                                   width: "1.6rem",
                                   height: "1.6rem",
                                   display: "inline",
-                                  marginRight: "0.5rem"
+                                  marginRight: "0.5rem",
                                 }}
                               >
                                 <FontAwesomeIcon
@@ -445,28 +461,28 @@ export default function BookList({
                                 {book.title}
                               </span>
                               <span
-                            style={{
-                              width: "1rem",
-                              height: "1rem",
-                              display: "inline",
-                            }}
-                          >
-                            <FontAwesomeIcon
-                              style={{ width: "0.75rem" }}
-                              icon={faPenToSquare}
-                              color={
-                                book.id === mainListAccordionActive
-                                  ? "#ff8a8a"
-                                  : "#b6b6b6"
-                              }
-                              size="xs"
-                              fade={
-                                book.id === mainListAccordionActive
-                                  ? true
-                                  : false
-                              }
-                            />
-                          </span>
+                                style={{
+                                  width: "1rem",
+                                  height: "1rem",
+                                  display: "inline",
+                                }}
+                              >
+                                <FontAwesomeIcon
+                                  style={{ width: "0.75rem" }}
+                                  icon={faPenToSquare}
+                                  color={
+                                    book.id === mainListAccordionActive
+                                      ? "#ff8a8a"
+                                      : "#b6b6b6"
+                                  }
+                                  size="xs"
+                                  fade={
+                                    book.id === mainListAccordionActive
+                                      ? true
+                                      : false
+                                  }
+                                />
+                              </span>
                             </Card.Title>
                             {book.author && (
                               <Card.Subtitle
@@ -481,7 +497,7 @@ export default function BookList({
                                     width: "1.2rem",
                                     height: "1.2rem",
                                     display: "inline",
-                                    marginRight: "0.3rem"
+                                    marginRight: "0.3rem",
                                   }}
                                 >
                                   <FontAwesomeIcon
@@ -551,7 +567,7 @@ export default function BookList({
                                         width: "1rem",
                                         height: "1rem",
                                         display: "inline",
-                                        marginRight: "0.3rem"
+                                        marginRight: "0.3rem",
                                       }}
                                     >
                                       <FontAwesomeIcon
