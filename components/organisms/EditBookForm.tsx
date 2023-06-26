@@ -181,10 +181,15 @@ export default function EditBookForm({
             style={{
               width: "1rem",
               height: "1rem",
-              display: "inline-flex",
+              display: "inline",
             }}
           >
-            <FontAwesomeIcon icon={faBook} color="#ffcdcd" size="1x" />
+            <FontAwesomeIcon
+              style={{ width: "0.8rem" }}
+              icon={faBook}
+              color="#e7c0ff"
+              size="1x"
+            />
           </span>
         </DefaultCol>
         <DefaultCol>
@@ -203,10 +208,15 @@ export default function EditBookForm({
             style={{
               width: "1rem",
               height: "1rem",
-              display: "inline-flex",
+              display: "inline",
             }}
           >
-            <FontAwesomeIcon icon={faUser} color="#ffcdcd" size="1x" />
+            <FontAwesomeIcon
+              style={{ width: "0.8rem" }}
+              icon={faUser}
+              color="#e7c0ff"
+              size="1x"
+            />
           </span>
         </DefaultCol>
         <DefaultCol style={{ paddingRight: "0" }}>
