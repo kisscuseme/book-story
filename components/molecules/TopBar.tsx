@@ -9,9 +9,10 @@ const TopBarRow = styled(Row)`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  background-color: #fbf6ff;
+  width: 100vw;
+  background-color: #dddddd;
   z-index: 100;
+  box-shadow: 0.05rem 0.05rem 0.2rem #c6c6c6;
 `;
 
 // 상단 바 구성에 사용

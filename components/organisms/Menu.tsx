@@ -97,7 +97,7 @@ export default function Menu() {
               <LanguageSelectorForClient />
             </Col>
           </Row>
-          <DivisionLine />
+          <DivisionLine color="#f3f3f3" />
           <Row>
             <Col>
               {l("E-mail")}: {userInfo?.email}
@@ -108,7 +108,7 @@ export default function Menu() {
               {l("Name")}: {userInfo?.name}
             </Col>
           </Row>
-          <DivisionLine />
+          <DivisionLine color="#f3f3f3" />
           <Row>
             <Col></Col>
             <Col>

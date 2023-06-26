@@ -399,16 +399,19 @@ export default function BookList({
               return (
                 <Card
                   key={book.id}
-                  style={{ marginBottom: "1rem", backgroundColor: "#faf4ff" }}
+                  style={{
+                    marginBottom: "1rem",
+                    backgroundColor: "#ffffff",
+                    borderWidth: "0",
+                    boxShadow: "0.05rem 0.05rem 0.2rem #dddddd",
+                  }}
                 >
                   <Card.Body style={{ padding: "0.7rem" }}>
-                    <Accordion.Item
-                      eventKey={book.id}
-                    >
+                    <Accordion.Item eventKey={book.id}>
                       <Accordion.Header>
                         <DefaultCol>
                           <div>
-                            <Card.Title style={{paddingBottom: "0.2rem"}}>
+                            <Card.Title style={{ paddingBottom: "0.2rem" }}>
                               <span
                                 style={{
                                   width: "1rem",
@@ -517,73 +520,72 @@ export default function BookList({
                       >
                         {book.comments?.map((comment) => {
                           return (
-                            <Card.Text key={`${book.id}.${comment.id}`} style={{marginBottom: "0"}}>
-                              <Accordion.Item
-                                eventKey={`${book.id}.${comment.id}`}
-                              >
-                                <Accordion.Header>
-                                  <div
+                            <Accordion.Item
+                              key={`${book.id}.${comment.id}`}
+                              eventKey={`${book.id}.${comment.id}`}
+                            >
+                              <Accordion.Header>
+                                <div
+                                  style={{
+                                    paddingLeft: "0.6rem",
+                                  }}
+                                >
+                                  <span
                                     style={{
-                                      paddingLeft: "0.6rem",
+                                      color:
+                                        comment.type === "Passage"
+                                          ? "#ff7768"
+                                          : "#5561ff",
+                                      display: "inline-flex",
                                     }}
                                   >
-                                    <span
-                                      style={{
-                                        color:
-                                          comment.type === "Passage"
-                                            ? "#ff7768"
-                                            : "#5561ff",
-                                        display: "inline-flex",
-                                      }}
-                                    >
-                                      {firstLoading
-                                        ? comment.transType
-                                        : l(comment.type)}
-                                    </span>
-                                    <span
-                                      style={{
-                                        paddingLeft: "0.5rem",
-                                        color: "#6b6b6b",
-                                        paddingRight: "0.3rem",
-                                      }}
-                                    >
-                                      {comment.text}
-                                    </span>
-                                    <span
-                                      style={{
-                                        width: "0.6rem",
-                                        height: "0.6rem",
-                                        display: "inline-flex",
-                                      }}
-                                    >
-                                      <FontAwesomeIcon
-                                        icon={faPenToSquare}
-                                        color={
-                                          `${book.id}.${comment.id}` ===
-                                          subListAccordionActive[book.id]
-                                            ? "#c783ff"
-                                            : "#b6b6b6"
-                                        }
-                                        size="2xs"
-                                        fade={
-                                          `${book.id}.${comment.id}` ===
-                                          subListAccordionActive[book.id]
-                                            ? true
-                                            : false
-                                        }
-                                      />
-                                    </span>
-                                  </div>
-                                </Accordion.Header>
-                                <Accordion.Body>
-                                  <EditCommentForm
-                                    book={book}
-                                    comment={comment}
-                                    componentsTextData={componentsTextData}
-                                  />
-                                </Accordion.Body>
-                              </Accordion.Item>
-                            </Card.Text>
+                                    {firstLoading
+                                      ? comment.transType
+                                      : l(comment.type)}
+                                  </span>
+                                  <span
+                                    style={{
+                                      paddingLeft: "0.5rem",
+                                      color: "#6b6b6b",
+                                      paddingRight: "0.3rem",
+                                    }}
+                                  >
+                                    {comment.text}
+                                  </span>
+                                  <span
+                                    style={{
+                                      width: "0.6rem",
+                                      height: "0.6rem",
+                                      display: "inline-flex",
+                                    }}
+                                  >
+                                    <FontAwesomeIcon
+                                      icon={faPenToSquare}
+                                      color={
+                                        `${book.id}.${comment.id}` ===
+                                        subListAccordionActive[book.id]
+                                          ? "#c783ff"
+                                          : "#b6b6b6"
+                                      }
+                                      size="2xs"
+                                      fade={
+                                        `${book.id}.${comment.id}` ===
+                                        subListAccordionActive[book.id]
+                                          ? true
+                                          : false
+                                      }
+                                    />
+                                  </span>
+                                </div>
+                              </Accordion.Header>
+                              <Accordion.Body>
+                                <EditCommentForm
+                                  book={book}
+                                  comment={comment}
+                                  componentsTextData={componentsTextData}
+                                />
+                              </Accordion.Body>
+                            </Accordion.Item>
                           );
                         })}
                       </Accordion>
