@@ -411,7 +411,13 @@ export default function BookList({
                       <Accordion.Header>
                         <DefaultCol>
                           <div>
-                            <Card.Title style={{ paddingBottom: "0.2rem" }}>
+                            <Card.Title
+                              style={
+                                book.author
+                                  ? { paddingBottom: "0.2rem" }
+                                  : { paddingBottom: "0", marginBottom: "0" }
+                              }
+                            >
                               <span
                                 style={{
                                   width: "1rem",
