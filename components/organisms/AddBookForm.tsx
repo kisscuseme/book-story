@@ -88,7 +88,7 @@ export default function AddBookForm({ componentsTextData }: AddBookFormProps) {
         if (e.key === "Enter") e.preventDefault();
       }}
     >
-      <Row style={{ paddingBottom: "0.5rem" }}>
+      <Row style={{ paddingBottom: "0.5rem", paddingTop: "0.5rem" }}>
         <DefaultCol>
           <SearchBookForm
             register={register}

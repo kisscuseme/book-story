@@ -1,12 +1,16 @@
 "use client";
 
-import { Accordion, Row } from "react-bootstrap";
+import { Accordion, Card, Row } from "react-bootstrap";
 import { DefaultCol } from "../atoms/DefaultAtoms";
 import { CustomButton } from "../atoms/CustomButton";
 import { decrypt, l } from "@/services/util/util";
 import { accordionCustomStyle } from "../molecules/CustomMolecules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBook, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBook,
+  faPenToSquare,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { DivisionLine } from "../molecules/DefaultMolecules";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -393,201 +397,244 @@ export default function BookList({
           >
             {(firstLoading ? serverBookData : bookList).map((book, index) => {
               return (
-                <Accordion.Item
+                <Card
                   key={book.id}
-                  eventKey={book.id}
-                  style={{ paddingBottom: "0.6rem" }}
+                  style={{ marginBottom: "1rem", backgroundColor: "#faf4ff" }}
                 >
-                  <Accordion.Header>
-                    <span
-                      style={{
-                        width: "1rem",
-                        height: "1rem",
-                        display: "inline-flex",
-                      }}
+                  <Card.Body style={{ padding: "0.7rem" }}>
+                    <Accordion.Item
+                      eventKey={book.id}
                     >
-                      <FontAwesomeIcon
-                        icon={faBook}
-                        color="#d1d1d1"
-                        size="1x"
-                      />
-                    </span>
-                    <span
-                      style={{
-                        paddingLeft: "0.3rem",
-                        paddingRight: "0.3rem",
-                        fontSize: "1.15rem",
-                      }}
-                    >
-                      {book.title}
-                      {book.author && (
-                        <>
-                          {" - "}
-                          <span style={{ color: "#6f6f6f" }}>
-                            {book.author}
-                          </span>
-                        </>
-                      )}
-                    </span>
-                    <span
-                      style={{
-                        width: "0.75rem",
-                        height: "0.75rem",
-                        display: "inline-flex",
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faPenToSquare}
-                        color={
-                          book.id === mainListAccordionActive
-                            ? "#ff8a8a"
-                            : "#b6b6b6"
-                        }
-                        size="xs"
-                        fade={
-                          book.id === mainListAccordionActive ? true : false
-                        }
-                      />
-                    </span>
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <EditBookForm
-                      book={book}
-                      componentsTextData={componentsTextData}
-                    />
-                    <AddCommentForm
-                      book={book}
-                      componentsTextData={componentsTextData}
-                    />
-                  </Accordion.Body>
-                  <Accordion
-                    onSelect={(e) => {
-                      const tempAccordionActive = { ...subListAccordionActive };
-                      tempAccordionActive[book.id] = e;
-                      setSubListAccordionActive(tempAccordionActive);
-                    }}
-                    defaultActiveKey={mainListAccordionActive}
-                  >
-                    {book.comments?.map((comment) => {
-                      return (
-                        <Accordion.Item
-                          key={`${book.id}.${comment.id}`}
-                          eventKey={`${book.id}.${comment.id}`}
-                        >
-                          <Accordion.Header>
-                            <div
-                              style={{
-                                paddingLeft: "0.6rem",
-                              }}
-                            >
+                      <Accordion.Header>
+                        <DefaultCol>
+                          <div>
+                            <Card.Title style={{paddingBottom: "0.2rem"}}>
                               <span
                                 style={{
-                                  color:
-                                    comment.type === "Passage"
-                                      ? "#ff7768"
-                                      : "#5561ff",
-                                  display: "inline-flex",
-                                }}
-                              >
-                                {firstLoading
-                                  ? comment.transType
-                                  : l(comment.type)}
-                              </span>
-                              <span
-                                style={{
-                                  paddingLeft: "0.5rem",
-                                  color: "#6b6b6b",
-                                  paddingRight: "0.3rem",
-                                }}
-                              >
-                                {comment.text}
-                              </span>
-                              <span
-                                style={{
-                                  width: "0.6rem",
-                                  height: "0.6rem",
+                                  width: "1rem",
+                                  height: "1rem",
                                   display: "inline-flex",
                                 }}
                               >
                                 <FontAwesomeIcon
-                                  icon={faPenToSquare}
-                                  color={
-                                    `${book.id}.${comment.id}` ===
-                                    subListAccordionActive[book.id]
-                                      ? "#c783ff"
-                                      : "#b6b6b6"
-                                  }
-                                  size="2xs"
-                                  fade={
-                                    `${book.id}.${comment.id}` ===
-                                    subListAccordionActive[book.id]
-                                      ? true
-                                      : false
-                                  }
+                                  icon={faBook}
+                                  color="#d1d1d1"
+                                  size="1x"
                                 />
                               </span>
-                            </div>
-                          </Accordion.Header>
-                          <Accordion.Body>
-                            <EditCommentForm
-                              book={book}
-                              comment={comment}
-                              componentsTextData={componentsTextData}
-                            />
-                          </Accordion.Body>
-                        </Accordion.Item>
-                      );
-                    })}
-                  </Accordion>
-                  {nextCommentLastVisible[book.id] &&
-                  !noMoreCommentsData[book.id] ? (
-                    <Row style={{ paddingLeft: "1.7rem" }}>
-                      <CenterCol>
-                        {(book.comments || []).length > 0 &&
-                        (commentIsLoading || commentIsFetching) &&
-                        targetLoadingComment === book.id ? (
-                          <CustomButton align="left" color="#b5b5b5">
-                            <CustomSpinner
-                              animation="border"
-                              size="sm"
-                              style={{ opacity: "0.5" }}
-                            />
-                          </CustomButton>
-                        ) : (
-                          <CustomButton
-                            align="left"
-                            type="button"
-                            size="sm"
-                            color="#b5b5b5"
-                            onClick={() => {
-                              setTargetLoadingComment(book.id);
+                              <span
+                                style={{
+                                  paddingLeft: "0.4rem",
+                                  paddingRight: "0.4rem",
+                                  fontSize: "1.15rem",
+                                  verticalAlign: "top",
+                                }}
+                              >
+                                {book.title}
+                              </span>
+                            </Card.Title>
+                            {book.author && (
+                              <Card.Subtitle
+                                style={{
+                                  paddingLeft: "0.5rem",
+                                  paddingBottom: "0.2rem",
+                                  color: "#999999",
+                                }}
+                              >
+                                <span
+                                  style={{
+                                    width: "0.7rem",
+                                    height: "0.7rem",
+                                    display: "inline-flex",
+                                  }}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faUser}
+                                    color="#d1d1d1"
+                                    size="xs"
+                                  />
+                                </span>
+                                <span
+                                  style={{
+                                    paddingLeft: "0.2rem",
+                                    paddingRight: "0.2rem",
+                                    fontSize: "0.9rem",
+                                    verticalAlign: "top",
+                                  }}
+                                >
+                                  {book.author}
+                                </span>
+                              </Card.Subtitle>
+                            )}
+                          </div>
+                        </DefaultCol>
+                        <DefaultCol
+                          style={{ paddingLeft: "0.5rem", maxWidth: "1.2rem" }}
+                        >
+                          <span
+                            style={{
+                              width: "0.75rem",
+                              height: "0.75rem",
+                              display: "inline-flex",
                             }}
                           >
-                            {l("Load More")}
-                          </CustomButton>
-                        )}
-                      </CenterCol>
-                    </Row>
-                  ) : (
-                    book.commentLastVisible &&
-                    !commentLastVisible[book.id] && (
-                      <Row style={{ paddingLeft: "1.7rem" }}>
-                        <CenterCol>
-                          <CustomButton align="left" color="#b5b5b5">
-                            <CustomSpinner
-                              animation="border"
-                              size="sm"
-                              style={{ opacity: "0.5" }}
+                            <FontAwesomeIcon
+                              icon={faPenToSquare}
+                              color={
+                                book.id === mainListAccordionActive
+                                  ? "#ff8a8a"
+                                  : "#b6b6b6"
+                              }
+                              size="xs"
+                              fade={
+                                book.id === mainListAccordionActive
+                                  ? true
+                                  : false
+                              }
                             />
-                          </CustomButton>
-                        </CenterCol>
-                      </Row>
-                    )
-                  )}
-                  {bookList.length !== index + 1 && (
-                    <DivisionLine color="#f0e7ff" />
-                  )}
-                </Accordion.Item>
+                          </span>
+                        </DefaultCol>
+                      </Accordion.Header>
+                      <Accordion.Body>
+                        <EditBookForm
+                          book={book}
+                          componentsTextData={componentsTextData}
+                        />
+                        <AddCommentForm
+                          book={book}
+                          componentsTextData={componentsTextData}
+                        />
+                      </Accordion.Body>
+                      <Accordion
+                        onSelect={(e) => {
+                          const tempAccordionActive = {
+                            ...subListAccordionActive,
+                          };
+                          tempAccordionActive[book.id] = e;
+                          setSubListAccordionActive(tempAccordionActive);
+                        }}
+                        defaultActiveKey={mainListAccordionActive}
+                      >
+                        {book.comments?.map((comment) => {
+                          return (
+                            <Card.Text key={`${book.id}.${comment.id}`} style={{marginBottom: "0"}}>
+                              <Accordion.Item
+                                eventKey={`${book.id}.${comment.id}`}
+                              >
+                                <Accordion.Header>
+                                  <div
+                                    style={{
+                                      paddingLeft: "0.6rem",
+                                    }}
+                                  >
+                                    <span
+                                      style={{
+                                        color:
+                                          comment.type === "Passage"
+                                            ? "#ff7768"
+                                            : "#5561ff",
+                                        display: "inline-flex",
+                                      }}
+                                    >
+                                      {firstLoading
+                                        ? comment.transType
+                                        : l(comment.type)}
+                                    </span>
+                                    <span
+                                      style={{
+                                        paddingLeft: "0.5rem",
+                                        color: "#6b6b6b",
+                                        paddingRight: "0.3rem",
+                                      }}
+                                    >
+                                      {comment.text}
+                                    </span>
+                                    <span
+                                      style={{
+                                        width: "0.6rem",
+                                        height: "0.6rem",
+                                        display: "inline-flex",
+                                      }}
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={faPenToSquare}
+                                        color={
+                                          `${book.id}.${comment.id}` ===
+                                          subListAccordionActive[book.id]
+                                            ? "#c783ff"
+                                            : "#b6b6b6"
+                                        }
+                                        size="2xs"
+                                        fade={
+                                          `${book.id}.${comment.id}` ===
+                                          subListAccordionActive[book.id]
+                                            ? true
+                                            : false
+                                        }
+                                      />
+                                    </span>
+                                  </div>
+                                </Accordion.Header>
+                                <Accordion.Body>
+                                  <EditCommentForm
+                                    book={book}
+                                    comment={comment}
+                                    componentsTextData={componentsTextData}
+                                  />
+                                </Accordion.Body>
+                              </Accordion.Item>
+                            </Card.Text>
+                          );
+                        })}
+                      </Accordion>
+                      {nextCommentLastVisible[book.id] &&
+                      !noMoreCommentsData[book.id] ? (
+                        <Row style={{ paddingLeft: "1.7rem" }}>
+                          <CenterCol>
+                            {(book.comments || []).length > 0 &&
+                            (commentIsLoading || commentIsFetching) &&
+                            targetLoadingComment === book.id ? (
+                              <CustomButton align="left" color="#b5b5b5">
+                                <CustomSpinner
+                                  animation="border"
+                                  size="sm"
+                                  style={{ opacity: "0.5" }}
+                                />
+                              </CustomButton>
+                            ) : (
+                              <CustomButton
+                                align="left"
+                                type="button"
+                                size="sm"
+                                color="#b5b5b5"
+                                onClick={() => {
+                                  setTargetLoadingComment(book.id);
+                                }}
+                              >
+                                {l("Load More")}
+                              </CustomButton>
+                            )}
+                          </CenterCol>
+                        </Row>
+                      ) : (
+                        book.commentLastVisible &&
+                        !commentLastVisible[book.id] && (
+                          <Row style={{ paddingLeft: "1.7rem" }}>
+                            <CenterCol>
+                              <CustomButton align="left" color="#b5b5b5">
+                                <CustomSpinner
+                                  animation="border"
+                                  size="sm"
+                                  style={{ opacity: "0.5" }}
+                                />
+                              </CustomButton>
+                            </CenterCol>
+                          </Row>
+                        )
+                      )}
+                    </Accordion.Item>
+                  </Card.Body>
+                </Card>
               );
             })}
           </Accordion>
