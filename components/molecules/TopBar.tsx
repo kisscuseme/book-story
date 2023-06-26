@@ -11,9 +11,9 @@ const TopBarRow = styled(Row)`
   left: 0;
   margin: 0%;
   width: 100%;
-  background-color: #dddddd;
+  background-color: #e5e5e5;
   z-index: 100;
-  box-shadow: 0.05rem 0.05rem 0.2rem #c6c6c6;
+  box-shadow: 0.05rem 0.05rem 0.2rem #d1d1d1;
 `;
 
 // 상단 바 구성에 사용
