@@ -201,7 +201,7 @@ export default function EditCommentForm({
             itemAlign="start"
             align="left"
             size="small"
-            backgroundColor={comment.type === "Passage" ? "#ff7878" : "#5561ff"}
+            backgroundColor={comment.type === "Passage" ? "#5561ff" : "#ff7878"}
             color="#ffffff"
             initText={
               firstLoading && comment.transType
@@ -215,14 +215,14 @@ export default function EditCommentForm({
                   ? componentsTextData.verseLabel
                   : l("Passage"),
                 href: "#",
-                backgroundColor: "#ff7878",
+                backgroundColor: "#5561ff",
                 color: "#ffffff",
               },
               {
                 key: "Feeling",
                 label: firstLoading ? componentsTextData.feelLabel : l("Feeling"),
                 href: "#",
-                backgroundColor: "#5561ff",
+                backgroundColor: "#ff7878",
                 color: "#ffffff",
               },
             ]}

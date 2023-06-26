@@ -136,7 +136,7 @@ export default function AddCommentForm({
             }}
             itemAlign="start"
             align="left"
-            backgroundColor={"#ff7878"}
+            backgroundColor={"#5561ff"}
             color="#ffffff"
             initText={
               firstLoading ? componentsTextData.verseLabel : l(commentType)
@@ -148,7 +148,7 @@ export default function AddCommentForm({
                   ? componentsTextData.verseLabel
                   : l("Passage"),
                 href: "#",
-                backgroundColor: "#ff7878",
+                backgroundColor: "#5561ff",
                 color: "#ffffff",
               },
               {
@@ -157,7 +157,7 @@ export default function AddCommentForm({
                   ? componentsTextData.feelLabel
                   : l("Feeling"),
                 href: "#",
-                backgroundColor: "#5561ff",
+                backgroundColor: "#ff7878",
                 color: "#ffffff",
               },
             ]}

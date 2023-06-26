@@ -18,6 +18,8 @@ import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import SearchBookForm from "./SearchBookForm";
 import { object, string } from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBook, faUser } from "@fortawesome/free-solid-svg-icons";
 
 interface EditBookFormProps {
   book: BookType;
@@ -174,6 +176,17 @@ export default function EditBookForm({
       style={{ paddingLeft: "0.5rem" }}
     >
       <Row style={{ paddingBottom: "0.5rem" }}>
+        <DefaultCol style={{ maxWidth: "0.1rem" }}>
+          <span
+            style={{
+              width: "1rem",
+              height: "1rem",
+              display: "inline-flex",
+            }}
+          >
+            <FontAwesomeIcon icon={faBook} color="#ffcdcd" size="1x" />
+          </span>
+        </DefaultCol>
         <DefaultCol>
           <SearchBookForm
             book={book}
@@ -185,6 +198,17 @@ export default function EditBookForm({
         </DefaultCol>
       </Row>
       <Row style={{ paddingBottom: "0.5rem" }}>
+        <DefaultCol style={{ maxWidth: "0.1rem" }}>
+          <span
+            style={{
+              width: "1rem",
+              height: "1rem",
+              display: "inline-flex",
+            }}
+          >
+            <FontAwesomeIcon icon={faUser} color="#ffcdcd" size="1x" />
+          </span>
+        </DefaultCol>
         <DefaultCol style={{ paddingRight: "0" }}>
           <SearchBookForm
             book={book}

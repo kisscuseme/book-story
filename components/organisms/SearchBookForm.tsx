@@ -60,7 +60,7 @@ export default function SearchBookForm({
           }
           setSearchList(tempSearchList);
         });
-      }, 200);
+      }, 300);
     } else {
       setSearchList([]);
     }

@@ -8,6 +8,8 @@ import { accordionCustomStyle } from "../molecules/CustomMolecules";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBook,
+  faHeart,
+  faPaperclip,
   faPenToSquare,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -420,12 +422,14 @@ export default function BookList({
                             >
                               <span
                                 style={{
-                                  width: "1rem",
-                                  height: "1rem",
-                                  display: "inline-flex",
+                                  width: "1.6rem",
+                                  height: "1.6rem",
+                                  display: "inline-block",
+                                  verticalAlign: "sub"
                                 }}
                               >
                                 <FontAwesomeIcon
+                                  style={{width: "1rem"}}
                                   icon={faBook}
                                   color="#d1d1d1"
                                   size="1x"
@@ -433,10 +437,11 @@ export default function BookList({
                               </span>
                               <span
                                 style={{
-                                  paddingLeft: "0.4rem",
                                   paddingRight: "0.4rem",
                                   fontSize: "1.15rem",
-                                  verticalAlign: "top",
+                                  height: "1.6rem",
+                                  display: "inline-block",
+                                  verticalAlign: "sub"
                                 }}
                               >
                                 {book.title}
@@ -452,12 +457,14 @@ export default function BookList({
                               >
                                 <span
                                   style={{
-                                    width: "0.7rem",
-                                    height: "0.7rem",
-                                    display: "inline-flex",
+                                    width: "0.9rem",
+                                    height: "0.9rem",
+                                    display: "inline-block",
+                                    verticalAlign: "sub",
                                   }}
                                 >
                                   <FontAwesomeIcon
+                                    style={{width: "0.6rem"}}
                                     icon={faUser}
                                     color="#d1d1d1"
                                     size="xs"
@@ -465,10 +472,10 @@ export default function BookList({
                                 </span>
                                 <span
                                   style={{
-                                    paddingLeft: "0.2rem",
                                     paddingRight: "0.2rem",
                                     fontSize: "0.9rem",
-                                    verticalAlign: "top",
+                                    display: "inline-block",
+                                    verticalAlign: "sub",
                                   }}
                                 >
                                   {book.author}
@@ -540,20 +547,34 @@ export default function BookList({
                                     style={{
                                       color:
                                         comment.type === "Passage"
-                                          ? "#ff7768"
-                                          : "#5561ff",
-                                      display: "inline-flex",
+                                          ? "#5561ff"
+                                          : "#ff7768",
+                                      display: "inline-block",
                                     }}
                                   >
-                                    {firstLoading
-                                      ? comment.transType
-                                      : l(comment.type)}
+                                    <span
+                                      style={{
+                                        width: "1rem",
+                                        height: "1rem",
+                                        display: "inline-block",
+                                        verticalAlign: "sub",
+                                      }}
+                                    >
+                                      <FontAwesomeIcon
+                                        style={{width: "0.7rem"}}
+                                        icon={comment.type === "Passage"
+                                        ? faPaperclip : faHeart}
+                                        size="xs"
+                                      />
+                                    </span>
                                   </span>
                                   <span
                                     style={{
-                                      paddingLeft: "0.5rem",
                                       color: "#6b6b6b",
                                       paddingRight: "0.3rem",
+                                      height: "1rem",
+                                      display: "inline-block",
+                                      verticalAlign: "sub",
                                     }}
                                   >
                                     {comment.text}
@@ -562,7 +583,8 @@ export default function BookList({
                                     style={{
                                       width: "0.6rem",
                                       height: "0.6rem",
-                                      display: "inline-flex",
+                                      display: "inline-block",
+                                      verticalAlign: "sub",
                                     }}
                                   >
                                     <FontAwesomeIcon
