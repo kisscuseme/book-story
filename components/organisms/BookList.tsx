@@ -437,13 +437,36 @@ export default function BookList({
                               </span>
                               <span
                                 style={{
-                                  paddingRight: "0.4rem",
+                                  paddingRight: "0.3rem",
                                   fontSize: "1.15rem",
                                   display: "inline",
                                 }}
                               >
                                 {book.title}
                               </span>
+                              <span
+                            style={{
+                              width: "1rem",
+                              height: "1rem",
+                              display: "inline",
+                            }}
+                          >
+                            <FontAwesomeIcon
+                              style={{ width: "0.75rem" }}
+                              icon={faPenToSquare}
+                              color={
+                                book.id === mainListAccordionActive
+                                  ? "#ff8a8a"
+                                  : "#b6b6b6"
+                              }
+                              size="xs"
+                              fade={
+                                book.id === mainListAccordionActive
+                                  ? true
+                                  : false
+                              }
+                            />
+                          </span>
                             </Card.Title>
                             {book.author && (
                               <Card.Subtitle
@@ -480,33 +503,6 @@ export default function BookList({
                               </Card.Subtitle>
                             )}
                           </div>
-                        </DefaultCol>
-                        <DefaultCol
-                          style={{ paddingLeft: "0.5rem", maxWidth: "1.2rem" }}
-                        >
-                          <span
-                            style={{
-                              width: "1rem",
-                              height: "1rem",
-                              display: "inline",
-                            }}
-                          >
-                            <FontAwesomeIcon
-                              style={{ width: "0.75rem" }}
-                              icon={faPenToSquare}
-                              color={
-                                book.id === mainListAccordionActive
-                                  ? "#ff8a8a"
-                                  : "#b6b6b6"
-                              }
-                              size="xs"
-                              fade={
-                                book.id === mainListAccordionActive
-                                  ? true
-                                  : false
-                              }
-                            />
-                          </span>
                         </DefaultCol>
                       </Accordion.Header>
                       <Accordion.Body>
