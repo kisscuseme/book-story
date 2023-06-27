@@ -422,20 +422,13 @@ export default function BookList({
                     backgroundColor: "#ffffff",
                     borderWidth: "0",
                     boxShadow: "0.05rem 0.05rem 0.2rem #dddddd",
+                    padding: "0.7rem"
                   }}
                 >
-                  <Card.Body style={{ padding: "0.7rem" }}>
                     <Accordion.Item eventKey={book.id}>
                       <Accordion.Header>
                         <DefaultCol>
                           <div>
-                            <Card.Title
-                              style={
-                                book.author
-                                  ? { paddingBottom: "0.2rem" }
-                                  : { paddingBottom: "0", marginBottom: "0" }
-                              }
-                            >
                               <span
                                 style={{
                                   width: "1.6rem",
@@ -483,15 +476,12 @@ export default function BookList({
                                   }
                                 />
                               </span>
-                            </Card.Title>
                             {book.author && (
-                              <Card.Subtitle
-                                style={{
-                                  paddingLeft: "0.5rem",
-                                  paddingBottom: "0.2rem",
-                                  color: "#999999",
-                                }}
-                              >
+                              <div style={{
+                                marginTop: "0.5rem",
+                                paddingLeft: "0.3rem",
+                                color: "#9d9d9d"
+                              }}>
                                 <span
                                   style={{
                                     width: "1.2rem",
@@ -516,7 +506,7 @@ export default function BookList({
                                 >
                                   {book.author}
                                 </span>
-                              </Card.Subtitle>
+                              </div>
                             )}
                           </div>
                         </DefaultCol>
@@ -674,7 +664,6 @@ export default function BookList({
                         )
                       )}
                     </Accordion.Item>
-                  </Card.Body>
                 </Card>
               );
             })}
