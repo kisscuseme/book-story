@@ -53,17 +53,9 @@ export const showToastState = atom<ToastType>({
 });
 
 // 선택된 main list accordion 키 값
-export const mainListAccordionActiveState = atom<AccordionEventKey | null>({
-  key: "mainListAccordionActiveState",
+export const accordionActiveState = atom<AccordionEventKey | null>({
+  key: "accordionActiveState",
   default: "",
-});
-
-// 선택된 sub list accordion 키 값
-export const subListAccordionActiveState = atom<
-  Record<string, AccordionEventKey>
->({
-  key: "subListAccordionActiveState",
-  default: {},
 });
 
 // 선택한 언어
